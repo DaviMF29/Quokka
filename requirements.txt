@@ -6,3 +6,5 @@ bcrypt
 PyJWT
 flask_jwt_extended
 datetime
+gunicorn
+
