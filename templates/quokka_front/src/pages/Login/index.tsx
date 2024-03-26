@@ -22,7 +22,7 @@ import { api } from "../../services/api";
         .required('Este é um campo obrigatório!'),
         password: yup
         .string()
-        .min(8, 'A senha deve ter no mínimo 8 caracteres')
+        .min(2, 'A senha deve ter no mínimo 8 caracteres')
         .required('Este é um campo obrigatório!'),
     })
         
