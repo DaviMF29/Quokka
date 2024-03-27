@@ -1,11 +1,11 @@
 from flask import Flask
-from flaskjwtextended import JWTManager
-from routes.userroutes import usersapp
+from flask_jwt_extended import JWTManager
+from routes.user_routes import users_app
 import os
 from pymongo import MongoClient
-from flaskcors import CORS
+from flask_cors import CORS
 
-app = Flask(_name)
+app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 jwt = JWTManager(app)
 
@@ -17,5 +17,5 @@ db = client.get_database(os.getenv("MONGODB_DBNAME"))
 
 app.register_blueprint(users_app)
 
-if __name == "__main":
+if __name__ == "__main":
     app.run()
