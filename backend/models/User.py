@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 from bson import ObjectId
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client = MongoClient(os.getenv("MONGODB_URI"))
 db = client.get_database(os.getenv("MONGODB_DBNAME"))
@@ -56,5 +59,3 @@ class User:
         users_collection = db.users
         result = users_collection.find_one_and_delete({"_id": ObjectId(user_id)})
         return result
-
-
