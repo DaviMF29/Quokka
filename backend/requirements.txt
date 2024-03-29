@@ -6,6 +6,6 @@ bcrypt
 PyJWT
 flask_jwt_extended
 datetime
+gunicorn==20.1.0
 Flask-CORS
-waitress
 
