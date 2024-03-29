@@ -10,7 +10,7 @@ app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
 jwt = JWTManager(app)
 
 
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 client = MongoClient(os.getenv("MONGODB_URI"))
 db = client.get_database(os.getenv("MONGODB_DBNAME"))
