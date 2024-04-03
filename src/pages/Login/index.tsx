@@ -38,7 +38,6 @@ export function Login(){
     })
 
     async function loginUser(data:LoginUserFormData) {
-        console.log(data)
         await auth.authenticate(data.email,data.password)
         history('/home')
     }

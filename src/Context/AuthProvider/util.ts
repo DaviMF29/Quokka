@@ -17,10 +17,10 @@ export function getUserLocalStorage() {
     return user
 }
 
-export async function LoginRequest(username: string, password: string){
+export async function LoginRequest(email: string, password: string){
     try{
 
-        const request = await api.post('/api/login', {username, password})
+        const request = await api.post('/api/login', {email, password})
 
     
         return request.data
