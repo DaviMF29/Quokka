@@ -5,20 +5,20 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "@radix-ui/themes";
 import { NewRegisterModal } from "../../components/NewRegisterModal";
-import { useFormik } from "formik";
-import * as yup from 'yup'
+import * as z from 'zod';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
-    const validationLogin = yup.object().shape({
-        email: yup
-        .string()
-        .email('Não é um email válido!')
-        .required('Este é um campo obrigatório!'),
-        password: yup
-        .string()
-        .min(2, 'A senha deve ter no mínimo 8 caracteres')
-        .required('Este é um campo obrigatório!'),
+    
+
+    const loginUserFormSchema = z.object({
+        email: z.string().email('Formato de email inválido!').nonempty('Campo obrigatório!').toLowerCase(),
+        password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres').nonempty(),
+        
     })
+
+    type LoginUserFormData = z.infer<typeof loginUserFormSchema>
 
 export function Login(){
 
@@ -28,22 +28,21 @@ export function Login(){
     const auth = useAuth()
     const history = useNavigate()
 
-
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: '',
-        },
-        validationSchema: validationLogin,
-        
-        onSubmit: async (data) => {
-            console.log(data)
-            await auth.authenticate(data.email, data.password)
-            history('/home')
-        }
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+        reset,
+    } = useForm<LoginUserFormData>({
+        resolver: zodResolver(loginUserFormSchema)
     })
 
-
+    async function loginUser(data:LoginUserFormData) {
+        console.log(data)
+        await auth.authenticate(data.email,data.password)
+        history('/home')
+        return data
+    }
 
 
     return(
@@ -54,27 +53,24 @@ export function Login(){
                 <img src={text} alt="" />
             </LogoTitleContainer>
             <FormContainer 
-                onSubmit={formik.handleSubmit}
-                validationSchema={validationLogin}
+                onSubmit={handleSubmit(loginUser)}
             >
                 <input 
                     id="email"
-                    name="email"
                     type="text" 
                     placeholder="Email"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
+                    {...register('email')}
+                    
                 />
 
                 
                 
                 <input 
                     id="password"
-                    name="password"
                     type="password"  
                     placeholder="Senha"
-                    onChange={formik.handleChange}
-                    value={formik.values.password}
+                    
+                    {...register('password')}
                 
                 />
 

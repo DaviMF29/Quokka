@@ -7,6 +7,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import { api } from "../../services/api";
 
 
+
 const createUserFormSchema = z.object({
     username: z.string().nonempty('Campo obrigatório!'),
     email: z.string().email('Formato de email inválido!').nonempty('Campo obrigatório!').toLowerCase(),
@@ -23,7 +24,7 @@ export function NewRegisterModal() {
         register, 
         handleSubmit, 
         formState: {errors},
-        reset
+        reset,
         } =  useForm<CreateUserFormData>({
         resolver: zodResolver(createUserFormSchema)
     })
@@ -38,20 +39,23 @@ export function NewRegisterModal() {
         
         try {
 
+            console.log(data)
             await api.post('/api/users', {
                 username,
                 email,
                 password
             })
 
-            
+            reset()
+      
             
         } catch (error) {
             console.error(error)
+            reset();
         }
         
 
-        reset()
+        
     }
 
    
