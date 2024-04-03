@@ -1,0 +1,6 @@
+.env
+txt.txt
+.venv/
+redesocial/
+__pycache__/
+rascunhos.txt
