@@ -13,12 +13,12 @@ def login(email, password):
         return {"message": "Invalid username or password"}, 401
     
 
-def create_user_controller(username, email, password):
+def create_user_controller(email,username, password):
     user = User.get_user_by_email_model(email)
     if user:
         return {"message": "User already created"}, 400
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(10))
     hashed_password_base64 = base64.b64encode(hashed_password).decode()
-    user_id = User.create_user_model(username, email, hashed_password_base64)
+    user_id = User.create_user_model(email,username, hashed_password_base64)
     return {"id": user_id, "message": f"User {username} created"}, 201
 

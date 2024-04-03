@@ -8,7 +8,7 @@ db = client.get_database(os.getenv("MONGODB_DBNAME"))
 class User:
 
     @staticmethod
-    def create_user_model(username, email, hashed_password_base64):
+    def create_user_model(email,username, hashed_password_base64):
         users_collection = db.users
         new_user = {
             "username": username,
