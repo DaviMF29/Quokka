@@ -41,7 +41,6 @@ export function Login(){
         console.log(data)
         await auth.authenticate(data.email,data.password)
         history('/home')
-        return data
     }
 
 
