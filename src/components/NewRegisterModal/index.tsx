@@ -40,12 +40,15 @@ export function NewRegisterModal() {
         try {
 
             console.log(data)
-            await api.post('/api/users', {
+            const request = await api.post('/api/users', {
                 username,
                 email,
                 password
             })
-
+            
+            if(request.status === 201) {
+                alert('Usuário cadastrado com sucesso!')
+            }
             reset()
       
             

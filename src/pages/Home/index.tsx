@@ -7,8 +7,8 @@ export function Home() {
 
     return(
         <>
-            <h1>Email: {user.email}</h1>
-            <h2>Token: {user.token}</h2>
+            <h1>Seja bem vindo: {user.email}</h1>
+            
 
 
             <button onClick={user.logout}>Logout</button>
