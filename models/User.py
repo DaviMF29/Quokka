@@ -3,7 +3,9 @@ from bson import ObjectId
 import os
 
 client = MongoClient(os.getenv("MONGODB_URI"))
-db = client.get_database(os.getenv("MONGODB_DBNAME"))
+db_name = "redesocial"
+db = client[db_name]
+
 
 class User:
 

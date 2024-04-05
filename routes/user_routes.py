@@ -26,6 +26,5 @@ def create_user_route():
     username = data["username"]
     email = data["email"]
     password = data["password"]
-
     response, status_code = create_user_controller(email, username, password)
     return jsonify(response), status_code
