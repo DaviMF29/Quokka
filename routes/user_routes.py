@@ -7,9 +7,7 @@ users_app = Blueprint("users_app", __name__)
 @users_app.route("/api/login", methods=["POST"])
 def login_route():
     data = request.get_json()
-    if "email" not in data or "password" not in data:
-        return jsonify({"message": "Missing email or password"}), 400
-
+   
     email = data["email"]
     password = data["password"]
 
@@ -19,10 +17,7 @@ def login_route():
 @users_app.route("/api/users", methods=["POST"])
 def create_user_route():
     data = request.get_json()
-    if not all(key in data for key in ["username", "email", "password"]):
-        return jsonify({"message": "Missing required fields"}), 400
-
-
+    
     username = data["username"]
     email = data["email"]
     password = data["password"]
