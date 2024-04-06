@@ -1,11 +1,12 @@
 import { useAuth } from "../../hooks/useAuth";
+import { LoginFailScreen } from "../LoginFailScreen";
 
 
 export function ProtectedLayout({ children } : {children: JSX.Element}){
     const auth = useAuth()
 
     if(!auth.email){
-        return <h1>You are not logged!</h1>
+        return <LoginFailScreen/>
     }
 
     return children
