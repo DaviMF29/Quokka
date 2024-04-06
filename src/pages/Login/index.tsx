@@ -1,4 +1,4 @@
-import { FormContainer, LoginContainer, LogoTitleContainer, RegisterButton, RegisterDiv, SubmitButton } from "./styles";
+import { FormContainer, LoginContainer, LogoImg, LogoTitleContainer, RegisterButton, RegisterDiv, SubmitButton, TextImg } from "./styles";
 import logo from '../../assets/urso branco 1.svg'
 import text from '../../assets/quokka 1.svg'
 import { useAuth } from "../../hooks/useAuth";
@@ -47,8 +47,8 @@ export function Login(){
         <LoginContainer>
 
             <LogoTitleContainer>
-                <img src={logo} alt="" />
-                <img src={text} alt="" />
+                <LogoImg src={logo} alt="" />
+                <TextImg src={text} alt="" />
             </LogoTitleContainer>
             <FormContainer 
                 onSubmit={handleSubmit(loginUser)}

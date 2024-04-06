@@ -9,6 +9,15 @@ export const LoginContainer = styled.div`
     justify-content: space-around;
     align-items: center;
     
+    @media(max-width: 1010px){
+        flex-direction: column; 
+        padding: 20px; 
+        text-align: center;
+        height: fit-content;
+        justify-content: center
+        
+    }
+    
     
 `
 
@@ -17,12 +26,22 @@ export const LogoTitleContainer = styled.div`
     flex-direction: column;
     justify-content: space-around;
 
-    img {
-        width: 500px;
-    }
 
 `
 
+export const LogoImg = styled.img`
+    width: 500px;
+    @media(max-width: 1010px){
+        display: none;
+    }
+`
+export const TextImg = styled.img`
+    width: 500px;
+    
+    @media(max-width: 1010px){
+        
+    }
+`
 export const FormContainer = styled.form`
     display: flex;
     flex-direction: column;
@@ -80,3 +99,4 @@ export const RegisterButton = styled.button`
     text-decoration: underline;
 
 `
+
