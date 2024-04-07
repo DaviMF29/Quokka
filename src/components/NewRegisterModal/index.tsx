@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { api } from "../../services/api";
+import axios from "axios";
 
 
 
@@ -40,20 +41,25 @@ export function NewRegisterModal() {
         try {
 
             console.log(data)
-            const request = await api.post('/api/users', {
+            const response = await api.post('/api/users', {
                 username,
                 email,
                 password
             })
             
-            if(request.status === 201) {
+            if(response.status === 201) {
                 alert('Usuário cadastrado com sucesso!')
             }
             reset()
       
             
         } catch (error) {
-            console.error(error)
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data.message === "User already created") {
+                  alert('Usuário já cadastrado!')
+                  return;
+                }
+              }
             reset();
         }
         
