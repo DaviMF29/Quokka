@@ -55,7 +55,7 @@ export function NewRegisterModal() {
             
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                if (error.response?.data.message === "User already created") {
+                if (error.response?.status === 400) {
                   alert('Usuário já cadastrado!')
                   return;
                 }
