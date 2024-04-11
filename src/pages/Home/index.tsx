@@ -1,5 +1,8 @@
 
+import { Header } from "../../components/Header"
+import { SideProfile } from "../../components/SideProfile"
 import { useAuth } from "../../hooks/useAuth"
+import { HomeContainer, Wrapper } from "./styles"
 
 
 export function Home() {
@@ -7,13 +10,17 @@ export function Home() {
     const user = useAuth()
 
     return(
-        <>
-            <h1>Seja bem vindo: {user.email}</h1>
+        <Wrapper>
+            <Header />
+            <HomeContainer>
+                <SideProfile/>
+                <button onClick={user.logout}>Logout</button>
+            </HomeContainer>
+        </Wrapper>
+        
+        
             
-
-
-            <button onClick={user.logout}>Logout</button>
-        </>
+        
         
     )
 }
