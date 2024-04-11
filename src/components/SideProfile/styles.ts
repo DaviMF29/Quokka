@@ -69,6 +69,21 @@ export const Profile = styled.div`
         line-height: 1.6;
     }
 
+    div{
+        display: flex;
+        gap: 1rem;
+
+        span { 
+            color: ${props => props.theme['gray-100']};
+            font-weight: bold;
+            border: 1px solid ${props => props.theme['blue-300']};
+            border-radius: 5px;
+            margin-top: 1rem;
+            padding: 0.2rem 0.5rem;
+            
+        }
+    }
+
 `
 
 export const Avatar = styled.img`

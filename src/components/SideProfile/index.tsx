@@ -11,6 +11,10 @@ export function SideProfile() {
                 src={profilePic}></Avatar>
                 <strong>Elias Medeiros</strong>
                 <span>Junior Developer</span>
+                <div>
+                    <span>Seguidores: 34</span>
+                    <span>Seguindo: 10</span>
+                </div>
             </Profile>
             <footer>
                 <ProfileButton>
