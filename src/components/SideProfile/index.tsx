@@ -2,8 +2,14 @@ import { Aside, Avatar, Cover, Profile, ProfileButton } from "./styles";
 import profilePic from '../../assets/profilepic.png'
 import { useAuth } from "../../hooks/useAuth";
 
+interface SideProfileProps {
+    username: string
+    email:string
+    followers: number
+    following: number
+}
 
-export function SideProfile() {
+export function SideProfile({username, email, followers, following}:SideProfileProps) {
 
     return(
         <Aside>
@@ -11,11 +17,11 @@ export function SideProfile() {
             <Profile>
                 <Avatar
                 src={profilePic}></Avatar>
-                <strong>username</strong>
-                <span>email</span>
+                <strong>{username}</strong>
+                <span>{email}</span>
                 <div>
-                    <span>Seguidores: followers</span>
-                    <span>Seguindo: following</span>
+                    <span>Seguidores: {followers}</span>
+                    <span>Seguindo: {following}</span>
                 </div>
             </Profile>
             <footer>

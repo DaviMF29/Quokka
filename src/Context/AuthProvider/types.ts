@@ -3,7 +3,7 @@ export interface IUser {
     id?: string;
     email?: string;
     username?: string;
-    token?: string;
+    access_token?: string;
 }
 
 export interface IContext extends IUser {
