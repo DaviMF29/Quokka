@@ -19,3 +19,26 @@ export const HomeContainer = styled.div`
     align-items: flex-start;
 
 `
+
+
+export const CreateNewPostDiv = styled.div`
+    position: absolute;
+    top: 90%;
+    right: 2%;
+`
+
+export const OpenCreateNewPostButton = styled.button`
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 999px;
+    background-color: ${props => props.theme['blue-300']};
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover{
+        background-color: ${props => props.theme['blue-400']};
+    }
+
+`

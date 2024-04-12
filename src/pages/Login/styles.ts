@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const LoginContainer = styled.div`
     width: 100vw;
     height: 100vh;
-    background-color: black;
+    background-color: ${props => props.theme['gray-800']};
     color: white;
     display: flex;
     justify-content: space-around;
@@ -25,6 +25,7 @@ export const LogoTitleContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    
 
 
 `
@@ -52,6 +53,8 @@ export const FormContainer = styled.form`
     background: ${props => props.theme['gray-900']};
     border-radius: 8px;
     border: 3px double ${props => props.theme['blue-300']};
+    box-shadow: -50px 50px 40px rgba(0, 0, 0, 0.5);
+    
     
 
     input {

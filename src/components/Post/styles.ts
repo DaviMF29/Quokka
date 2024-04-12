@@ -64,6 +64,51 @@ export const CommentForm = styled.form`
         color: ${props => props.theme['gray-100']};
     }
 
+    textarea {
+        width: 100%;
+        height: 5rem;
+        background: ${props => props.theme['gray-900']};
+        border: 0;
+        resize: none;
+        height: 6rem;
+        padding: 1rem;
+        border-radius: 8px;
+        color: ${props => props.theme['gray-100']};
+        line-height: 1.4;
+        margin-top:1rem;
+
+        &:focus {
+            outline: 1px solid ${props => props.theme['blue-300']};
+        }
+    }
+
 `
 
+export const CommentList = styled.div`
+    margin-top: 2rem;
+`
 
+export const CommentButton = styled.button`
+    padding: 1rem 1.5rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 0;
+    background: ${props => props.theme['blue-300']};
+    color: ${props => props.theme['white']};
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.1s;
+
+    &:not(:disabled):hover {
+        background: ${props => props.theme['blue-400']};
+    }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+
+
+
+`
