@@ -26,8 +26,8 @@ export function Home() {
            const userInfo = await user.getUserInfo(user.access_token)
            setUsername(userInfo.username)
            setEmail(userInfo.email)
-           setFollowers(userInfo.followers)
-           setFollowing(userInfo.following)
+           setFollowers(userInfo.followers.lenght)
+           setFollowing(userInfo.following.lenght)
         }
     }
 
