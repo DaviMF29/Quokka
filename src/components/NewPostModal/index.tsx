@@ -2,18 +2,40 @@ import * as  Dialog  from "@radix-ui/react-dialog";
 import { SubmitButton} from "../NewRegisterModal/styles";
 import { TextAreaPost, Title, Overlay, Content } from "./styles";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
 
 interface NewPostProps {
-    id: string
+    userId: string
+    username: string
     text: string
+    isCode: boolean
 
 }
 export function NewPostModal(){
 
     const {register, handleSubmit,reset} = useForm<NewPostProps>()
 
-    function handleCreateNewPost(data:NewPostProps){
-        console.log(data)
+    const [token, setToken] = useState<string>('')
+
+    //const [posts, setPosts] = useState<NewPostProps[]>([])
+
+    const user = useAuth()
+
+    useEffect(() => {
+        const storedAccessToken = localStorage.getItem('u')
+        if(storedAccessToken){
+            setToken(storedAccessToken)
+        }
+    },[])
+
+    
+
+    async function handleCreateNewPost(data:NewPostProps){
+        const jsonObject = JSON.parse(token)
+        const accessToken = jsonObject.access_token
+        const userInfo = await user.getUserInfo(accessToken)
+        console.log(userInfo._id, data)
         reset()
     }
 

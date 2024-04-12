@@ -1,5 +1,6 @@
 
 export interface IUser {
+    id?: string;
     email?: string;
     username?: string;
     token?: string;
@@ -8,6 +9,7 @@ export interface IUser {
 export interface IContext extends IUser {
     authenticate: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    getUserInfo: (token:string) => Promise<any>;
 
 }
 

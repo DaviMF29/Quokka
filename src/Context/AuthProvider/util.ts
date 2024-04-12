@@ -13,7 +13,7 @@ export function getUserLocalStorage() {
     }
 
     const user = JSON.parse(json)
-
+    
     return user
 }
 

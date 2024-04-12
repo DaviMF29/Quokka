@@ -9,22 +9,29 @@ export const Overlay = styled(Dialog.Overlay)`
     inset: 0;
     background: rgba(0,0,0,0.9);
     
+    
 `
 
 export const Content = styled(Dialog.Content)`
-    min-width: 32rem;
+    min-width: 50rem;
     border-radius: 6px;
     padding: 2.5rem 3rem;
     background: ${props => props.theme['gray-900']};
     position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+    gap: 3rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
     border: 1px solid ${props => props.theme['blue-400']};
+
+    form{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
 
    
     

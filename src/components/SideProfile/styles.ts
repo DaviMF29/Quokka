@@ -72,6 +72,7 @@ export const Profile = styled.div`
     div{
         display: flex;
         gap: 1rem;
+        margin: 8px;
 
         span { 
             color: ${props => props.theme['gray-100']};

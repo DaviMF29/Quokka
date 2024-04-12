@@ -1,10 +1,11 @@
 import { Avatar } from "../SideProfile/styles";
 import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, PostContainer, PostContent } from "./styles";
 import authorImg from '../../assets/profilepic.png'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth";
 
 
 const createCommentFormSchema = z.object({
@@ -15,10 +16,6 @@ type CreateCommentFormData = z.infer<typeof createCommentFormSchema>
 
 
 export function Post() {
-
-    
-
-    
 
     
 

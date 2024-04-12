@@ -10,8 +10,7 @@ import { Plus } from "phosphor-react"
 
 
 export function Home() {
-
-    const user = useAuth()
+    
 
     return(
         <Wrapper>
