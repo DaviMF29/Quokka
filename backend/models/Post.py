@@ -13,12 +13,13 @@ db = client[db_name]
 class Post:
 
     @staticmethod
-    def create_post_model(userId, username, text, isCode=False, language = None, previousPostId = None):
+    def create_post_model(userId, username, text,createdAt, isCode=False, language = None, previousPostId = None):
         posts_collection = db.posts
         new_post = {
             "userId": userId,
             "username": username,
             "text": text,
+            "createdAt": createdAt,
             "likes": 0,
             "comments": [],
             "isCode": isCode,

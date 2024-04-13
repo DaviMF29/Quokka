@@ -4,8 +4,8 @@ from middleware.global_middleware import (
     verify_post, verify_change_in_text, verify_post_is_a_comment)
 
 
-def create_post_controller(userId, username, text, isCode=False, language=None,previousPostId = None):
-    post_id = Post.create_post_model(userId, username, text, isCode, language, previousPostId)
+def create_post_controller(userId, username, text,createdAt, isCode=False, language=None,previousPostId = None):
+    post_id = Post.create_post_model(userId, username, text,createdAt, isCode, language, previousPostId)
     return post_id
 
 def get_all_posts_controller():
@@ -44,20 +44,20 @@ def add_like_to_post_controller(postId):
     Post.update_post_by_id_model(postId, updated_fields)
     return {"message": "Like added successfully"}, 200
 
-def add_comment_to_post_controller(previousPostId, userId, username, text, isCode=False, language=None):
+def add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode=False, language=None):
     post = verify_post(previousPostId)
     if not post:
         return {"message": "Post not found"}, 404
 
     if 'comments' not in post:
         post['comments'] = []
-
-    _id = create_post_controller(userId, username, text, isCode=isCode, language=language, previousPostId=previousPostId)
+    _id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language, previousPostId=previousPostId)
     new_comment = {
         "_id": _id,
         "userId": userId,
         "username": username,
         "text": text,
+        "createdAt": createdAt,
         "likes": 0,
         "previousPost": previousPostId
     }

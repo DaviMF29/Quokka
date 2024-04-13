@@ -17,7 +17,8 @@ post_app = Blueprint("post_app", __name__)
 
 @post_app.route("/api/posts")
 def get_posts():
-    return get_all_posts_controller()
+    posts = get_all_posts_controller()
+    return jsonify(posts), 200
 
 @post_app.route("/api/posts/<postId>")
 def get_post_by_id(postId):
@@ -52,6 +53,7 @@ def create_post_route():
     username = data["username"]
     userId = data["userId"]
     text = data["text"]
+    createdAt = data["createdAt"]
     isCode = data.get("isCode", False)
 
     if not all([username, userId, text]):
@@ -67,7 +69,7 @@ def create_post_route():
     except:
         return jsonify({"message": "User not exist"}), 400
 
-    post_id = create_post_controller(userId, username, text, isCode=isCode, language=language)
+    post_id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language)
     return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
 
 
