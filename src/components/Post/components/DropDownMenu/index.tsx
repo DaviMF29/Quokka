@@ -17,6 +17,7 @@ interface DropDownPostProps {
     currentUserId: string
     text: string
     deleteFunction: (postId:string, userId:string) => void
+    setPostState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const editPostFormSchema = z.object({
@@ -25,7 +26,7 @@ const editPostFormSchema = z.object({
 
 type EditPostFormData = z.infer<typeof editPostFormSchema>
 
-export function DropDownPost({deleteFunction, _id, currentUserId, text}:DropDownPostProps) {
+export function DropDownPost({setPostState,deleteFunction, _id, currentUserId, text}:DropDownPostProps) {
 
     const [show, setShow] = useState(false);
 
@@ -47,6 +48,7 @@ export function DropDownPost({deleteFunction, _id, currentUserId, text}:DropDown
             await api.put(url,{
                 text: data.text
             })
+            setPostState(false)
             
         }
         else{
@@ -61,13 +63,13 @@ export function DropDownPost({deleteFunction, _id, currentUserId, text}:DropDown
             </HamburguerButton>
 
             <DropdownMenu>
-            <DropdownItem href="#/action-2">
+            <DropdownItem >
                     <EditChoice onClick={handleShow} title='Deletar post'>
                             <PencilSimple size={20}/>
                             <span>Editar</span>
                     </EditChoice>
                 </DropdownItem>
-                <DropdownItem href="#/action-2">
+                <DropdownItem >
                     <DeleteButton onClick={deletePost} title='Deletar post'>
                             <Trash size={20}/>
                             <span>Excluir</span>

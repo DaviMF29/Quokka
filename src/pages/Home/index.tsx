@@ -25,8 +25,10 @@ export function Home() {
     const [following, setFollowing] = useState<number>(0)
 
     const [posts, setPosts] = useState<PostProps[]>([])
+    const [postsLoaded, setPostsLoaded] = useState(false);
     
-
+    
+    
 
     async function callUserInformations() {
         if(user.access_token){
@@ -47,9 +49,17 @@ export function Home() {
     }
 
     useEffect(() => {
-        callPostList(),
         callUserInformations()
     }, [])
+
+   
+
+    useEffect(() => {
+        if (!postsLoaded) {
+            callPostList();
+            setPostsLoaded(true);
+            }
+    }, [postsLoaded]);
 
     
         
@@ -67,7 +77,7 @@ export function Home() {
                 })
 
                 alert('Post deletado!')
-                navigate('/home')
+                setPostsLoaded(false)
 
             }
         }
@@ -101,6 +111,7 @@ export function Home() {
                                 text={posts.text}   
                                 _id={posts._id}
                                 deletePostFunction={handleDeletePost}
+                                setPostState={setPostsLoaded}
                                 currentUserId={userId}
                             />
 
@@ -114,7 +125,11 @@ export function Home() {
                     <Dialog.Trigger>
                         <OpenCreateNewPostButton><Plus size={20}/></OpenCreateNewPostButton>
                     </Dialog.Trigger>
-                    <NewPostModal />
+                    <NewPostModal 
+                        userId={userId}
+                        username={username}
+                        setPostState={setPostsLoaded}
+                    />
                 </Dialog.Root>
             </CreateNewPostDiv>
         </Wrapper>

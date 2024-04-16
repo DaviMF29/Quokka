@@ -28,13 +28,14 @@ export interface PostProps {
     isCode?: boolean
     currentUserId: string
     deletePostFunction: (postId:string, userId:string) => void
+    setPostState: React.Dispatch<React.SetStateAction<boolean>>;
     
 
 }
 
 export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, setPostState}:PostProps) {
 
     
 
@@ -82,6 +83,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                                  _id={_id} 
                                  currentUserId={currentUserId} 
                                  deleteFunction={handleDeletePost}
+                                 setPostState={setPostState}
                                  text={text}
                                  />
                 }

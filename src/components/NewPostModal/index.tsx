@@ -10,46 +10,35 @@ import { api } from "../../services/api";
 interface NewPostProps {
     userId: string
     username: string
-    text: string
-    isCode: boolean
+    text?: string
+    isCode?: boolean
+    setPostState: React.Dispatch<React.SetStateAction<boolean>>;
 
 }
-export function NewPostModal(){
+export function NewPostModal({userId, username, setPostState}:NewPostProps){
 
     const {register, handleSubmit,reset} = useForm<NewPostProps>()
-
-    //const [posts, setPosts] = useState<NewPostProps[]>([])
-
-    const user = useAuth()
-
-    const [username, setUsername] = useState<string>('')
-    const [userId,setUserId] = useState<string>('')
     
-
-    
-
-    async function handleCreateNewPost(data:NewPostProps){
-        if(user.access_token){
-            const accessToken = user.access_token
-            const userInfo = await user.getUserInfo(accessToken)
-            setUsername(userInfo.username)
-            setUserId(userInfo._id)
-            const text = data.text
-            
-
-            await api.post("/api/posts",{
-                text,
-                username,
-                userId,
-                createdAt: new Date(),
-            })
-            reset()
-           
-            
-            
-        }
+    async function handleCreateNewPost(data: NewPostProps) {
         
     
+            const text = data.text;
+            
+            setTimeout(async () => {
+                try {
+                    await api.post("/api/posts", {
+                        text,
+                        username,
+                        userId,
+                        createdAt: new Date(),
+                    });
+                    setPostState(false)
+                    reset();
+                } catch (error) {
+                    console.error('Erro ao criar novo post:', error);
+                }
+            }, 1000);
+        
     }
 
 
