@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import { Trash, User } from "phosphor-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { DropDownPost } from "./components/DropDownMenu";
 
 
 
@@ -25,12 +28,13 @@ export interface PostProps {
     isCode?: boolean
     currentUserId: string
     deletePostFunction: (postId:string, userId:string) => void
+    editPostFunction: (postId:string, userId:string, newText?:string) => void
 
 }
 
 export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
 
-export function Post({ _id,username, userId, text, createdAt, deletePostFunction, currentUserId}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, editPostFunction }:PostProps) {
 
     
 
@@ -49,8 +53,14 @@ export function Post({ _id,username, userId, text, createdAt, deletePostFunction
     function handleDeletePost(){
         deletePostFunction(_id, currentUserId)
     }
+
+    function handleEditPost(){
+        editPostFunction(_id, currentUserId)
+    }
     
     const isAuthor = currentUserId === userId
+
+
     
     
     return(
@@ -68,13 +78,16 @@ export function Post({ _id,username, userId, text, createdAt, deletePostFunction
 
                 </Author>
                 
-                <time>
-                    {createdAt}
-                </time>
+                
 
-                { isAuthor && <DeleteButton onClick={handleDeletePost} title='Deletar post'>
-                            <Trash size={20}/>
-                </DeleteButton>}
+                { isAuthor && <DropDownPost
+                                 _id={_id} 
+                                 currentUserId={currentUserId} 
+                                 deleteFunction={handleDeletePost}
+                                 editFunction={handleEditPost}
+                                 text={text}
+                                 />
+                }
 
 
                 

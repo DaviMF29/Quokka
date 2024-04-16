@@ -122,10 +122,13 @@ export const CommentButton = styled.button`
 export const DeleteButton = styled.button`
     background: transparent;
     border: 0;
-    color: ${props => props.theme['gray-400']};
+    color: ${props => props.theme['red-300']};
     cursor: pointer;
     border-radius: 2px;
     transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
     &:hover{
         color: ${props => props.theme['red-500']};

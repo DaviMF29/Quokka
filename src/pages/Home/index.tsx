@@ -9,12 +9,14 @@ import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
+import { useNavigate } from "react-router-dom"
 
 
 
 export function Home() {
     
     const user = useAuth()
+    const navigate = useNavigate()
 
     const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')
@@ -60,12 +62,35 @@ export function Home() {
 
             if(post.userId === userId){
                 const url = `/api/posts/${postId}`
-                api.delete(url, {
+                await api.delete(url, {
                     data: {userId}
                 })
+
+                alert('Post deletado!')
+                navigate('/home')
+
             }
         }
+    }
 
+
+    async function handleEditPost(postId:string, userId:string, newText?:string) {
+        const postIndex = posts.findIndex(post => post._id == postId)
+
+        if(postIndex !== -1){
+            const post = posts[postIndex]
+
+            if(post.userId === userId){
+                const url = `/api/posts/${postId}`
+                await api.put(url, {
+                    data: {newText}
+                })
+
+                alert('Post Editado!')
+                navigate('/home')
+
+            }
+        }
 
     }
     
@@ -94,6 +119,7 @@ export function Home() {
                                 text={posts.text}   
                                 _id={posts._id}
                                 deletePostFunction={handleDeletePost}
+                                editPostFunction={handleEditPost}
                                 currentUserId={userId}
                             />
 

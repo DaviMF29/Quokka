@@ -40,7 +40,7 @@ export function NewRegisterModal() {
         
         try {
 
-            console.log(data)
+            
             const response = await api.post('/api/users', {
                 username,
                 email,
