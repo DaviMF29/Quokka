@@ -74,25 +74,7 @@ export function Home() {
     }
 
 
-    async function handleEditPost(postId:string, userId:string, newText?:string) {
-        const postIndex = posts.findIndex(post => post._id == postId)
-
-        if(postIndex !== -1){
-            const post = posts[postIndex]
-
-            if(post.userId === userId){
-                const url = `/api/posts/${postId}`
-                await api.put(url, {
-                    data: {newText}
-                })
-
-                alert('Post Editado!')
-                navigate('/home')
-
-            }
-        }
-
-    }
+    
     
     
 
@@ -119,7 +101,6 @@ export function Home() {
                                 text={posts.text}   
                                 _id={posts._id}
                                 deletePostFunction={handleDeletePost}
-                                editPostFunction={handleEditPost}
                                 currentUserId={userId}
                             />
 

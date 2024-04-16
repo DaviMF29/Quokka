@@ -68,7 +68,7 @@ export const OffCanvasBody = styled(OffCanvas.Body)`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    justify-content: space-around;
+    justify-content: initial;
     align-items: center;
     
 
@@ -76,16 +76,14 @@ export const OffCanvasBody = styled(OffCanvas.Body)`
 
 
 
-export const PreviousPost = styled.div`
-    border: 1px solid ${props => props.theme['blue-300']};
-    border-radius: 6px;
-    padding: 1rem;
-    width: 100%;
-    height: 55vh;
-    color: white;
+export const PreviousPost = styled.form`
+    margin-top: 5rem;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    width: 100%;
     align-items: center;
+    justify-content: center;
 
     textarea{
         resize: none;
@@ -99,7 +97,24 @@ export const PreviousPost = styled.div`
 
 export const EditButton = styled(Button)`
 
-    width: 50%;
+    margin-top: 8rem;
+    width: 70%;
+    height: 3rem;
+
+
+`
+
+export const PreviousPostContent = styled.div`
+    border: 1px solid ${props => props.theme['blue-300']};
+    border-radius: 6px;
+    padding: 1rem;
+    width: 100%;
+    height: 55vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 
 
 `

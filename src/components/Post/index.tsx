@@ -28,13 +28,13 @@ export interface PostProps {
     isCode?: boolean
     currentUserId: string
     deletePostFunction: (postId:string, userId:string) => void
-    editPostFunction: (postId:string, userId:string, newText?:string) => void
+    
 
 }
 
 export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, editPostFunction }:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction}:PostProps) {
 
     
 
@@ -54,9 +54,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
         deletePostFunction(_id, currentUserId)
     }
 
-    function handleEditPost(){
-        editPostFunction(_id, currentUserId)
-    }
+    
     
     const isAuthor = currentUserId === userId
 
@@ -84,7 +82,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                                  _id={_id} 
                                  currentUserId={currentUserId} 
                                  deleteFunction={handleDeletePost}
-                                 editFunction={handleEditPost}
                                  text={text}
                                  />
                 }

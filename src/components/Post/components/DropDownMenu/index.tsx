@@ -1,10 +1,14 @@
 import { DotsThree,  PencilSimple, Trash} from 'phosphor-react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { DropdownItem, DropdownMenu, HamburguerButton, OffCanvas, OffCanvasHeader, PreviousPost, EditChoice, EditButton, OffCanvasBody } from './styles';
+import { DropdownItem, DropdownMenu, HamburguerButton, OffCanvas, OffCanvasHeader, PreviousPost, EditChoice, EditButton, OffCanvasBody, PreviousPostContent } from './styles';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { DeleteButton } from '../../styles';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from '../../../../services/api';
 
 
 
@@ -13,21 +17,41 @@ interface DropDownPostProps {
     currentUserId: string
     text: string
     deleteFunction: (postId:string, userId:string) => void
-    editFunction: (postId:string, userId:string, text:string) => void
 }
-export function DropDownPost({deleteFunction, editFunction, _id, currentUserId, text}:DropDownPostProps) {
+
+const editPostFormSchema = z.object({
+    text: z.string(),
+})
+
+type EditPostFormData = z.infer<typeof editPostFormSchema>
+
+export function DropDownPost({deleteFunction, _id, currentUserId, text}:DropDownPostProps) {
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const {register, handleSubmit, reset} = useForm<EditPostFormData>({
+        resolver: zodResolver(editPostFormSchema)
+    })
+
     function deletePost(){
         deleteFunction(_id, currentUserId)
     }
 
-    function editPost(){
-        editFunction(_id,currentUserId, text)
+    async function editPost(data:EditPostFormData){
+        const url = `/api/posts/${_id}`
+        
+        if(data.text !== text){
+            await api.put(url,{
+                text: data.text
+            })
+            
+        }
+        else{
+            alert('Texto não modificado!')
+        }
     }
   return (
     <>
@@ -59,12 +83,19 @@ export function DropDownPost({deleteFunction, editFunction, _id, currentUserId, 
         </OffCanvasHeader>
         <OffCanvasBody>
 
-          <PreviousPost>
-            <h3>Post Anterior</h3>
-            <textarea defaultValue={text}></textarea>
+          <PreviousPost onSubmit={handleSubmit(editPost)}>
+
+            <PreviousPostContent>
+                <h3>Post Anterior</h3>
+                <textarea 
+                    defaultValue={text}
+                    {...register('text')}
+                />
+            </PreviousPostContent>
             
+            <EditButton type='submit'>Editar</EditButton>
           </PreviousPost>
-          <EditButton onClick={editPost}>Editar</EditButton>
+          
 
 
           
