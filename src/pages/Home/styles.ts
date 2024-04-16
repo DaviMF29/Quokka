@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
     background: ${props => props.theme['gray-900']};
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     
 
 `
@@ -28,6 +29,9 @@ export const CreateNewPostDiv = styled.div`
 `
 
 export const OpenCreateNewPostButton = styled.button`
+    position: fixed;
+    top: 90%;
+    left: 94%;
     height: 3.5rem;
     width: 3.5rem;
     border-radius: 999px;
@@ -40,5 +44,11 @@ export const OpenCreateNewPostButton = styled.button`
     &:hover{
         background-color: ${props => props.theme['blue-400']};
     }
+
+`
+
+
+export const Posts = styled.div`
+    color: white;
 
 `

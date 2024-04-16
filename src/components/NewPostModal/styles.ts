@@ -10,6 +10,7 @@ export const Overlay = styled(Dialog.Overlay)`
     background: rgba(0,0,0,0.9);
     
     
+    
 `
 
 export const Content = styled(Dialog.Content)`

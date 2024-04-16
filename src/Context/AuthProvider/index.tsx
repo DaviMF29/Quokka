@@ -24,10 +24,6 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     }, [])
 
     
-    
-
-    
-
     async function authenticate(email: string, password: string) {
         const response = await LoginRequest(email, password)
 
@@ -50,10 +46,6 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         return response.data
     }
 
-    
-    
-
-    
 
     function logout(){
 
@@ -61,6 +53,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setUserLocalStorage(null)
 
     }
+
+
 
     return(
         <AuthContext.Provider value={{...user, authenticate, logout, getUserInfo}}>

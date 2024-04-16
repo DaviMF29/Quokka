@@ -4,6 +4,7 @@ export const PostContainer = styled.article`
     background: ${props => props.theme['gray-800']};
     border-radius: 8px;
     padding: 2.5rem;
+    
 
     &+&{
         margin-top: 2rem;
@@ -18,6 +19,9 @@ export const PostContainer = styled.article`
     & > header time {
         font-size: 0.875rem;
         color: ${props => props.theme['gray-400']};
+    }
+    &:last-child{
+        margin-bottom: 2rem
     }
 
 `
@@ -50,6 +54,8 @@ export const PostContent = styled.div`
     line-height: 1.6;
     color: ${props => props.theme['gray-300']};
     margin-top: 1.5rem;
+
+    
 
 `
 
@@ -109,6 +115,21 @@ export const CommentButton = styled.button`
     }
 
 
+
+
+`
+
+export const DeleteButton = styled.button`
+    background: transparent;
+    border: 0;
+    color: ${props => props.theme['gray-400']};
+    cursor: pointer;
+    border-radius: 2px;
+    transition: 0.3s;
+
+    &:hover{
+        color: ${props => props.theme['red-500']};
+    }
 
 
 `

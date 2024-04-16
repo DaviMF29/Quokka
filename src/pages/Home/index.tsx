@@ -1,13 +1,14 @@
 
 import { Dialog } from "@radix-ui/themes"
 import { Header } from "../../components/Header"
-import { Post } from "../../components/Post"
+import { Post, PostProps } from "../../components/Post"
 import { SideProfile } from "../../components/SideProfile"
 import { useAuth } from "../../hooks/useAuth"
-import { CreateNewPostDiv, HomeContainer, OpenCreateNewPostButton, Wrapper } from "./styles"
+import { CreateNewPostDiv, HomeContainer, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
 import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
+import { api } from "../../services/api"
 
 
 export function Home() {
@@ -16,27 +17,55 @@ export function Home() {
 
     const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')
+    const [userId, setUserId] = useState<string>('')
     const [followers, setFollowers] = useState<number>(0)
     const [following, setFollowing] = useState<number>(0)
+
+    const [posts, setPosts] = useState<PostProps[]>([])
     
 
 
     async function callUserInformations() {
         if(user.access_token){
            const userInfo = await user.getUserInfo(user.access_token)
+           setUserId(userInfo._id)
            setUsername(userInfo.username)
            setEmail(userInfo.email)
            setFollowers(userInfo.followers.lenght)
            setFollowing(userInfo.following.lenght)
+           
+           
         }
     }
 
+    async function callPostList(){
+        const postList = await api.get('api/posts')
+        setPosts(postList.data)
+    }
+
     useEffect(() => {
+        callPostList(),
         callUserInformations()
     }, [])
-        
+
     
-   
+        
+
+    function handleDeletePost(postId:string, userId:string){
+        const postIndex = posts.findIndex(post => post._id == postId)
+
+        if(postIndex !== -1){
+            const post = posts[postIndex]
+
+            if(post.userId === userId){
+                posts.splice(postIndex, 1)
+            }
+        }
+
+
+    }
+    
+    console.log(userId)
 
     return(
         <Wrapper>
@@ -48,8 +77,26 @@ export function Home() {
                     followers={followers}
                     following={following}
                 />
-                <Post>
-                </Post>
+
+                <Posts>
+                    {posts.map(posts => {
+                        return(
+                                                    
+                            <Post 
+                                key={posts._id}
+                                username={posts.username}
+                                userId={posts.userId}
+                                createdAt={posts.createdAt}
+                                text={posts.text}   
+                                _id={posts._id}
+                                deletePostFunction={handleDeletePost}
+                                currentUserId={userId}
+                            />
+
+                         )
+                    })}
+                </Posts>
+                
             </HomeContainer>
             <CreateNewPostDiv>  
                 <Dialog.Root>

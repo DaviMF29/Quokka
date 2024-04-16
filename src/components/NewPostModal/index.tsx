@@ -35,11 +35,13 @@ export function NewPostModal(){
             setUsername(userInfo.username)
             setUserId(userInfo._id)
             const text = data.text
+            console.log(userId, username)
 
             await api.post("/api/posts",{
                 text,
                 username,
                 userId,
+                createdAt: new Date(),
                 isCode:false,
             })
             reset()

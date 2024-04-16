@@ -1,25 +1,40 @@
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, PostContainer, PostContent } from "./styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, DeleteButton, PostContainer, PostContent } from "./styles";
 import authorImg from '../../assets/profilepic.png'
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
+import { Trash, User } from "phosphor-react";
 
 
-const createCommentFormSchema = z.object({
+
+/*const createCommentFormSchema = z.object({
     content: z.string().nonempty('Campo obrigatório!'),
 })
 
-type CreateCommentFormData = z.infer<typeof createCommentFormSchema>
+type CreateCommentFormData = z.infer<typeof createCommentFormSchema>*/
 
+export interface PostProps {
+    _id: string
+    username: string
+    userId: string
+    text: string
+    createdAt: string
+    isCode?: boolean
+    currentUserId: string
+    deletePostFunction: (postId:string, userId:string) => void
 
-export function Post() {
+}
+
+export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
+
+export function Post({ _id,username, userId, text, createdAt, deletePostFunction, currentUserId}:PostProps) {
 
     
 
-    const {
+    /*const {
         register, 
         handleSubmit, 
         formState: {errors},
@@ -29,26 +44,37 @@ export function Post() {
         resolver: zodResolver(createCommentFormSchema)
     })
 
-    ///const commentFieldChange = watch('content')
-
+    const commentFieldChange = watch('content')*/
     
+    function handleDeletePost(){
+        deletePostFunction(_id, currentUserId)
+    }
+    
+    const isAuthor = currentUserId === userId
     
     
     return(
         <PostContainer>
             <header>
                 <Author>
-                   <Avatar src={authorImg}/> 
+                   <Avatar
+                   src="#">
+                        
+                    </Avatar> 
                    <AuthorInfo>
-                        <strong>Elias Medeiros</strong>
-                        <span>Junior Developer</span>
+                        <strong>{username}</strong>
+                        <span>{userId}</span>
                    </AuthorInfo>
 
                 </Author>
-
+                
                 <time>
-                    Just now
+                    {createdAt}
                 </time>
+
+                { isAuthor && <DeleteButton onClick={handleDeletePost} title='Deletar post'>
+                            <Trash size={20}/>
+                </DeleteButton>}
 
 
                 
@@ -57,7 +83,7 @@ export function Post() {
 
             
             <PostContent>
-                Aqui ficará o conteúdo do post || Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quisquam tempore ullam nihil. Distinctio nisi possimus veniam est, tempore praesentium voluptatum eaque saepe sed quam omnis commodi debitis! Vero, id eos.
+                {text}
             </PostContent>
 
             {/*<CommentForm onSubmit={handleSubmit(addNewComment)}>
