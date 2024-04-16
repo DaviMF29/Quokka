@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import { api } from "../../services/api"
 
 
+
 export function Home() {
     
     const user = useAuth()
@@ -51,21 +52,24 @@ export function Home() {
     
         
 
-    function handleDeletePost(postId:string, userId:string){
+    async function handleDeletePost(postId:string, userId:string){
         const postIndex = posts.findIndex(post => post._id == postId)
 
         if(postIndex !== -1){
             const post = posts[postIndex]
 
             if(post.userId === userId){
-                posts.splice(postIndex, 1)
+                const url = `/api/posts/${postId}`
+                api.delete(url, {
+                    data: {userId}
+                })
             }
         }
 
 
     }
     
-    console.log(userId)
+    
 
     return(
         <Wrapper>

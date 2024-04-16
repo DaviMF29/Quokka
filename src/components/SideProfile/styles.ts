@@ -4,6 +4,7 @@ export const Aside = styled.aside`
     background: ${props => props.theme['gray-800']};
     border-radius: 8px;
     overflow: hidden;
+    
 
     
 
