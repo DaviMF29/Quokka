@@ -24,7 +24,7 @@ export const Content = styled(Dialog.Content)`
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    border: 1px solid ${props => props.theme['blue-400']};
+    border: 1px solid ${props => props.theme['blue-300']};
 
    
     
@@ -51,6 +51,9 @@ export const CloseButton = styled(Dialog.Close)`
 export const SubmitButton = styled.button`
     
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 90%;
     height: 15%;
     padding: 1rem;
@@ -75,9 +78,10 @@ export const RegisterFormContainer = styled.form`
     height: 30rem;
     margin-top: 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     flex-direction: column;
     align-items: center;
+    
     
 
 `

@@ -91,6 +91,11 @@ export const SubmitButton = styled.button`
 export const RegisterDiv = styled.div`
     display: flex;
     gap: 1rem;
+
+    P{
+        margin: 0;
+    }
+    
 `
 
 export const RegisterButton = styled.button`

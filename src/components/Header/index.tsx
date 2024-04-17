@@ -14,7 +14,7 @@ export function Header() {
     }
     return(
         <HeaderContainer>
-            <Logo src={quokkaLogo} alt="" />
+            <a href='/home'><Logo src={quokkaLogo} alt="" /></a>
             <strong>Quokka</strong>
             <button onClick={userLogout}>Sair</button>
         </HeaderContainer>

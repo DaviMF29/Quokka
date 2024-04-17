@@ -10,6 +10,7 @@ import { Trash, User } from "phosphor-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DropDownPost } from "./components/DropDownMenu";
+import avatarImg2 from '../../assets/avatar_img2.avif'
 
 
 
@@ -67,7 +68,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
             <header>
                 <Author>
                    <Avatar
-                   src="#">
+                   src={avatarImg2}>
                         
                     </Avatar> 
                    <AuthorInfo>

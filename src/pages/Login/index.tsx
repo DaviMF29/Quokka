@@ -75,7 +75,7 @@ export function Login(){
                 <SubmitButton type="submit" >Entrar</SubmitButton>
 
                     <RegisterDiv>
-                        <p>Ainda não tem conta?</p>  
+                        <span>Ainda não tem conta?</span>
                         <Dialog.Root>
                                 <Dialog.Trigger>
                                     <RegisterButton>Registrar</RegisterButton>
