@@ -11,6 +11,8 @@ import { format, isValid, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";*/
 import { DropDownPost } from "./components/DropDownMenu";
 import avatarImg2 from '../../assets/avatar_img2.avif'
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 
 
@@ -25,7 +27,7 @@ export interface PostProps {
     username: string
     userId: string
     text: string
-    createdAt: string
+    createdAt: Date
     isCode?: boolean
     currentUserId: string
     deletePostFunction: (postId:string, userId:string) => void
@@ -61,12 +63,21 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
     
     
     const isAuthor = currentUserId === userId
+    
+    const formattedDateTime = new Date(createdAt).toLocaleString('pt-BR', { timeZone: 'UTC' });
+    const publishedDateRelativeToNow = formatDistanceToNow(createdAt,{
+        locale:ptBR,
+        addSuffix: true
 
+    })
 
     
     
     return(
         <PostContainer>
+
+            
+            
             <header>
                 <Author>
                    <Avatar
@@ -75,14 +86,13 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                     </Avatar> 
                    <AuthorInfo>
                         <strong>{username}</strong>
-                        <span>{userId}</span>
+                        <time>
+                            {publishedDateRelativeToNow}
+                        </time>
                    </AuthorInfo>
 
                 </Author>
                 
-                
-                
-
                 { isAuthor && <DropDownPost
                                  _id={_id} 
                                  currentUserId={currentUserId} 
@@ -91,12 +101,16 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                                  text={text}
                                  />
                 }
+                
+                
+
+               
 
 
                 
                 
             </header>
-
+            
             
             <PostContent>
                 {text}

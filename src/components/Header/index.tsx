@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import quokkaLogo from '../../assets/urso branco 1.svg'
 import { useAuth } from '../../hooks/useAuth'
 import { HeaderContainer, Logo } from './styles'
+import {motion} from 'framer-motion'
 
 
 export function Header() {
@@ -13,7 +14,7 @@ export function Header() {
         history('/')
     }
     return(
-        <HeaderContainer>
+        <HeaderContainer >
             <a href='/home'><Logo src={quokkaLogo} alt="" /></a>
             <strong>Quokka</strong>
             <button onClick={userLogout}>Sair</button>

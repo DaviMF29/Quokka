@@ -82,8 +82,6 @@ export function Home() {
                     }
                 }
                 await api.delete(url, config)
-
-                alert('Post deletado!')
                 setPostsLoaded(false)
 
             }
