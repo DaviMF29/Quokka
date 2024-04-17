@@ -3,7 +3,7 @@ import { SubmitButton,CloseButton} from "../NewRegisterModal/styles";
 import { TextAreaPost, Title, Overlay, Content,  } from "./styles";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { X } from "phosphor-react";
 import { api } from "../../services/api";
 
@@ -12,31 +12,43 @@ interface NewPostProps {
     username: string
     text?: string
     isCode?: boolean
-    setPostState: React.Dispatch<React.SetStateAction<boolean>>;
+    setPostState: Dispatch<SetStateAction<boolean>>;
+    setOpenState: Dispatch<SetStateAction<boolean>>
 
 }
-export function NewPostModal({userId, username, setPostState}:NewPostProps){
+export function NewPostModal({userId, username, setPostState, setOpenState}:NewPostProps){
 
     const {register, handleSubmit,reset} = useForm<NewPostProps>()
     
+    const user = useAuth()
+
+    
     async function handleCreateNewPost(data: NewPostProps) {
         
-    
+            
             const text = data.text;
             
             setTimeout(async () => {
-                try {
-                    await api.post("/api/posts", {
-                        text,
-                        username,
-                        userId,
-                        createdAt: new Date(),
-                    });
-                    setPostState(false)
-                    reset();
-                } catch (error) {
-                    console.error('Erro ao criar novo post:', error);
-                }
+                
+                    try {
+                        await api.post("/api/posts", {
+                            text,
+                            username,
+                            userId,
+                            createdAt: new Date(),
+                            },
+                            {headers: {
+                                Authorization: `Bearer ${user.access_token}`
+                            }}
+                        );
+                        setPostState(false)
+                        setOpenState(false)
+                        reset();
+                            } catch (error) {
+                                console.error('Erro ao criar novo post:', error);
+                            }
+                
+                   
             }, 1000);
         
     }

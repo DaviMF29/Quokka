@@ -1,14 +1,14 @@
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, DeleteButton, PostContainer, PostContent } from "./styles";
-import authorImg from '../../assets/profilepic.png'
+import { Author, AuthorInfo, PostContainer, PostContent } from "./styles";
+/*import authorImg from '../../assets/profilepic.png'
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import { Trash, User } from "phosphor-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { format, isValid, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";*/
 import { DropDownPost } from "./components/DropDownMenu";
 import avatarImg2 from '../../assets/avatar_img2.avif'
 
@@ -34,12 +34,14 @@ export interface PostProps {
 
 }
 
-export const dateFormatter = new Intl.DateTimeFormat('pt-BR')
+
 
 export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, setPostState}:PostProps) {
 
     
-
+    
+    
+   
     /*const {
         register, 
         handleSubmit, 
@@ -77,6 +79,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                    </AuthorInfo>
 
                 </Author>
+                
                 
                 
 

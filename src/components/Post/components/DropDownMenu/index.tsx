@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from '../../../../services/api';
+import { useAuth } from '../../../../hooks/useAuth';
 
 
 
@@ -29,6 +30,7 @@ type EditPostFormData = z.infer<typeof editPostFormSchema>
 export function DropDownPost({setPostState,deleteFunction, _id, currentUserId, text}:DropDownPostProps) {
 
     const [show, setShow] = useState(false);
+    const user = useAuth()
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -47,8 +49,11 @@ export function DropDownPost({setPostState,deleteFunction, _id, currentUserId, t
         if(data.text !== text){
             await api.put(url,{
                 text: data.text
-            })
+            },{headers: {
+                Authorization: `Bearer ${user.access_token}`
+            }})
             setPostState(false)
+            setShow(false)
             
         }
         else{
@@ -88,7 +93,7 @@ export function DropDownPost({setPostState,deleteFunction, _id, currentUserId, t
           <PreviousPost onSubmit={handleSubmit(editPost)}>
 
             <PreviousPostContent>
-                <h3>Post Anterior</h3>
+                <h2>Post Anterior</h2>
                 <textarea 
                     defaultValue={text}
                     {...register('text')}

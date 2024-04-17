@@ -24,6 +24,8 @@ export function Home() {
     const [followers, setFollowers] = useState<number>(0)
     const [following, setFollowing] = useState<number>(0)
 
+    const [open, setOpen] = useState(false)
+
     const [posts, setPosts] = useState<PostProps[]>([])
     const [postsLoaded, setPostsLoaded] = useState(false);
     
@@ -45,7 +47,8 @@ export function Home() {
 
     async function callPostList(){
         const postList = await api.get('api/posts')
-        setPosts(postList.data)
+        setPosts(postList.data.reverse())
+        
     }
 
     useEffect(() => {
@@ -72,9 +75,13 @@ export function Home() {
 
             if(post.userId === userId){
                 const url = `/api/posts/${postId}`
-                await api.delete(url, {
-                    data: {userId}
-                })
+                const config = {
+                    data: {userId},
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`
+                    }
+                }
+                await api.delete(url, config)
 
                 alert('Post deletado!')
                 setPostsLoaded(false)
@@ -121,7 +128,7 @@ export function Home() {
                 
             </HomeContainer>
             <CreateNewPostDiv>  
-                <Dialog.Root>
+                <Dialog.Root open={open} onOpenChange={setOpen}>
                     <Dialog.Trigger>
                         <OpenCreateNewPostButton><Plus size={20}/></OpenCreateNewPostButton>
                     </Dialog.Trigger>
@@ -129,6 +136,7 @@ export function Home() {
                         userId={userId}
                         username={username}
                         setPostState={setPostsLoaded}
+                        setOpenState={setOpen}
                     />
                 </Dialog.Root>
             </CreateNewPostDiv>
