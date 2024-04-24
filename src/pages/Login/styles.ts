@@ -47,7 +47,7 @@ export const FormContainer = styled.form`
     display: flex;
     flex-direction: column;
     height: fit-content;
-    gap: 100px;
+    gap: 6rem;
     padding: 4rem 2.5rem;
     align-items: center;
     background: ${props => props.theme['gray-900']};
@@ -108,3 +108,14 @@ export const RegisterButton = styled.button`
 
 `
 
+export const FormError = styled.span`
+
+    color: ${props => props.theme['red-500']};
+    font-size: 12px;
+    margin-top: -5rem;
+    margin-bottom: -2rem;
+    
+    
+
+
+`

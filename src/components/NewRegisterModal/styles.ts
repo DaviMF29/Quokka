@@ -100,6 +100,7 @@ export const FormError = styled.span`
 
     color: ${props => props.theme['red-500']};
     font-size: 12px;
+    
 
 
 `

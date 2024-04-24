@@ -8,6 +8,7 @@ import { NewRegisterModal } from "../../components/NewRegisterModal";
 import * as z from 'zod';
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormError } from "../Login/styles";
 
 
     
@@ -39,7 +40,9 @@ export function Login(){
 
     async function loginUser(data:LoginUserFormData) {
         await auth.authenticate(data.email,data.password)
+        reset()
         history('/home')
+        
     }
 
 
@@ -59,7 +62,9 @@ export function Login(){
                     placeholder="Email"
                     {...register('email')}
                     
+                    
                 />
+                    {errors.email && <FormError>{errors.email.message}</FormError>}
 
                 
                 
@@ -69,8 +74,9 @@ export function Login(){
                     placeholder="Senha"
                     
                     {...register('password')}
-                
+                    
                 />
+                    {errors.password && <FormError>{errors.password.message}</FormError>}
 
                 <SubmitButton type="submit" >Entrar</SubmitButton>
 

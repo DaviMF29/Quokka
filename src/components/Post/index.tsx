@@ -64,7 +64,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
     
     const isAuthor = currentUserId === userId
     
-    const formattedDateTime = new Date(createdAt).toLocaleString('pt-BR', { timeZone: 'UTC' });
     const publishedDateRelativeToNow = formatDistanceToNow(createdAt,{
         locale:ptBR,
         addSuffix: true

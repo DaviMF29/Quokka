@@ -1,3 +1,4 @@
+import axios, { AxiosError } from "axios"
 import { api } from "../../services/api"
 import { IUser } from "./types"
 
@@ -26,6 +27,11 @@ export async function LoginRequest(email: string, password: string){
         return request.data
 
     }catch(error){
-        return null
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 401) {
+              alert('Email ou senha inválidos!')
+              return;
+            }
+          }
     }
 }
