@@ -9,14 +9,13 @@ import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
-import { useNavigate } from "react-router-dom"
+
 
 
 
 export function Home() {
     
     const user = useAuth()
-    const navigate = useNavigate()
 
     const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')

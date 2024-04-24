@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { api } from "../../services/api"
 import { IUser } from "./types"
 
