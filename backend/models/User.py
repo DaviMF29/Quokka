@@ -17,10 +17,21 @@ class User:
             "email": email,
             "password": hashed_password_base64,
             "following": [],
-            "followers":[]
+            "followers":[],
+            "favorites":[]
         }
         result = users_collection.insert_one(new_user)
         return str(result.inserted_id)
+
+    @staticmethod
+    def get_all_posts():
+        users_collection = db.users
+        users = users_collection.find()
+        serialized_posts = []
+        for user in users:
+            user["_id"] = str(user["_id"])
+            serialized_posts.append(user)
+        return serialized_posts
 
     @staticmethod
     def get_user_by_username_model(username):
@@ -57,5 +68,3 @@ class User:
         users_collection = db.users
         result = users_collection.find_one_and_delete({"_id": ObjectId(user_id)})
         return result
-
-
