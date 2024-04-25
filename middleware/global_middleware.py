@@ -51,6 +51,16 @@ def verify_post_is_from_user(postId, userId):
         return True
     abort(400, {"message": "This post does not belong to the user"})    
 
+def verify_change_in_user(user_id, field_name, new_value):
+    user = verify_user(user_id)
+    if field_name in user:
+        current_value = user[field_name]
+        if current_value == new_value:
+            abort(400, f"The {field_name} is the same")
+        return current_value
+    else:
+        abort(400, f"User data is missing '{field_name}' field")
+
 
 def delete_all_posts_from_user(userId):
     posts = Post.get_all_posts_from_user(userId)

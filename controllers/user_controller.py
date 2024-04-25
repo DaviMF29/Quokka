@@ -2,7 +2,7 @@ from models.User import User
 import bcrypt
 import base64
 from middleware.global_middleware import (
-    verify_email_registered,verify_user)
+    verify_email_registered,verify_user,verify_change_in_user)
 
 def create_user_controller(email,username, password):
     verify_email_registered(email)
@@ -24,15 +24,17 @@ def delete_user_controller(userId):
     return {"message": "User deleted"}, 200
 
 def update_user_controller(user_id, new_data):
-    verify_user(user_id)
-    
     updated_fields = {}
     for key, value in new_data.items():
-        if key != "_id":                          #proibir alteração do _id
+        if key != "_id":  # proibir alteração do _id
             updated_fields[key] = value
 
-    
+    for field_name, new_value in updated_fields.items():
+        verify_change_in_user(user_id, field_name, new_value)
+
     User.update_user(user_id, updated_fields)
-    
+
     return {"message": "User updated"}
+
+
 
