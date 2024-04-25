@@ -54,7 +54,7 @@ class User:
     @staticmethod
     def update_user(user_id, updated_fields):
         users_collection = db.users
-        result = users_collection.update_many({"_id": ObjectId(user_id)}, {"$set": updated_fields})
+        result = users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": updated_fields})
         return result
     
     @staticmethod

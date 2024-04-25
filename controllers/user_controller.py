@@ -22,3 +22,17 @@ def delete_user_controller(userId):
     verify_user(userId)
     User.delete_account_model(userId)
     return {"message": "User deleted"}, 200
+
+def update_user_controller(user_id, new_data):
+    verify_user(user_id)
+    
+    updated_fields = {}
+    for key, value in new_data.items():
+        if key != "_id":                          #proibir alteração do _id
+            updated_fields[key] = value
+
+    
+    User.update_user(user_id, updated_fields)
+    
+    return {"message": "User updated"}
+

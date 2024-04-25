@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from controllers.user_controller import create_user_controller, add_favoritepost_controller, delete_user_controller
+from controllers.user_controller import create_user_controller,add_favoritepost_controller, delete_user_controller, update_user_controller
 from flask_jwt_extended import jwt_required
 from middleware.global_middleware import delete_all_posts_from_user
 
@@ -45,3 +45,15 @@ def delete_user_route(userId):
     if status_code == 200:
         delete_all_posts_from_user(userId)
     return jsonify(response), status_code
+
+
+@users_app.route("/api/users/<user_id>", methods=["PUT"])
+@jwt_required()
+def update_user_route(user_id):
+    data = request.get_json()
+
+    try:
+        update_user_controller(user_id, data)
+        return jsonify({"message": "User updated"}), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
