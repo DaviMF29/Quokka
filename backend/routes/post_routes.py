@@ -1,8 +1,8 @@
-from flask import request, jsonify, Blueprint, abort
+from flask import request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required
 
 from middleware.global_middleware import (
-    verify_user, verify_post,validate_text_length,
-    verify_change_in_text, verify_post_is_from_user)
+    verify_user, verify_post,validate_text_length, verify_post_is_from_user)
 
 from controllers.post_controller import (
     create_post_controller, add_like_to_post_controller, add_comment_to_post_controller,
@@ -12,8 +12,6 @@ from controllers.post_controller import (
 )
 
 post_app = Blueprint("post_app", __name__)
-
-
 
 @post_app.route("/api/posts")
 def get_posts():
@@ -26,6 +24,7 @@ def get_post_by_id(postId):
     return jsonify(post)
 
 @post_app.route("/api/posts/<postId>", methods=["DELETE"])
+@jwt_required()
 def delete_post_route(postId):
     data = request.get_json()
     userID = data["userId"]
@@ -34,6 +33,7 @@ def delete_post_route(postId):
     return jsonify({"message": "Post deleted"}), 200
 
 @post_app.route("/api/posts/<postId>", methods=["PUT"])
+@jwt_required()
 def update_post_route(postId):
     data = request.get_json()
     new_text = data.get("text", None)
@@ -48,12 +48,13 @@ def update_post_route(postId):
         return jsonify({"message": str(e)}), 500
 
 @post_app.route("/api/posts", methods=["POST"])
+@jwt_required()
 def create_post_route():
     data = request.get_json()
     username = data["username"]
     userId = data["userId"]
-    text = data["text"]
-    createdAt = data["createdAt"]
+    text = data["text"] 
+    createdAt = data["createdAt"] #você tem que definir no backend
     isCode = data.get("isCode", False)
 
     if not all([username, userId, text]):
@@ -75,6 +76,7 @@ def create_post_route():
 
 
 @post_app.route("/api/posts/comment", methods=["PUT"])
+@jwt_required()
 def add_comment_route():
     data = request.get_json()
     previousPostId = data["previousPostId"]
@@ -107,6 +109,7 @@ def add_comment_route():
 
 
 @post_app.route("/api/posts/like/<postId>", methods=["PUT"])
+@jwt_required()
 def add_like_route(postId):
     
     if not all([postId]):

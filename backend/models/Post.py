@@ -2,8 +2,6 @@ from pymongo import MongoClient
 from bson import ObjectId
 import os
 import re
-import json
-
 
 client = MongoClient(os.getenv("MONGODB_URI"))
 db_name = "redesocial"
@@ -29,7 +27,6 @@ class Post:
         result = posts_collection.insert_one(new_post)
         return str(result.inserted_id)
 
-
     @staticmethod
     def get_all_posts():
         posts_collection = db.posts
@@ -47,17 +44,27 @@ class Post:
         return result.modified_count > 0
 
     @staticmethod
+    def get_all_posts_from_user(userId):
+        posts_collection = db.posts
+        posts = posts_collection.find({"userId": userId})
+        serialized_posts = []
+        for post in posts:
+            post["_id"] = str(post["_id"])
+            serialized_posts.append(post)
+        return serialized_posts
+
+    @staticmethod
     def get_post_by_username_model(username):
         posts_collection = db.posts
         post = posts_collection.find_one({"username": username})
         return post
-    
+
     @staticmethod
     def get_post_by_id_model(userId):
         posts_collection = db.posts
         post = posts_collection.find_one({"_id": ObjectId(userId)})
         if post:
-            post["_id"] = str(post["_id"])  # Convertendo o ObjectId para string
+            post["_id"] = str(post["_id"])  
         return post
 
     @staticmethod
@@ -85,7 +92,13 @@ class Post:
         return result
 
     @staticmethod
-    def delete_comment_from_post_model(postId, commentId):           #ja tentei com delete_one
+    def delete_all_post_by_userId_model(userId):
+        posts_collection = db.posts
+        result = posts_collection.delete_many({"userId": userId})
+        return result.deleted_count > 0
+
+    @staticmethod
+    def delete_comment_from_post_model(postId, commentId):           
         posts_collection = db.posts
         result = posts_collection.update_one(
             {"_id": ObjectId(postId)},

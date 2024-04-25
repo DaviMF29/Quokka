@@ -27,13 +27,11 @@ def get_post_by_id_controller(postId):
         return {"message": "Post not found"}, 404
     return post
 
-
 def update_post_by_id_controller(postId, text):       
     verify_change_in_text(postId,text)
     updated_fields = {"text": text}
     Post.update_post_by_id_model(postId, updated_fields)
     return {"message": "Post updated successfully"}
-
 
 def add_like_to_post_controller(postId):
     post = verify_post(postId)
@@ -67,8 +65,3 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
     Post.update_post_by_id_model(previousPostId, updated_fields)
 
     return {"message": "Comment added successfully", "id": _id}, 200
-
-
-
-
-

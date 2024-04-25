@@ -5,9 +5,6 @@ from models.Post import Post
 #CONSTANTES
 MAX_TEXT_LENGTH = 300
 
-
-
-
 def verify_user(userId):               
     user = User.get_user_by_id_model(userId)
     if not user:
@@ -52,6 +49,13 @@ def verify_post_is_from_user(postId, userId):
     post = verify_post(postId)
     if post.get("userId") == userId:
         return True
-    abort(400, {"message": "This post does not belong to the user"})
+    abort(400, {"message": "This post does not belong to the user"})    
 
+
+def delete_all_posts_from_user(userId):
+    posts = Post.get_all_posts_from_user(userId)
+    post_ids = [post.get("_id") for post in posts if post.get("userId") == userId]
+    for post_id in post_ids:
+        Post.delete_post_by_id_model(post_id)   #perguntar para rodrigo se uso o for ou se uso o delete_many
     
+    return True
