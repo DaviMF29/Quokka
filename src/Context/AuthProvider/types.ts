@@ -1,8 +1,10 @@
 
 export interface IUser {
-    id?: string;
+    userId?: string;
     email?: string;
     username?: string;
+    followers?: number | undefined;
+    following?: number | undefined;
     access_token?: string;
 }
 

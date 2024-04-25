@@ -3,15 +3,21 @@ import profilePic from '../../assets/profilepic.png'
 import { useAuth } from "../../hooks/useAuth";
 import { User } from "phosphor-react";
 import avatarImg from '../../assets/avatar_img.png'
+import { useNavigate } from "react-router-dom";
 
 interface SideProfileProps {
-    username: string
-    email:string
-    followers: number
-    following: number
+    username: string | undefined
+    email:string | undefined
+    followers: number | undefined
+    following: number | undefined
 }
 
 export function SideProfile({username, email, followers, following}:SideProfileProps) {
+    const navigate = useNavigate()
+
+    function handleGoToProfile(){
+        navigate('/profile')
+    }
 
     return(
         <Aside>
@@ -27,7 +33,7 @@ export function SideProfile({username, email, followers, following}:SideProfileP
                 </div>
             </Profile>
             <footer>
-                <ProfileButton>
+                <ProfileButton onClick={handleGoToProfile}>
                     Editar seu perfil
                 </ProfileButton>
             </footer>
