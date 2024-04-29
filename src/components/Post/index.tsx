@@ -1,26 +1,23 @@
-import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, PostContainer, PostContent } from "./styles";
-/*import authorImg from '../../assets/profilepic.png'
-import { useEffect, useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../hooks/useAuth";
-import { Trash, User } from "phosphor-react";
-import { format, isValid, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";*/
-import { DropDownPost } from "./components/DropDownMenu";
-import avatarImg2 from '../../assets/avatar_img2.avif'
+import { z } from "zod";
+import { Avatar } from "../SideProfile/styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, PostContainer, PostContent } from "./styles";
+
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import avatarImg2 from '../../assets/avatar_img2.avif';
+import { Comments } from "../Comment";
+import { DropDownPost } from "./components/DropDownMenu";
+import { useState } from "react";
 
 
 
-/*const createCommentFormSchema = z.object({
+const createCommentFormSchema = z.object({
     content: z.string().nonempty('Campo obrigatório!'),
 })
 
-type CreateCommentFormData = z.infer<typeof createCommentFormSchema>*/
+type CreateCommentFormData = z.infer<typeof createCommentFormSchema>
 
 export interface PostProps {
     _id: string
@@ -40,11 +37,11 @@ export interface PostProps {
 
 export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, setPostState}:PostProps) {
 
-    
+    const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
     
    
-    /*const {
+    const {
         register, 
         handleSubmit, 
         formState: {errors},
@@ -54,7 +51,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
         resolver: zodResolver(createCommentFormSchema)
     })
 
-    const commentFieldChange = watch('content')*/
+    const commentFieldChange = watch('content')
     
     function handleDeletePost(){
         deletePostFunction(_id, currentUserId)
@@ -70,8 +67,15 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
 
     })
 
+    function addNewComment(data: CreateCommentFormData) {
+        console.log('comentado:', data.content);
+        setComments(prevComments => [...prevComments, data]);
+        reset()
+    }
     
     
+
+
     return(
         <PostContainer>
 
@@ -115,7 +119,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                 {text}
             </PostContent>
 
-            {/*<CommentForm onSubmit={handleSubmit(addNewComment)}>
+            <CommentForm onSubmit={handleSubmit(addNewComment)}>
                 <textarea 
 
                 placeholder="Escreva um comentário" 
@@ -125,14 +129,14 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
             </CommentForm>
 
             <CommentList>
-                {comments.map((comment: string) => {
-                        return (
+                {comments.map((comment: CreateCommentFormData) => {
+                    return (
                         <Comments 
-                            content={comment}
-                            
-                        />)
-                    })}
-                </CommentList>*/}
+                            content={comment.content}
+                        />
+                    );
+                })}
+            </CommentList>
 
         
         </PostContainer>

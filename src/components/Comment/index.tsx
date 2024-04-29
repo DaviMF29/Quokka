@@ -3,7 +3,14 @@ import { Avatar } from "../SideProfile/styles";
 import { Trash, ThumbsUp } from "phosphor-react";
 import { Comment,CommentBox, CommentContent, AuthorAndTime, DeleteCommentButton, LikeButton } from "./styles";
 
-export function Comments(content:any) {
+// interface CommentsProps {
+//     content: string;
+//     userAvatarSrc: string;
+//     username: string;
+//     commentDateTime: string;
+//     onDeleteComment: () => void; 
+// }
+export function Comments({content} : {content: string}) {
 
     const [likeCount, setLikeCount] = useState(0)
 
@@ -14,22 +21,22 @@ export function Comments(content:any) {
 
     return(
         <Comment>
-            <Avatar src="https://avatars.githubusercontent.com/u/82901702?v=4"/>
+            <Avatar src="https://avatars.githubusercontent.com/eliasmedeiros898"/>
             <CommentBox>
                 <CommentContent>
                     <header>
                         <AuthorAndTime>
-                            <strong>Alexandre Star</strong>
-                            <time dateTime="2023-08-24 18:58:59">
-                                Cerca de 1hr atrás
+                            <strong>Elias Medeiros</strong>
+                            <time dateTime={new Date().toString()}>
+                                agora há pouco
                             </time>
                         </AuthorAndTime>
 
                         <DeleteCommentButton>
-                            <Trash size={20}/>
+                            <Trash size={20} />
                         </DeleteCommentButton>
                     </header>
-                    <p>Conteudo aqui</p>
+                    <p>{content}</p>
                 </CommentContent>
 
                 <footer>

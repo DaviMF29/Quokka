@@ -56,6 +56,8 @@ export const FormContainer = styled.form`
     box-shadow: -50px 50px 40px rgba(0, 0, 0, 0.5);
     
     
+    
+    
 
     input {
         height: 50px;
