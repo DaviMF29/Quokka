@@ -18,7 +18,8 @@ class User:
             "password": hashed_password_base64,
             "following": [],
             "followers":[],
-            "favorites":[]
+            "favorites":[],
+            "liked_posts":[],
         }
         result = users_collection.insert_one(new_user)
         return str(result.inserted_id)
