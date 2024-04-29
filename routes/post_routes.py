@@ -5,7 +5,7 @@ from middleware.global_middleware import (
     verify_user, verify_post,validate_text_length, verify_post_is_from_user)
 
 from controllers.post_controller import (
-    create_post_controller, add_like_to_post_controller, add_comment_to_post_controller,
+    create_post_controller, add_comment_to_post_controller,
     delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
     get_post_by_id_controller
     
@@ -108,20 +108,7 @@ def add_comment_route():
     return jsonify(result)
 
 
-@post_app.route("/api/posts/like/<postId>", methods=["PUT"])
-@jwt_required()
-def add_like_route(postId):
-    
-    if not all([postId]):
-        return jsonify({"message": "Missing required fields"}), 400
 
-    try:
-        verify_post(postId)
-    except:
-        return jsonify({"message": "User or post does not exist"}), 404
-
-    result = add_like_to_post_controller(postId)
-    return jsonify(result)
 
 
 

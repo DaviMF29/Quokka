@@ -2,7 +2,8 @@ from models.User import User
 import bcrypt
 import base64
 from middleware.global_middleware import (
-    verify_email_registered,verify_user,verify_change_in_user)
+    verify_email_registered,verify_user,verify_change_in_user,
+    add_like_to_post,remove_like_from_post)
 
 def create_user_controller(email,username, password):
     verify_email_registered(email)
@@ -36,5 +37,14 @@ def update_user_controller(user_id, new_data):
 
     return {"message": "User updated"}
 
+def add_like_to_post_controller(user_id, post_id):
+    try:
+        if not User.add_like_to_post(user_id, post_id):
+            remove_like_from_post(post_id)
+            return False, "Post already liked. Like removed"
+        add_like_to_post(post_id)
+        return True, "Post liked successfully"
+    except Exception as e:
+        return False, f"An error occurred: {str(e)}"
 
 

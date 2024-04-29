@@ -68,3 +68,25 @@ class User:
         users_collection = db.users
         result = users_collection.find_one_and_delete({"_id": ObjectId(user_id)})
         return result
+    
+
+    def add_like_to_post(user_id, post_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id": ObjectId(user_id)}, {"liked_posts": 1})
+
+        if user is None:
+            return False
+
+        liked_posts = user.get("liked_posts", [])
+        if post_id not in liked_posts:
+            liked_posts.append(post_id)
+            users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": {"liked_posts": liked_posts}})
+            return True
+        else:
+            users_collection.update_one({"_id": ObjectId(user_id)}, {"$pull": {"liked_posts": post_id}})
+            return False
+
+    def add_new_field_to_all_users(new_field_name):
+        users_collection = db.users
+        result = users_collection.update_many({}, {"$set": {new_field_name: []}})
+        return result

@@ -63,9 +63,27 @@ def verify_change_in_user(user_id, field_name, new_value):
 
 
 def delete_all_posts_from_user(userId):
-    posts = Post.get_all_posts_from_user(userId)
+    posts = Post.get_all_posts_from_user_model(userId)
     post_ids = [post.get("_id") for post in posts if post.get("userId") == userId]
     for post_id in post_ids:
-        Post.delete_post_by_id_model(post_id)   #perguntar para rodrigo se uso o for ou se uso o delete_many
+        Post.delete_post_by_id_model(post_id) 
     
     return True
+
+def add_like_to_post(postId):
+    post = verify_post(postId)
+    post = Post.get_post_by_id_model(postId)
+    likes = post.get("likes", 0)
+    likes += 1    
+    Post.update_post_model(postId, {"likes": likes})
+    return {"message": "Like added"}, 201
+
+def remove_like_from_post(postId):
+    post = verify_post(postId)
+    post = Post.get_post_by_id_model(postId)
+    likes = post.get("likes", 0)
+    if likes == 0:
+        abort(400, {"message": "The post has no likes"})
+    likes -= 1    
+    Post.update_post_model(postId, {"likes": likes})
+    return {"message": "Like removed"}, 201

@@ -40,11 +40,11 @@ class Post:
     @staticmethod
     def update_post_model(postId, update_data):
         posts_collection = db.posts
-        result = posts_collection.update_one({"_id": postId}, {"$set": update_data})
+        result = posts_collection.update_one({"_id": ObjectId(postId)}, {"$set": update_data})
         return result.modified_count > 0
 
     @staticmethod
-    def get_all_posts_from_user(userId):
+    def get_all_posts_from_user_model(userId):
         posts_collection = db.posts
         posts = posts_collection.find({"userId": userId})
         serialized_posts = []

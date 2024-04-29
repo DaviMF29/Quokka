@@ -33,14 +33,7 @@ def update_post_by_id_controller(postId, text):
     Post.update_post_by_id_model(postId, updated_fields)
     return {"message": "Post updated successfully"}
 
-def add_like_to_post_controller(postId):
-    post = verify_post(postId)
-    if not post:
-        return {"message": "This post does not exist"}, 404
-    
-    updated_fields = {"likes": post.get("likes", 0) + 1}
-    Post.update_post_by_id_model(postId, updated_fields)
-    return {"message": "Like added successfully"}, 200
+
 
 def add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode=False, language=None):
     post = verify_post(previousPostId)
