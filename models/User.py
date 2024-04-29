@@ -61,8 +61,14 @@ class User:
     @staticmethod
     def get_followers_model(user_id):
         users_collection = db.users
-        followers = users_collection.find({"following": user_id})
+        followers = users_collection.find({"followers": user_id})
         return list(followers)
+    
+    @staticmethod
+    def get_following_model(user_id):
+        users_collection = db.users
+        following = users_collection.find({"following": user_id})
+        return list(following)
     
     @staticmethod
     def delete_account_model(user_id):

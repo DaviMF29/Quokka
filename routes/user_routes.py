@@ -1,7 +1,8 @@
 from flask import request, jsonify, Blueprint
 from controllers.user_controller import (
     create_user_controller,add_favoritepost_controller,
-    delete_user_controller,update_user_controller,add_like_to_post_controller)
+    delete_user_controller,update_user_controller,add_like_to_post_controller,
+    add_following_controller)
 from flask_jwt_extended import jwt_required
 from middleware.global_middleware import delete_all_posts_from_user
 from models.User import User
@@ -86,3 +87,13 @@ def add_like_to_post_route(postId):
         return jsonify({"message": message}), 200
     else:
         return jsonify({"message": message}), 200
+    
+
+@users_app.route("/api/users/following", methods=["POST"])
+@jwt_required()
+def add_following_route():
+    data = request.get_json()
+    user_id = data["userId"]
+    following_id = data["followingId"]
+    response, status_code = add_following_controller(user_id, following_id)
+    return jsonify(response), status_code

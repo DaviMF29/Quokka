@@ -48,3 +48,18 @@ def add_like_to_post_controller(user_id, post_id):
         return False, f"An error occurred: {str(e)}"
 
 
+def add_following_controller(user_id, following_id):
+    user = verify_user(user_id)
+    following = user.get("following", [])
+    if following_id not in following:
+        following.append(following_id)
+        User.update_user(user_id, {"following": following})
+
+    user_following = verify_user(following_id)
+    followers = user_following.get("followers", [])
+    if user_id not in followers:
+        followers.append(user_id)
+        User.update_user(following_id, {"followers": followers})
+
+    return {"message": "User followed"}, 201
+
