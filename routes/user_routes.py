@@ -90,7 +90,6 @@ def add_like_to_post_route(postId):
     
 
 @users_app.route("/api/users/following", methods=["POST"])
-@jwt_required()
 def add_following_route():
     data = request.get_json()
     user_id = data["userId"]
