@@ -50,6 +50,7 @@ def add_like_to_post_controller(user_id, post_id):
 
 def add_following_controller(user_id, following_id):
     user = verify_user(user_id)
+    user_follow = verify_user(following_id)
     following = user.get("following", [])
     user_following = verify_user(following_id)
     followers = user_following.get("followers", [])
