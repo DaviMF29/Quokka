@@ -10,16 +10,18 @@ db = client[db_name]
 class User:
 
     @staticmethod
-    def create_user_model(email,username, hashed_password_base64):
+    def create_user_model(email,username,image, hashed_password_base64):
         users_collection = db.users
         new_user = {
             "username": username,
             "email": email,
+            "image":image,
             "password": hashed_password_base64,
             "following": [],
             "followers":[],
             "favorites":[],
             "liked_posts":[],
+            "posts": []
         }
         result = users_collection.insert_one(new_user)
         return str(result.inserted_id)
@@ -33,6 +35,13 @@ class User:
             user["_id"] = str(user["_id"])
             serialized_posts.append(user)
         return serialized_posts
+
+    @staticmethod
+    def get_all_posts_from_user(user_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        posts = user.get("posts", [])
+        return posts
 
     @staticmethod
     def get_user_by_username_model(username):
@@ -61,14 +70,23 @@ class User:
     @staticmethod
     def get_followers_model(user_id):
         users_collection = db.users
-        followers = users_collection.find({"followers": user_id})
-        return list(followers)
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            followers = user.get("followers", [])
+            return followers
+        else:
+            return []
     
     @staticmethod
     def get_following_model(user_id):
         users_collection = db.users
-        following = users_collection.find({"following": user_id})
-        return list(following)
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            following = user.get("following", [])
+            return following
+        else:
+            return []
+
     
     @staticmethod
     def delete_account_model(user_id):
@@ -76,23 +94,6 @@ class User:
         result = users_collection.find_one_and_delete({"_id": ObjectId(user_id)})
         return result
     
-
-    def add_like_to_post(user_id, post_id):
-        users_collection = db.users
-        user = users_collection.find_one({"_id": ObjectId(user_id)}, {"liked_posts": 1})
-
-        if user is None:
-            return False
-
-        liked_posts = user.get("liked_posts", [])
-        if post_id not in liked_posts:
-            liked_posts.append(post_id)
-            users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": {"liked_posts": liked_posts}})
-            return True
-        else:
-            users_collection.update_one({"_id": ObjectId(user_id)}, {"$pull": {"liked_posts": post_id}})
-            return False
-
     def add_new_field_to_all_users(new_field_name):
         users_collection = db.users
         result = users_collection.update_many({}, {"$set": {new_field_name: []}})

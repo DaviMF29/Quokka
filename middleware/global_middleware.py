@@ -69,21 +69,3 @@ def delete_all_posts_from_user(userId):
         Post.delete_post_by_id_model(post_id) 
     
     return True
-
-def add_like_to_post(postId):
-    post = verify_post(postId)
-    post = Post.get_post_by_id_model(postId)
-    likes = post.get("likes", 0)
-    likes += 1    
-    Post.update_post_model(postId, {"likes": likes})
-    return {"message": "Like added"}, 201
-
-def remove_like_from_post(postId):
-    post = verify_post(postId)
-    post = Post.get_post_by_id_model(postId)
-    likes = post.get("likes", 0)
-    if likes == 0:
-        abort(400, {"message": "The post has no likes"})
-    likes -= 1    
-    Post.update_post_model(postId, {"likes": likes})
-    return {"message": "Like removed"}, 201

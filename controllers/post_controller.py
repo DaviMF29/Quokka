@@ -1,11 +1,13 @@
 from models.Post import Post
-from bson import ObjectId
+from utils.user_posts import add_post_in_user
 from middleware.global_middleware import (
     verify_post, verify_change_in_text, verify_post_is_a_comment)
 
 
 def create_post_controller(userId, username, text,createdAt, isCode=False, language=None,previousPostId = None):
     post_id = Post.create_post_model(userId, username, text,createdAt, isCode, language, previousPostId)
+    post = get_post_by_id_controller(post_id)
+    add_post_in_user(userId, post)
     return post_id
 
 def get_all_posts_controller():
@@ -32,8 +34,6 @@ def update_post_by_id_controller(postId, text):
     updated_fields = {"text": text}
     Post.update_post_by_id_model(postId, updated_fields)
     return {"message": "Post updated successfully"}
-
-
 
 def add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode=False, language=None):
     post = verify_post(previousPostId)

@@ -1,11 +1,17 @@
 from flask import request, jsonify, Blueprint
+
 from controllers.user_controller import (
     create_user_controller,add_favoritepost_controller,
-    delete_user_controller,update_user_controller,add_like_to_post_controller,
-    add_following_controller)
+    delete_user_controller,update_user_controller,
+    add_like_to_post_controller,add_following_controller,
+    get_all_following_controller,get_posts_from_following_controller)
+
 from flask_jwt_extended import jwt_required
 from middleware.global_middleware import delete_all_posts_from_user
 from models.User import User
+
+from flask_jwt_extended import get_jwt_identity
+
 
 users_app = Blueprint("users_app", __name__)
 
@@ -62,22 +68,11 @@ def update_user_route(user_id):
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
-
-@users_app.route("/api/users/teste", methods=["POST"])
-def update_all_users_route():
-    data = request.get_json()
-    if "field" not in data:
-        return jsonify({"error": "Field name not provided"}), 400
-
-    field = data["field"]
-    result = User.add_new_field_to_all_users(field)
-    return jsonify({"message": f"Number of documents updated: {result.modified_count}"}), 200
-
-@users_app.route("/api/users/like/<postId>", methods=["POST"])
+@users_app.route("/api/users/like/<userId>", methods=["POST"])
 @jwt_required()
-def add_like_to_post_route(postId):
+def add_like_to_post_route(userId):
     data = request.get_json()
-    userId = data.get("userId")
+    postId = data.get("postId")
 
     if not userId or not postId:
         return jsonify({"error": "User ID or Post ID missing"}), 400
@@ -88,11 +83,37 @@ def add_like_to_post_route(postId):
     else:
         return jsonify({"message": message}), 200
     
-
 @users_app.route("/api/users/following", methods=["POST"])
+@jwt_required()
 def add_following_route():
     data = request.get_json()
     user_id = data["userId"]
     following_id = data["followingId"]
     response, status_code = add_following_controller(user_id, following_id)
     return jsonify(response), status_code
+
+@users_app.route("/api/users/<userId>/following", methods=["GET"])
+@jwt_required()
+def get_following_route(userId):
+    response = get_all_following_controller(userId)
+    return jsonify(response), 200
+
+@users_app.route("/api/users/following/posts", methods=["GET"])
+@jwt_required()
+def get_following_posts_route():
+    userId = get_jwt_identity()
+    response = get_posts_from_following_controller(userId)
+    return jsonify(response), 200
+
+
+#---------------------------------EXTRA--------------------------------
+
+@users_app.route("/api/users/teste", methods=["POST"])
+def update_all_users_route():
+    data = request.get_json()
+    if "field" not in data:
+        return jsonify({"error": "Field name not provided"}), 400
+
+    field = data["field"]
+    result = User.add_new_field_to_all_users(field)
+    return jsonify({"message": f"Number of documents updated: {result.modified_count}"}), 200

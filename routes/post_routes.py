@@ -27,8 +27,8 @@ def get_post_by_id(postId):
 @jwt_required()
 def delete_post_route(postId):
     data = request.get_json()
-    userID = data["userId"]
-    verify_post_is_from_user(postId,userID)
+    userId = data["userId"]
+    verify_post_is_from_user(postId,userId)
     delete_post_controller(postId)
     return jsonify({"message": "Post deleted"}), 200
 
@@ -54,7 +54,7 @@ def create_post_route():
     username = data["username"]
     userId = data["userId"]
     text = data["text"] 
-    createdAt = data["createdAt"] #você tem que definir no backend
+    createdAt = data["createdAt"]
     isCode = data.get("isCode", False)
 
     if not all([username, userId, text]):
