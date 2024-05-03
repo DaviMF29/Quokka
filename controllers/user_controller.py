@@ -2,6 +2,9 @@ from models.User import User
 import bcrypt
 import base64
 import hashlib
+
+from utils.user_posts import order_posts_by_createdAt
+
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user)
 
@@ -86,6 +89,7 @@ def get_posts_from_following_controller(user_id):
     posts = []
     for following_id in following:
         posts.append(User.get_all_posts_from_user(following_id))
+    order_posts_by_createdAt(posts)
     return posts
 
 
