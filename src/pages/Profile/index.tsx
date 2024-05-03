@@ -1,13 +1,34 @@
-import { Box, Tabs } from "@radix-ui/themes";
+import { Box, Button, Tabs } from "@radix-ui/themes";
 import { Header } from "../../components/Header";
 import { useAuth } from "../../hooks/useAuth";
 import { Banner, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, StyledBox, StyledTabTrigger } from "./styles";
 import '@radix-ui/themes/styles.css';
 import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const createEditFormSchema = z.object({
+    username: z.string(),
+})
+
+type CreateEditFormData = z.infer<typeof createEditFormSchema>
+
+
 
 export function Profile() {
 
     const user = useAuth()
+
+    const {
+        register, 
+        handleSubmit, 
+        formState: {errors},
+        watch,
+        reset,
+        } =  useForm<CreateEditFormData>({
+        resolver: zodResolver(createEditFormSchema)
+    })
 
     useEffect(() => {
         const fetchData = async () => {
@@ -17,9 +38,17 @@ export function Profile() {
         }
 
         fetchData()
-    }, [])
+    }, [user.username])
 
+    function handleEditProfile(data: CreateEditFormData){
+        if(user.access_token && user.userId){
+            user.updateUserInfo(user.access_token,user.userId,data.username)
+            user.getUserInfo(user.access_token)
+        }
 
+    }
+
+    
     return(
         <>
             <Header />
@@ -38,26 +67,33 @@ export function Profile() {
                     <Tabs.Root defaultValue="account">
                         <Tabs.List color="cyan">
                             <StyledTabTrigger value="account">Account</StyledTabTrigger>
-                            <StyledTabTrigger value="documents">Documents</StyledTabTrigger>
+                            <StyledTabTrigger value="favoritePosts">Post Favoritos</StyledTabTrigger>
                             <StyledTabTrigger value="settings">Settings</StyledTabTrigger>
                         </Tabs.List>
 
                         <StyledBox pt="3">
                             <Tabs.Content value="account">
-                                <form style={{display:'flex',flexDirection:'column'}}>
-                                    <label htmlFor="username">Username</label>
-                                    <input type="text" id="username" value={user.username} disabled/>
-                                    <label htmlFor="email">Email</label>
-                                    <input type="text" id="email" value={user.email} disabled/>
-                                    <label htmlFor="followers">Followers</label>
-                                    <input type="text" id="followers" value={user.followers} disabled/>
-                                    <label htmlFor="following">Following</label>
-                                    <input type="text" id="following" value={user.following} disabled/>
+                                <form style={{display:'flex',flexDirection:'column'}} onSubmit={handleSubmit(handleEditProfile)}>
+                                    <div>
+                                        <label htmlFor="username">Username:</label>
+                                        <input type="text" id="username" defaultValue={user.username} {...register('username')}/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="image">Imagem de perfil:</label>
+                                        <input type="file" id="image" />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="email">Email: </label>
+                                        <input type="text" id="email" value={user.email} disabled/>
+                                    </div>
+                                    
+
+                                    <Button type="submit">Save</Button>
                                 </form>
                             </Tabs.Content>
 
-                            <Tabs.Content value="documents">
-                                <p>documents content</p>
+                            <Tabs.Content value="favoritePosts">
+                                <p>Posts favoritos</p>
                             </Tabs.Content>
 
                             <Tabs.Content value="settings">

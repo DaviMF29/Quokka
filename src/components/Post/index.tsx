@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Avatar } from "../SideProfile/styles";
 import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, PostContainer, PostContent } from "./styles";
-
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';

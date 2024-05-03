@@ -15,6 +15,7 @@ export interface IContext extends IUser {
     authenticate: (email: string, password: string) => Promise<void>;
     logout: () => void;
     getUserInfo: (token:string) => Promise<any>;
+    updateUserInfo: (token:string, userId:string,username?: string, profileImage?: string) => Promise<void>;
 
 }
 

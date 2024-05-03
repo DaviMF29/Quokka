@@ -10,6 +10,7 @@ export const AuthContext = createContext<IContext>({} as IContext)
 export const AuthProvider = ({ children } : IAuthProvider) => {
     const [ user, setUser ] = useState<IUser | null>()
     const [username, setUsername] = useState<string>('')
+    const [profilePicture, setProfilePicture] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [userId, setUserId] = useState<string>('')
     const [followers, setFollowers] = useState<userId[]>([])
@@ -56,6 +57,19 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         
     }
 
+    async function updateUserInfo(token:string, userId:string, username?: string, profileImage?: string) {
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          };
+        const response = await api.put(`/api/users/${userId}`,{username},config)
+
+        setUsername(response.data.username)
+        
+    }
+
+    
     
     
 
@@ -72,7 +86,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
 
 
     return(
-        <AuthContext.Provider value={{...user,userId,username,email,following,followers, authenticate, logout, getUserInfo}}>
+        <AuthContext.Provider value={{...user,userId,username,email,following,followers, authenticate, logout, getUserInfo, updateUserInfo}}>
             {children}
         </AuthContext.Provider>
     )

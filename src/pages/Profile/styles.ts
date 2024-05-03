@@ -57,7 +57,37 @@ export const StyledBox = styled(Box)`
     margin-top: 2rem;
     color: ${props => props.theme['gray-100']};
     background: ${props => props.theme['gray-900']};
+
+    form {
+        display: flex;
+        gap: 2rem;
+        div{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            input{
+                padding: 0.5rem;
+                border-radius: 5px;
+                border: 1px solid ${props => props.theme['gray-800']};
+                background: ${props => props.theme['gray-800']};
+                color: ${props => props.theme['gray-100']};
+
+                &:disabled{
+                    background: ${props => props.theme['gray-700']};
+                    color: ${props => props.theme['gray-500']};
+                    cursor: not-allowed;
+                }
+
+                
+            }
+        }
+        
+    }
 `
+
+
+
 
 export const StyledTabTrigger = styled(Tabs.Trigger)`
     color: white;
