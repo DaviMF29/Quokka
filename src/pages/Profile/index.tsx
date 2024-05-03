@@ -3,10 +3,11 @@ import { Header } from "../../components/Header";
 import { useAuth } from "../../hooks/useAuth";
 import { Banner, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, StyledBox, StyledTabTrigger } from "./styles";
 import '@radix-ui/themes/styles.css';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { PostProps } from "../../components/Post";
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -20,6 +21,11 @@ export function Profile() {
 
     const user = useAuth()
 
+    const [favoritePosts, setFavoritePosts] = useState<PostProps[]>([])
+
+    function callFavoritePostsList(){
+
+    }
     const {
         register, 
         handleSubmit, 
@@ -66,17 +72,28 @@ export function Profile() {
                 
                     <Tabs.Root defaultValue="account">
                         <Tabs.List color="cyan">
-                            <StyledTabTrigger value="account">Account</StyledTabTrigger>
+                            <StyledTabTrigger value="publications">Minhas Publicações</StyledTabTrigger>
                             <StyledTabTrigger value="favoritePosts">Post Favoritos</StyledTabTrigger>
+                            <StyledTabTrigger value="account">Account</StyledTabTrigger>
                             <StyledTabTrigger value="settings">Settings</StyledTabTrigger>
                         </Tabs.List>
 
                         <StyledBox pt="3">
+                            <Tabs.Content value="publications">
+                                <p>Minhas publicações</p>
+                            </Tabs.Content>
+                            <Tabs.Content value="favoritePosts">
+                                <p>Posts favoritos</p>
+                            </Tabs.Content>
                             <Tabs.Content value="account">
                                 <form style={{display:'flex',flexDirection:'column'}} onSubmit={handleSubmit(handleEditProfile)}>
                                     <div>
                                         <label htmlFor="username">Username:</label>
                                         <input type="text" id="username" defaultValue={user.username} {...register('username')}/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="age">Data de nascimento: </label>
+                                        <input type="date" id="age" />
                                     </div>
                                     <div>
                                         <label htmlFor="image">Imagem de perfil:</label>
@@ -87,14 +104,13 @@ export function Profile() {
                                         <input type="text" id="email" value={user.email} disabled/>
                                     </div>
                                     
+                                    
 
                                     <Button type="submit">Save</Button>
                                 </form>
                             </Tabs.Content>
 
-                            <Tabs.Content value="favoritePosts">
-                                <p>Posts favoritos</p>
-                            </Tabs.Content>
+                            
 
                             <Tabs.Content value="settings">
                                 <p>settings content</p>

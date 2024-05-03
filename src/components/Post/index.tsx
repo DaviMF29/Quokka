@@ -93,6 +93,8 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
                         </time>
                    </AuthorInfo>
 
+                    { !isAuthor && <button>Favoritar</button>}
+
                 </Author>
                 
                 { isAuthor && <DropDownPost

@@ -15,6 +15,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     const [userId, setUserId] = useState<string>('')
     const [followers, setFollowers] = useState<userId[]>([])
     const [following, setFollowing] = useState<userId[]>([])
+    
 
     
 

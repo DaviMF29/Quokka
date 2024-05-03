@@ -11,6 +11,8 @@ export const ProfileWrapper = styled.div`
     align-items: center;
     padding-top: 2rem;
     gap: 1rem;
+    position: absolute;
+    top: -1rem;
     
 
     h1{

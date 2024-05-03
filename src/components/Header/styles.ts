@@ -10,6 +10,9 @@ export const HeaderContainer = styled.header`
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
+    z-index: 1;
+    opacity: 0.8;
+    backdrop-filter: blur(15px);
 
     strong {
         font-size: 2.5rem;
