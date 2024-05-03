@@ -1,5 +1,5 @@
 import {createContext, useEffect, useState} from "react"
-import { IAuthProvider, IContext, IUser } from "./types"
+import { IAuthProvider, IContext, IUser, userId } from "./types"
 import { LoginRequest, getUserLocalStorage, setUserLocalStorage } from "./util"
 import { api } from "../../services/api"
 
@@ -12,8 +12,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [userId, setUserId] = useState<string>('')
-    const [followers, setFollowers] = useState<number>(0)
-    const [following, setFollowing] = useState<number>(0)
+    const [followers, setFollowers] = useState<userId[]>([])
+    const [following, setFollowing] = useState<userId[]>([])
 
     
 
@@ -65,8 +65,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setUserId('')
         setEmail('')
         setUsername('')
-        setFollowers(0)
-        setFollowing(0)
+        setFollowers([])
+        setFollowing([])
     }
 
 

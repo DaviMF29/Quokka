@@ -1,10 +1,13 @@
+export interface userId {
+    userId: string;
+}
 
 export interface IUser {
     userId?: string;
     email?: string;
     username?: string;
-    followers?: number | undefined;
-    following?: number | undefined;
+    followers?: Array<userId> | undefined;
+    following?: Array<userId> | undefined;
     access_token?: string;
 }
 

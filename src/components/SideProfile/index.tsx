@@ -1,22 +1,22 @@
 import { Aside, Avatar, Cover, Profile, ProfileButton } from "./styles";
-import profilePic from '../../assets/profilepic.png'
-import { useAuth } from "../../hooks/useAuth";
-import { User } from "phosphor-react";
 import avatarImg from '../../assets/avatar_img.png'
 import { useNavigate } from "react-router-dom";
+import { IUser } from "../../Context/AuthProvider/types";
 
-interface SideProfileProps {
-    username: string | undefined
-    email:string | undefined
-    followers: number | undefined
-    following: number | undefined
-}
 
-export function SideProfile({username, email, followers, following}:SideProfileProps) {
+
+export function SideProfile({username, email, followers, following}:IUser) {
     const navigate = useNavigate()
 
     function handleGoToProfile(){
         navigate('/profile')
+    }
+
+    function listToNumber(followers: Array<any> | undefined){
+        if(followers === undefined){
+            return 0
+        }
+        return followers.length
     }
 
     return(
@@ -28,8 +28,8 @@ export function SideProfile({username, email, followers, following}:SideProfileP
                 <strong>{username}</strong>
                 <span>{email}</span>
                 <div>
-                    <span>Seguidores: {followers}</span>
-                    <span>Seguindo: {following}</span>
+                    <span>Seguidores: {listToNumber(followers)}</span>
+                    <span>Seguindo: {listToNumber(following)}</span>
                 </div>
             </Profile>
             <footer>
