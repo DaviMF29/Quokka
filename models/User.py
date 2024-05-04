@@ -87,7 +87,16 @@ class User:
         else:
             return []
 
-    
+    @staticmethod
+    def get_favorite_posts_model(user_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            favorites = user.get("favorites", [])
+            return favorites
+        else:
+            return []
+        
     @staticmethod
     def delete_account_model(user_id):
         users_collection = db.users

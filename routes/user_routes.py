@@ -4,7 +4,8 @@ from controllers.user_controller import (
     create_user_controller,add_favoritepost_controller,
     delete_user_controller,update_user_controller,
     add_like_to_post_controller,add_following_controller,
-    get_all_following_controller,get_posts_from_following_controller)
+    get_all_following_controller,get_posts_from_following_controller,
+    get_favorite_posts_controller)
 
 from flask_jwt_extended import jwt_required
 from middleware.global_middleware import delete_all_posts_from_user
@@ -105,6 +106,12 @@ def get_following_posts_route():
     response = get_posts_from_following_controller(userId)
     return jsonify(response), 200
 
+@users_app.route("/api/users/favorite/posts", methods=["GET"])
+@jwt_required()
+def get_favorite_posts_route():
+    userId = get_jwt_identity()
+    response = get_favorite_posts_controller(userId)
+    return jsonify(response), 200
 
 #---------------------------------EXTRA--------------------------------
 

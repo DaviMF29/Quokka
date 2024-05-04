@@ -92,7 +92,12 @@ def get_posts_from_following_controller(user_id):
     order_posts_by_createdAt(posts)
     return posts
 
-
-
+def get_favorite_posts_controller(user_id):
+    verify_user(user_id)
+    favorites = User.get_favorite_posts_model(user_id)
+    posts = []
+    for post_id in favorites:
+        posts.append(post_id)
+    return posts
 
 
