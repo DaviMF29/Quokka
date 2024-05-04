@@ -69,3 +69,9 @@ def delete_all_posts_from_user(userId):
         Post.delete_post_by_id_model(post_id) 
     
     return True
+
+def verify_post_in_user_favorites(userId, postId):
+    user = verify_user(userId)
+    favorites = user.get("favorites", [])
+    return postId in favorites, "Post already in favorites" if postId in favorites else None
+

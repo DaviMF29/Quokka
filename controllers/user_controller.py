@@ -6,7 +6,8 @@ import hashlib
 from utils.user_posts import order_posts_by_createdAt
 
 from middleware.global_middleware import (
-    verify_email_registered,verify_user,verify_change_in_user)
+    verify_email_registered,verify_user,verify_change_in_user,
+    verify_post_in_user_favorites)
 
 def create_user_controller(email,username, password):
     verify_email_registered(email)
@@ -17,9 +18,14 @@ def create_user_controller(email,username, password):
     user_id = User.create_user_model(email,username,image, hashed_password_base64)
     return {"id": user_id, "message": f"User {username} created"}, 201
 
-def add_favoritepost_controller(user_id, postId):
+def add_or_remove_favorite_post_controller(user_id, postId):
+    already_in_favorites, message = verify_post_in_user_favorites(user_id, postId)
     user = verify_user(user_id)
     favorites = user.get("favorites", [])
+    if already_in_favorites:
+        favorites.remove(postId)
+        User.update_user(user_id, {"favorites": favorites})
+        return {"message": "Favorite removed"}, 200
     favorites.append(postId)
     User.update_user(user_id, {"favorites": favorites})
     return {"message": "Favorite added"}, 201

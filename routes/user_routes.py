@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 
 from controllers.user_controller import (
-    create_user_controller,add_favoritepost_controller,
+    create_user_controller,add_or_remove_favorite_post_controller,
     delete_user_controller,update_user_controller,
     add_like_to_post_controller,add_following_controller,
     get_all_following_controller,get_posts_from_following_controller,
@@ -46,7 +46,7 @@ def add_favorite_post_route():
     data = request.get_json()
     user_id = data["userId"]
     post_favorite = data["postId"]
-    response, status_code = add_favoritepost_controller(user_id, post_favorite)
+    response, status_code = add_or_remove_favorite_post_controller(user_id, post_favorite)
     return jsonify(response), status_code
 
 @users_app.route("/api/users/<userId>", methods=["DELETE"])
