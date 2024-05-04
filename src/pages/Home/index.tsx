@@ -105,6 +105,8 @@ export function Home() {
                                 deletePostFunction={handleDeletePost}
                                 setPostState={setPostsLoaded}
                                 currentUserId={user.userId ?? ''}
+                                setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                isFavorite={posts.isFavorite}
                             />
 
                          )

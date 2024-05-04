@@ -2,13 +2,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, PostContainer, PostContent } from "./styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, PostContainer, PostContent, UnfavoriteButton } from "./styles";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
 import { DropDownPost } from "./components/DropDownMenu";
 import { useState } from "react";
+import { BookmarkSimple } from "phosphor-react";
 
 
 
@@ -26,15 +27,17 @@ export interface PostProps {
     createdAt: Date
     isCode?: boolean
     currentUserId: string
+    isFavorite: boolean
     deletePostFunction: (postId:string, userId:string) => void
     setPostState: React.Dispatch<React.SetStateAction<boolean>>;
+    setPostAsFavorite: (postId: string, userId: string) => void
     
 
 }
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId, deletePostFunction, setPostState}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId, isFavorite,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
 
     const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
@@ -54,6 +57,15 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
     
     function handleDeletePost(){
         deletePostFunction(_id, currentUserId)
+    }
+
+    function handleSetPostAsFavorite(){
+        setPostAsFavorite(_id, currentUserId)
+        console.log('favoritado')
+    }
+
+    function handleRemoveFromFavorites(){
+        
     }
 
     
@@ -82,29 +94,42 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, del
             
             <header>
                 <Author>
-                   <Avatar
-                   src={avatarImg2}>
-                        
-                    </Avatar> 
-                   <AuthorInfo>
-                        <strong>{username}</strong>
-                        <time>
-                            {publishedDateRelativeToNow}
-                        </time>
-                   </AuthorInfo>
+                    <InfoWrapper>
+                        <Avatar
+                        src={avatarImg2}>
+                            
+                        </Avatar> 
+                        <AuthorInfo>
+                            <strong>{username}</strong>
+                            <time>
+                                {publishedDateRelativeToNow}
+                            </time>
+                        </AuthorInfo>
+                    </InfoWrapper>
+                   
 
-                    { !isAuthor && <button>Favoritar</button>}
+                    {!isFavorite && !isAuthor && (
+                        <FavoriteButton onClick={handleSetPostAsFavorite}>
+                            <BookmarkSimple size={18}/>
+                        </FavoriteButton>
+                    )}
+                    {isFavorite && !isAuthor && (
+                        <UnfavoriteButton onClick={handleRemoveFromFavorites}>
+                            <BookmarkSimple size={18} />
+                        </UnfavoriteButton>
+)}
 
+                    { isAuthor && <DropDownPost
+                        _id={_id} 
+                        currentUserId={currentUserId} 
+                        deleteFunction={handleDeletePost}
+                        setPostState={setPostState}
+                        text={text}
+                        />
+                    }
                 </Author>
                 
-                { isAuthor && <DropDownPost
-                                 _id={_id} 
-                                 currentUserId={currentUserId} 
-                                 deleteFunction={handleDeletePost}
-                                 setPostState={setPostState}
-                                 text={text}
-                                 />
-                }
+                
                 
                 
 

@@ -16,7 +16,7 @@ export interface IContext extends IUser {
     logout: () => void;
     getUserInfo: (token:string) => Promise<any>;
     updateUserInfo: (token:string, userId:string,username?: string, profileImage?: string) => Promise<void>;
-
+    setPostAsFavorite: (token: string, postId: string, userId: string) => Promise<void>;
 }
 
 

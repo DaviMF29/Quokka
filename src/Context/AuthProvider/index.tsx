@@ -70,6 +70,20 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         
     }
 
+    async function setPostAsFavorite(token:string,postId:string,userId:string) {
+        const data = {
+            userId : userId,
+            postId : postId,
+        }	
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          };
+        const response = await api.put(`/api/users/favorite`,data,config)
+        console.log(response.data)
+        
+    }
     
     
     
@@ -87,7 +101,19 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
 
 
     return(
-        <AuthContext.Provider value={{...user,userId,username,email,following,followers, authenticate, logout, getUserInfo, updateUserInfo}}>
+        <AuthContext.Provider value={{
+            ...user,
+            userId,
+            username,
+            email,
+            following,
+            followers,
+            authenticate,
+            logout, 
+            getUserInfo, 
+            updateUserInfo,
+            setPostAsFavorite,
+            }}>
             {children}
         </AuthContext.Provider>
     )

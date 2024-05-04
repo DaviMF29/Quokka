@@ -1,3 +1,4 @@
+import { Button } from "@radix-ui/themes";
 import styled from "styled-components";
 
 export const PostContainer = styled.article`
@@ -26,9 +27,19 @@ export const PostContainer = styled.article`
 
 `
 
+export const InfoWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+`
+
+
 export const Author = styled.div`
     display: flex;
     align-items: center;
+    width: 100%;
+    justify-content: space-between;
     gap: 1rem;
 
 `
@@ -136,3 +147,31 @@ export const DeleteButton = styled.button`
 
 
 `
+
+export const FavoriteButton = styled(Button)`
+    padding: 0.4rem;
+    background-color: ${props => props.theme['gray-900']};
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    
+    &:hover{
+        background-color: ${props => props.theme['blue-300']};
+    }
+
+`
+
+export const UnfavoriteButton = styled(Button)`
+    padding: 0.4rem;
+    background-color: ${props => props.theme['gray-900']};
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    
+    &:hover{
+        background-color: ${props => props.theme['red-300']};
+    }
+
+
+`
+
