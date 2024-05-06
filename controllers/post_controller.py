@@ -27,7 +27,8 @@ def get_post_by_id_controller(postId):
     post = verify_post(postId)
     if not post:
         return {"message": "Post not found"}, 404
-    return post
+    posts = Post.get_post_by_id_model(postId)
+    return posts
 
 def update_post_by_id_controller(postId, text):       
     verify_change_in_text(postId,text)
