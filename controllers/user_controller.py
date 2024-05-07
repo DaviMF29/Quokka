@@ -113,3 +113,8 @@ def get_user_by_username_controller(username):
         return {"message": "User not found"}, 404
     user.pop('password', None)
     return user
+
+def get_all_posts_from_user(userId):
+    verify_user(userId)
+    posts = User.get_all_posts_from_user(userId)
+    return posts
