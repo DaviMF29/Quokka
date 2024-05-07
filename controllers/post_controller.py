@@ -1,5 +1,5 @@
 from models.Post import Post
-from utils.user_posts import add_post_in_user
+from utils.user_posts import add_post_in_user, delete_post_from_user
 from middleware.global_middleware import (
     verify_post, verify_change_in_text, verify_post_is_a_comment)
 
@@ -13,11 +13,12 @@ def create_post_controller(userId, username, text,createdAt, isCode=False, langu
 def get_all_posts_controller():
     return Post.get_all_posts()
 
-def delete_post_controller(postId):
+def delete_post_controller(postId,userId):
     previous_post_id = verify_post_is_a_comment(postId)
     if previous_post_id:
         Post.delete_comment_from_post_model(previous_post_id, postId)
         Post.delete_post_by_id_model(postId)
+        delete_post_from_user(userId,postId)
         return {"message": "Comment deleted"}
     else:
         Post.delete_post_by_id_model(postId)

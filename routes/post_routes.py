@@ -24,12 +24,11 @@ def get_post_by_id(postId):
     return jsonify(post)
 
 @post_app.route("/api/posts/<postId>", methods=["DELETE"])
-@jwt_required()
 def delete_post_route(postId):
     data = request.get_json()
     userId = data["userId"]
     verify_post_is_from_user(postId,userId)
-    delete_post_controller(postId)
+    delete_post_controller(postId,userId)
     return jsonify({"message": "Post deleted"}), 200
 
 @post_app.route("/api/posts/<postId>", methods=["PUT"])
