@@ -1,4 +1,4 @@
-import { Box, Button, Tabs } from "@radix-ui/themes";
+import { Button, Tabs } from "@radix-ui/themes";
 import { Header } from "../../components/Header";
 import { useAuth } from "../../hooks/useAuth";
 import { Banner, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, StyledBox, StyledTabTrigger } from "./styles";
@@ -23,8 +23,17 @@ export function Profile() {
 
     const [favoritePosts, setFavoritePosts] = useState<PostProps[]>([])
 
-    function callFavoritePostsList(){
+    async function callFavoritePostsList(){
+        if(user.access_token){
+            const postsId = await user.getFavoritePostsId(user.access_token)
+            const favoritePostsList = await user.getPostById(postsId)
+            setFavoritePosts(favoritePostsList)
 
+            
+           
+        }
+
+        
     }
     const {
         register, 
@@ -40,6 +49,7 @@ export function Profile() {
         const fetchData = async () => {
             if(user.access_token){
                user.getUserInfo(user.access_token) 
+               callFavoritePostsList()
             }
         }
 
@@ -83,7 +93,18 @@ export function Profile() {
                                 <p>Minhas publicações</p>
                             </Tabs.Content>
                             <Tabs.Content value="favoritePosts">
-                                <p>Posts favoritos</p>
+                                <div>
+                                    {favoritePosts.map((post) => {
+                                        return(
+                                            <div>
+                                                <h3>{post.text}</h3>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+
+                                    
+                                
                             </Tabs.Content>
                             <Tabs.Content value="account">
                                 <form style={{display:'flex',flexDirection:'column'}} onSubmit={handleSubmit(handleEditProfile)}>

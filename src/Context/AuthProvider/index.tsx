@@ -81,9 +81,27 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             }
           };
         const response = await api.put(`/api/users/favorite`,data,config)
-        console.log(response.data)
+        
         
     }
+
+    async function getPostById(postId:string) {
+        
+        const response = await api.get(`/api/posts/${postId}`)
+        console.log(response.data)
+        return response.data
+    }
+
+    async function getFavoritePostsId(token:string) {
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          };
+        const response = await api.get('/api/users/favorite/posts',config)
+        return response.data
+    }
+       
     
     
     
@@ -113,6 +131,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             getUserInfo, 
             updateUserInfo,
             setPostAsFavorite,
+            getFavoritePostsId,
+            getPostById
             }}>
             {children}
         </AuthContext.Provider>

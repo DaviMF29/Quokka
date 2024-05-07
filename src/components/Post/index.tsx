@@ -9,7 +9,7 @@ import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
 import { DropDownPost } from "./components/DropDownMenu";
 import { useState } from "react";
-import { BookmarkSimple } from "phosphor-react";
+import { BookmarkSimple, BookmarksSimple } from "phosphor-react";
 
 
 
@@ -27,17 +27,18 @@ export interface PostProps {
     createdAt: Date
     isCode?: boolean
     currentUserId: string
-    isFavorite: boolean
+    userFavoritePosts: string[]
     deletePostFunction: (postId:string, userId:string) => void
     setPostState: React.Dispatch<React.SetStateAction<boolean>>;
     setPostAsFavorite: (postId: string, userId: string) => void
+    
     
 
 }
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId, isFavorite,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
 
     const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
@@ -61,16 +62,13 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, isF
 
     function handleSetPostAsFavorite(){
         setPostAsFavorite(_id, currentUserId)
-        console.log('favoritado')
-    }
-
-    function handleRemoveFromFavorites(){
         
     }
 
     
     
     const isAuthor = currentUserId === userId
+    
     
     const publishedDateRelativeToNow = formatDistanceToNow(createdAt,{
         locale:ptBR,
@@ -108,16 +106,21 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId, isF
                     </InfoWrapper>
                    
 
-                    {!isFavorite && !isAuthor && (
-                        <FavoriteButton onClick={handleSetPostAsFavorite}>
-                            <BookmarkSimple size={18}/>
-                        </FavoriteButton>
+                    {!isAuthor && (
+                        <>
+                            {userFavoritePosts.includes(_id) ? (
+                                <UnfavoriteButton onClick={handleSetPostAsFavorite}>
+                                    <BookmarkSimple size={18}/>
+                                </UnfavoriteButton>
+                            ) : (
+                                <FavoriteButton onClick={handleSetPostAsFavorite}>
+                                    <BookmarkSimple size={18}/>
+                                </FavoriteButton>
+                            )}
+                        </>
                     )}
-                    {isFavorite && !isAuthor && (
-                        <UnfavoriteButton onClick={handleRemoveFromFavorites}>
-                            <BookmarkSimple size={18} />
-                        </UnfavoriteButton>
-)}
+                    
+                    
 
                     { isAuthor && <DropDownPost
                         _id={_id} 

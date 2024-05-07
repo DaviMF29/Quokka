@@ -163,13 +163,13 @@ export const FavoriteButton = styled(Button)`
 
 export const UnfavoriteButton = styled(Button)`
     padding: 0.4rem;
-    background-color: ${props => props.theme['gray-900']};
+    background-color: ${props => props.theme['blue-300']};
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s;
     
     &:hover{
-        background-color: ${props => props.theme['red-300']};
+        background-color: ${props => props.theme['gray-900']};
     }
 
 

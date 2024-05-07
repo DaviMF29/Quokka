@@ -9,6 +9,7 @@ import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
+import { set } from "date-fns"
 
 
 
@@ -20,7 +21,17 @@ export function Home() {
 
     const [posts, setPosts] = useState<PostProps[]>([])
     const [postsLoaded, setPostsLoaded] = useState(false);
+    const [favoritePosts, setFavoritePosts] = useState<string[]>([])
     
+
+    async function callFavoritePostsList(){
+        if(user.access_token){
+            const postsId = await user.getFavoritePostsId(user.access_token)
+            setFavoritePosts(postsId)
+            console.log(postsId)
+        }
+    }
+
     
     
     
@@ -47,6 +58,7 @@ export function Home() {
     useEffect(() => {
         if (!postsLoaded) {
             callPostList();
+            callFavoritePostsList();
             setPostsLoaded(true);
             }
     }, [postsLoaded]);
@@ -106,7 +118,7 @@ export function Home() {
                                 setPostState={setPostsLoaded}
                                 currentUserId={user.userId ?? ''}
                                 setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
-                                isFavorite={posts.isFavorite}
+                                userFavoritePosts={favoritePosts}
                             />
 
                          )

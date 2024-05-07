@@ -1,3 +1,5 @@
+
+
 export interface userId {
     userId: string;
 }
@@ -17,6 +19,8 @@ export interface IContext extends IUser {
     getUserInfo: (token:string) => Promise<any>;
     updateUserInfo: (token:string, userId:string,username?: string, profileImage?: string) => Promise<void>;
     setPostAsFavorite: (token: string, postId: string, userId: string) => Promise<void>;
+    getFavoritePostsId: (token: string) => Promise<any>;
+    getPostById: (postId: string) => Promise<any>;
 }
 
 

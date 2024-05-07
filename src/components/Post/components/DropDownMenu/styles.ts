@@ -23,6 +23,7 @@ export const DropdownMenu = styled(Dropdown.Menu)`
     background: ${props => props.theme['gray-600']};
     width: 4vw;
     height: 10vh;
+    z-index: 0;
     
 
 `
