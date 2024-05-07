@@ -22,6 +22,7 @@ def delete_post_controller(postId,userId):
         return {"message": "Comment deleted"}
     else:
         Post.delete_post_by_id_model(postId)
+        delete_post_from_user(userId,postId)
         return {"message": "Post deleted"}
 
 def get_post_by_id_controller(postId):

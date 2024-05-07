@@ -24,6 +24,7 @@ def get_post_by_id(postId):
     return jsonify(post)
 
 @post_app.route("/api/posts/<postId>", methods=["DELETE"])
+#@jwt_required()
 def delete_post_route(postId):
     data = request.get_json()
     userId = data["userId"]
