@@ -76,13 +76,13 @@ def create_post_route():
 
 
 @post_app.route("/api/posts/comment", methods=["PUT"])
-@jwt_required()
 def add_comment_route():
     data = request.get_json()
     previousPostId = data["previousPostId"]
     username = data["username"]
     userId = data["userId"]
     text = data["text"]
+    createdAt = data["createdAt"]
     isCode = data.get("isCode", False)
     language = None
 
@@ -103,7 +103,7 @@ def add_comment_route():
     
     validate_text_length(text)
 
-    result = add_comment_to_post_controller(previousPostId, userId, username, text, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text)
+    result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
     
     return jsonify(result)
 

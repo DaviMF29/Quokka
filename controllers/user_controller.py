@@ -111,4 +111,5 @@ def get_user_by_username_controller(username):
     user = User.get_user_by_username_model(username)
     if not user:
         return {"message": "User not found"}, 404
+    user.pop('password', None)
     return user
