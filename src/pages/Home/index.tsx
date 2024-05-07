@@ -28,7 +28,7 @@ export function Home() {
         if(user.access_token){
             const postsId = await user.getFavoritePostsId(user.access_token)
             setFavoritePosts(postsId)
-            console.log(postsId)
+            
         }
     }
 
@@ -120,6 +120,7 @@ export function Home() {
                                 currentUserId={user.userId ?? ''}
                                 setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                 userFavoritePosts={favoritePosts}
+                                commentField={true}
                             />
 
                          )

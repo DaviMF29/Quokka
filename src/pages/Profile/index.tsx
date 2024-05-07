@@ -7,7 +7,9 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { PostProps } from "../../components/Post";
+import { Post, PostProps } from "../../components/Post";
+import { set } from "date-fns";
+
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -20,21 +22,12 @@ type CreateEditFormData = z.infer<typeof createEditFormSchema>
 export function Profile() {
 
     const user = useAuth()
-
+    const [postsLoaded, setPostsLoaded] = useState(false);
     const [favoritePosts, setFavoritePosts] = useState<PostProps[]>([])
 
-    async function callFavoritePostsList(){
-        if(user.access_token){
-            const postsId = await user.getFavoritePostsId(user.access_token)
-            const favoritePostsList = await user.getPostById(postsId)
-            setFavoritePosts(favoritePostsList)
+    
 
-            
-           
-        }
-
-        
-    }
+    console.log(favoritePosts)
     const {
         register, 
         handleSubmit, 
@@ -47,9 +40,22 @@ export function Profile() {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (user.access_token) {
+                const postsId = await user.getFavoritePostsId(user.access_token);
+                const postsPromises = postsId.map((postId: string) => user.getPostById(postId));
+                const resolvedPosts = await Promise.all(postsPromises);
+                setFavoritePosts(resolvedPosts);
+                setPostsLoaded(true);
+            }
+        }
+        fetchData();
+    }, [postsLoaded]);
+
+    useEffect(() => {
+        const fetchData = async () => {
             if(user.access_token){
                user.getUserInfo(user.access_token) 
-               callFavoritePostsList()
+               
             }
         }
 
@@ -93,19 +99,28 @@ export function Profile() {
                                 <p>Minhas publicações</p>
                             </Tabs.Content>
                             <Tabs.Content value="favoritePosts">
-                                <div>
-                                    {favoritePosts.map((post) => {
-                                        return(
-                                            <div>
-                                                <h3>{post.text}</h3>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-
-                                    
                                 
+                            {favoritePosts.length === 0 ? (
+                                <p>Não existem posts favoritados</p>
+                            ) : (
+                                favoritePosts.map(post => (
+                                    <Post 
+                                        key={post._id}
+                                        username={post.username}
+                                        userId={post.userId}
+                                        createdAt={post.createdAt}
+                                        text={post.text}
+                                        _id={post._id}
+                                        setPostState={setPostsLoaded}
+                                        currentUserId={user.userId ?? ''}
+                                        userFavoritePosts={favoritePosts.map(post => post._id)} 
+                                        setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                        commentField={false}
+                                    />
+                                ))
+                            )}
                             </Tabs.Content>
+
                             <Tabs.Content value="account">
                                 <form style={{display:'flex',flexDirection:'column'}} onSubmit={handleSubmit(handleEditProfile)}>
                                     <div>

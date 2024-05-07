@@ -88,7 +88,6 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     async function getPostById(postId:string) {
         
         const response = await api.get(`/api/posts/${postId}`)
-        console.log(response.data)
         return response.data
     }
 

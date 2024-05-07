@@ -4,7 +4,8 @@ import { Box, Tabs } from "@radix-ui/themes";
 export const ProfileWrapper = styled.div`
     background: ${props => props.theme['gray-900']};
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: fit-content;
     color: ${props => props.theme['gray-100']};
     display: flex;
     flex-direction: column;

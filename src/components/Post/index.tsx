@@ -27,15 +27,16 @@ export interface PostProps {
     createdAt: Date
     isCode?: boolean
     currentUserId: string
-    userFavoritePosts: string[]
-    deletePostFunction: (postId:string, userId:string) => void
-    setPostState: React.Dispatch<React.SetStateAction<boolean>>;
-    setPostAsFavorite: (postId: string, userId: string) => void
+    userFavoritePosts?: string[]
+    commentField?: boolean
+    deletePostFunction?: (postId:string, userId:string) => void
+    setPostState?: React.Dispatch<React.SetStateAction<boolean>>;
+    setPostAsFavorite?: (postId: string, userId: string) => void
 }
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts,commentField,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
 
     const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
@@ -54,18 +55,21 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     const commentFieldChange = watch('content')
     
     function handleDeletePost(){
-        deletePostFunction(_id, currentUserId)
+        if(deletePostFunction){
+          deletePostFunction(_id, currentUserId)  
+        }
+        
     }
     
 
     async function handleSetPostAsFavorite(){
-        await setPostAsFavorite(_id, currentUserId)
-        setPostState(false)
-        
-        
+        if(setPostAsFavorite){
+            await setPostAsFavorite(_id, currentUserId);
+            if (setPostState) {
+                setPostState(false);
+            }
+        }
     }
-
-    
     
     const isAuthor = currentUserId === userId
     
@@ -108,7 +112,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
 
                     {!isAuthor && (
                         <>
-                            {userFavoritePosts.includes(_id) ? (
+                            {(userFavoritePosts ?? []).includes(_id) ? (
                                 <UnfavoriteButton onClick={handleSetPostAsFavorite}>
                                     <BookmarksSimple size={18}/>
                                 </UnfavoriteButton>
@@ -126,9 +130,9 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                         _id={_id} 
                         currentUserId={currentUserId} 
                         deleteFunction={handleDeletePost}
-                        setPostState={setPostState}
+                        setPostState={setPostState || (() => {})}
                         text={text}
-                        />
+                    />
                     }
                 </Author>
                 
@@ -148,24 +152,27 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                 {text}
             </PostContent>
 
-            <CommentForm onSubmit={handleSubmit(addNewComment)}>
-                <textarea 
-
-                placeholder="Escreva um comentário" 
-                {...register('content')}
-                />
-                <CommentButton type="submit" disabled={!commentFieldChange}> Comentar </CommentButton>
-            </CommentForm>
-
-            <CommentList>
-                {comments.map((comment: CreateCommentFormData) => {
-                    return (
-                        <Comments 
-                            content={comment.content}
+            {commentField && (
+                <>
+                    <CommentForm onSubmit={handleSubmit(addNewComment)}>
+                        <textarea 
+                            placeholder="Escreva um comentário" 
+                            {...register('content')}
                         />
-                    );
-                })}
-            </CommentList>
+                        <CommentButton type="submit" disabled={!commentFieldChange}> Comentar </CommentButton>
+                    </CommentForm>
+
+                    <CommentList>
+                        {comments.map((comment: CreateCommentFormData) => {
+                            return (
+                                <Comments 
+                                    content={comment.content}
+                                />
+                            );
+                        })}
+                    </CommentList>
+                </>
+)}
 
         
         </PostContainer>
