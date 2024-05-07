@@ -25,3 +25,17 @@ def delete_post_from_user(user_id, post_id):
     posts = [post for post in posts if post.get("_id") != post_id]
     User.update_user(user_id, {"posts": posts})
     return posts
+
+def add_like_to_post(post_id):
+    post = Post.get_post_by_id_model(post_id)
+    likes = post.get("likes", 0)
+    likes += 1
+    Post.update_post_model(post_id, {"likes": likes})
+    return jsonify({"message": "Like added"}), 200
+
+def remove_like_from_post(post_id):
+    post = Post.get_post_by_id_model(post_id)
+    likes = post.get("likes", 0)
+    likes -= 1
+    Post.update_post_model(post_id, {"likes": likes})
+    return jsonify({"message": "Like removed"}), 200

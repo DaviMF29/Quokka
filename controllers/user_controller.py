@@ -3,7 +3,7 @@ import bcrypt
 import base64
 import hashlib
 
-from utils.user_posts import order_posts_by_createdAt
+from utils.user_posts import order_posts_by_createdAt, add_like_to_post,remove_like_from_post
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
@@ -54,15 +54,21 @@ def add_like_to_post_controller(user_id, post_id):
     if user is None:
         return False, "User not found"
 
-    liked_posts = user.get("liked_posts", [])
-    if post_id not in liked_posts:
-        liked_posts.append(post_id)
-        User.update_user(user_id, {"liked_posts": liked_posts})
-        return True, "Post liked successfully"
-    else:
+    liked_posts = set(user.get("liked_posts", []))
+
+    if post_id in liked_posts:
         liked_posts.remove(post_id)
-        User.update_user(user_id, {"liked_posts": liked_posts})
-        return False, "Post unliked successfully"
+        remove_like_from_post(post_id)
+        action = "unliked"
+    else:
+        liked_posts.add(post_id)
+        add_like_to_post(post_id)
+        action = "liked"
+
+    User.update_user(user_id, {"liked_posts": list(liked_posts)})
+
+    return True, f"Post {action} successfully"
+
 
 def add_following_controller(user_id, following_id):
     user = verify_user(user_id)

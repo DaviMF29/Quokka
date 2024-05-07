@@ -83,7 +83,8 @@ def add_like_to_post_route(userId):
     if success:
         return jsonify({"message": message}), 200
     else:
-        return jsonify({"message": message}), 200
+        return jsonify({"message": message}), 400 
+
     
 @users_app.route("/api/users/following", methods=["POST"])
 @jwt_required()
