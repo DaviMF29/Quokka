@@ -13,17 +13,19 @@ def create_post_controller(userId, username, text,createdAt, isCode=False, langu
 def get_all_posts_controller():
     return Post.get_all_posts()
 
-def delete_post_controller(postId,userId):
+def delete_post_controller(postId, userId):
     previous_post_id = verify_post_is_a_comment(postId)
     if previous_post_id:
-        Post.delete_comment_from_post_model(previous_post_id, postId)
-        Post.delete_post_by_id_model(postId)
-        delete_post_from_user(userId,postId)
-        return {"message": "Comment deleted"}
+        message = "Comment deleted"
     else:
-        Post.delete_post_by_id_model(postId)
-        delete_post_from_user(userId,postId)
-        return {"message": "Post deleted"}
+        message = "Post deleted"
+
+    Post.delete_comment_from_post_model(previous_post_id, postId) if previous_post_id else None
+    Post.delete_post_by_id_model(postId)
+    delete_post_from_user(userId, postId)
+
+    return {"message": message}
+
 
 def get_post_by_id_controller(postId):
     post = verify_post(postId)
