@@ -57,9 +57,10 @@ export function Home() {
 
     useEffect(() => {
         if (!postsLoaded) {
-            callPostList();
             callFavoritePostsList();
+            callPostList();
             setPostsLoaded(true);
+            
             }
     }, [postsLoaded]);
 

@@ -8,8 +8,8 @@ import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
 import { DropDownPost } from "./components/DropDownMenu";
-import { useState } from "react";
-import { BookmarkSimple, BookmarksSimple } from "phosphor-react";
+import { useEffect, useRef, useState } from "react";
+import { BookmarksSimple } from "phosphor-react";
 
 
 
@@ -31,9 +31,6 @@ export interface PostProps {
     deletePostFunction: (postId:string, userId:string) => void
     setPostState: React.Dispatch<React.SetStateAction<boolean>>;
     setPostAsFavorite: (postId: string, userId: string) => void
-    
-    
-
 }
 
 
@@ -59,9 +56,12 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     function handleDeletePost(){
         deletePostFunction(_id, currentUserId)
     }
+    
 
-    function handleSetPostAsFavorite(){
-        setPostAsFavorite(_id, currentUserId)
+    async function handleSetPostAsFavorite(){
+        await setPostAsFavorite(_id, currentUserId)
+        setPostState(false)
+        
         
     }
 
@@ -110,11 +110,11 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                         <>
                             {userFavoritePosts.includes(_id) ? (
                                 <UnfavoriteButton onClick={handleSetPostAsFavorite}>
-                                    <BookmarkSimple size={18}/>
+                                    <BookmarksSimple size={18}/>
                                 </UnfavoriteButton>
                             ) : (
                                 <FavoriteButton onClick={handleSetPostAsFavorite}>
-                                    <BookmarkSimple size={18}/>
+                                    <BookmarksSimple size={18}/>
                                 </FavoriteButton>
                             )}
                         </>
