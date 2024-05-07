@@ -175,3 +175,23 @@ export const UnfavoriteButton = styled(Button)`
 
 `
 
+
+export const LikeButton = styled.button`
+    
+    background: transparent;
+    border: 1px solid red;
+    border: none;
+    color: white;
+    transition: 0.2s;
+    &:hover{
+        color: ${props => props.theme['blue-300']};
+    }
+`
+
+export const PostFooter = styled.footer`
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+
+`
+

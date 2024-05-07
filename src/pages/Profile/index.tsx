@@ -27,7 +27,7 @@ export function Profile() {
 
     
 
-    console.log(favoritePosts)
+    
     const {
         register, 
         handleSubmit, 

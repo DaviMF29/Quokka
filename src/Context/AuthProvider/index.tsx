@@ -85,12 +85,6 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         
     }
 
-    async function getPostById(postId:string) {
-        
-        const response = await api.get(`/api/posts/${postId}`)
-        return response.data
-    }
-
     async function getFavoritePostsId(token:string) {
         const config = {
             headers: {
@@ -101,8 +95,38 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         return response.data
     }
        
+    async function getPostById(postId:string) {
+        
+        const response = await api.get(`/api/posts/${postId}`)
+        return response.data
+    }
+
+    async function addComment(token:string,previousPostId:string,text:string, userId:string, username:string) {
+        const data = {
+            previousPostId : previousPostId,
+            text : text,
+            userId : userId,
+            username: username,
+        }	
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          };
+        const response = await api.put("/api/posts/comment",data,config)
+        return response.data
+      
+    }
     
-    
+
+    async function addLike(token:string,postId:string) {
+
+      
+    }
+
+    async function getPostLikes(postID:string) {
+      
+    }
     
 
     function logout(){
@@ -131,7 +155,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             updateUserInfo,
             setPostAsFavorite,
             getFavoritePostsId,
-            getPostById
+            getPostById, 
+            addComment
             }}>
             {children}
         </AuthContext.Provider>

@@ -2,22 +2,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, PostContainer, PostContent, UnfavoriteButton } from "./styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton } from "./styles";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
 import { DropDownPost } from "./components/DropDownMenu";
 import { useEffect, useRef, useState } from "react";
-import { BookmarksSimple } from "phosphor-react";
+import { BookmarksSimple, ThumbsUp } from "phosphor-react";
+import { useAuth } from "../../hooks/useAuth";
+import { CommentSection } from "./components/CommentSection";
+import { Comment } from "../Comment/styles";
 
 
 
-const createCommentFormSchema = z.object({
-    content: z.string().nonempty('Campo obrigatório!'),
-})
 
-type CreateCommentFormData = z.infer<typeof createCommentFormSchema>
+ const createCommentFormSchema = z.object({
+     content: z.string().nonempty('Campo obrigatório!'),
+ })
+
+ type CreateCommentFormData = z.infer<typeof createCommentFormSchema>
 
 export interface PostProps {
     _id: string
@@ -38,21 +42,22 @@ export interface PostProps {
 
 export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts,commentField,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
 
-    const [comments, setComments] = useState<CreateCommentFormData[]>([])
+    const user = useAuth()
+     const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
     
    
-    const {
-        register, 
-        handleSubmit, 
-        formState: {errors},
-        watch,
-        reset,
-        } =  useForm<CreateCommentFormData>({
-        resolver: zodResolver(createCommentFormSchema)
-    })
+     const {
+         register, 
+         handleSubmit, 
+         formState: {errors},
+         watch,
+         reset,
+         } =  useForm<CreateCommentFormData>({
+         resolver: zodResolver(createCommentFormSchema)
+     })
 
-    const commentFieldChange = watch('content')
+     const commentFieldChange = watch('content')
     
     function handleDeletePost(){
         if(deletePostFunction){
@@ -72,19 +77,20 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     }
     
     const isAuthor = currentUserId === userId
-    
-    
+
     const publishedDateRelativeToNow = formatDistanceToNow(createdAt,{
         locale:ptBR,
         addSuffix: true
-
     })
 
-    function addNewComment(data: CreateCommentFormData) {
-        console.log('comentado:', data.content);
-        setComments(prevComments => [...prevComments, data]);
-        reset()
-    }
+     async function addNewComment(data: CreateCommentFormData) {
+         console.log('comentado:', data.content);
+         if (user.access_token && user.userId && user.username) { 
+             await user.addComment(user.access_token, _id, data.content, user.userId, user.username);
+         }
+         setComments(prevComments => [...prevComments, data]);
+         reset()
+     }
     
     
 
@@ -172,7 +178,18 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                         })}
                     </CommentList>
                 </>
-)}
+            )}
+
+            
+            
+
+            <PostFooter>
+               <LikeButton><ThumbsUp size={24} weight="fill"/> Like</LikeButton> 
+               {/* {commentField && 
+                <CommentSection postId={_id}                      
+                />} */}
+            </PostFooter>
+            
 
         
         </PostContainer>

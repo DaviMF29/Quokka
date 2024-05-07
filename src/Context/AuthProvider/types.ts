@@ -21,6 +21,7 @@ export interface IContext extends IUser {
     setPostAsFavorite: (token: string, postId: string, userId: string) => Promise<void>;
     getFavoritePostsId: (token: string) => Promise<any>;
     getPostById: (postId: string) => Promise<any>;
+    addComment: (token:string,previousPostId:string,text:string, userId:string, username:string) => Promise<void>;
 }
 
 
