@@ -58,3 +58,9 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
     Post.update_post_by_id_model(previousPostId, updated_fields)
 
     return {"message": "Comment added successfully", "id": _id}, 200
+
+def get_likes_from_post_controller(postId):
+    post = verify_post(postId)
+    if not post:
+        return {"message": "Post not found"}, 404
+    return {"likes": post["likes"]}

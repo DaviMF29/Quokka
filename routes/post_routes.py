@@ -7,7 +7,7 @@ from middleware.global_middleware import (
 from controllers.post_controller import (
     create_post_controller, add_comment_to_post_controller,
     delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
-    get_post_by_id_controller
+    get_post_by_id_controller,get_likes_from_post_controller
     
 )
 
@@ -107,10 +107,9 @@ def add_comment_route():
     
     return jsonify(result)
 
-
-
-
-
+@post_app.route("/api/posts/likes/<postId>", methods=["GET"])
+def get_likes_from_posts(postId):
+    return jsonify(get_likes_from_post_controller(postId)), 200
 
 
 

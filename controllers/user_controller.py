@@ -107,3 +107,8 @@ def get_favorite_posts_controller(user_id):
     return posts
 
 
+def get_user_by_username_controller(username):
+    user = User.get_user_by_username_model(username)
+    if not user:
+        return {"message": "User not found"}, 404
+    return user
