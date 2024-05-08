@@ -45,6 +45,10 @@ export function Profile() {
                 const postsId = await user.getFavoritePostsId(user.access_token);
                 const postsPromises = postsId.map((postId: string) => user.getPostById(postId));
                 const resolvedPosts = await Promise.all(postsPromises);
+
+
+                const userPosts = await user.getUserPosts(user.access_token, user.userId ?? '');
+                setMyPosts(userPosts);
                 setFavoritePosts(resolvedPosts);
                 setPostsLoaded(true);
             }
@@ -97,7 +101,28 @@ export function Profile() {
 
                         <StyledBox pt="3" >
                             <StyledTabsContent value="publications">
-                                <p>Minhas publicações</p>
+                                {myPosts.length === 0 ? (
+                                    <p>Não existem postagens</p>
+                                ) : (
+                                    myPosts.map(post => (
+                                        <Post 
+                                            key={post._id}
+                                            username={post.username}
+                                            userId={post.userId}
+                                            createdAt={post.createdAt}
+                                            text={post.text}
+                                            _id={post._id}
+                                            setPostState={setPostsLoaded}
+                                            currentUserId={user.userId ?? ''}
+                                            userFavoritePosts={myPosts.map(post => post._id)} 
+                                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                            commentField={false}
+                                        />
+                                    ))
+                                )}
+                                
+
+                                
                             </StyledTabsContent>
                             <StyledTabsContent value="favoritePosts">
                                 

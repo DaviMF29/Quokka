@@ -26,7 +26,7 @@ export interface IContext extends IUser {
     addComment: (token:string,previousPostId:string,text:string, userId:string, username:string) => Promise<void>;
     getPostLikes: (postId: string) => Promise<any>;
     addLike: (token: string, postId: string, userId:string) => Promise<void>;
-    getUserPosts: (token: string) => Promise<any>;
+    getUserPosts: (token: string, userId:string) => Promise<any>;
     getLikedPosts: (token: string) => Promise<any>;
 }
 

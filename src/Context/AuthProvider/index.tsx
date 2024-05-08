@@ -153,10 +153,13 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
       
     }
 
-    async function getUserPosts(token:string) {
+    async function getUserPosts(token:string, userId:string) {
       const config = {
         headers: {
           Authorization: `Bearer ${token}` 
+        },
+        data : {
+          userId : userId
         }
       };
       const response = await api.get(`/api/users/posts`,config)
