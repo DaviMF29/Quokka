@@ -44,6 +44,13 @@ class User:
         return posts
 
     @staticmethod
+    def get_posts_liked_by_user_model(user_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id":ObjectId(user_id)})
+        liked_posts = user.get("liked_posts",[])
+        return liked_posts
+
+    @staticmethod
     def get_user_by_username_model(username):
         users_collection = db.users
         user = users_collection.find_one({"username": username})

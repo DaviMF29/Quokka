@@ -6,7 +6,7 @@ from controllers.user_controller import (
     add_like_to_post_controller,add_following_controller,
     get_all_following_controller,get_posts_from_following_controller,
     get_favorite_posts_controller,get_user_by_username_controller,
-    get_all_posts_from_user)
+    get_all_posts_from_user,get_posts_likeds_controller)
 
 from flask_jwt_extended import jwt_required
 from middleware.global_middleware import delete_all_posts_from_user
@@ -126,6 +126,13 @@ def get_user_by_username_route(username):
 def get_my_posts_route():
     userId = get_jwt_identity()
     response = get_all_posts_from_user(userId)
+    return jsonify(response), 200
+
+@users_app.route("/api/users/liked_posts", methods=["GET"])
+@jwt_required()
+def get_my_likedposts():
+    userId = get_jwt_identity()
+    response = get_posts_likeds_controller(userId)
     return jsonify(response), 200
 
 #---------------------------------EXTRA--------------------------------

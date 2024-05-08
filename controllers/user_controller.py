@@ -112,6 +112,13 @@ def get_favorite_posts_controller(user_id):
         posts.append(post_id)
     return posts
 
+def get_posts_likeds_controller(user_id):
+    verify_user(user_id)
+    likedPosts = User.get_posts_liked_by_user_model(user_id)
+    posts = []
+    for post_id in likedPosts:
+        posts.append(post_id)
+    return posts
 
 def get_user_by_username_controller(username):
     user = User.get_user_by_username_model(username)
