@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { number, z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton } from "./styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnlikeButton } from "./styles";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
@@ -13,6 +13,7 @@ import { BookmarksSimple, ThumbsUp } from "phosphor-react";
 import { useAuth } from "../../hooks/useAuth";
 import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
+import { api } from "../../services/api";
 
 
 
@@ -32,32 +33,35 @@ export interface PostProps {
     isCode?: boolean
     currentUserId: string
     userFavoritePosts?: string[]
+    userLikedPosts?: string[]
     commentField?: boolean
     deletePostFunction?: (postId:string, userId:string) => void
-    setPostState?: React.Dispatch<React.SetStateAction<boolean>>;
+    setPostState: React.Dispatch<React.SetStateAction<boolean>>
     setPostAsFavorite?: (postId: string, userId: string) => void
+    setPostAsLiked?: (postId: string, userId: string) => void
 }
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts,commentField,deletePostFunction, setPostState, setPostAsFavorite}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
 
     const user = useAuth()
-     const [comments, setComments] = useState<CreateCommentFormData[]>([])
+    const [comments, setComments] = useState<CreateCommentFormData[]>([])
+    
+    const [numberOfLikes, setNumberOfLikes] = useState<number>(0)
     
     
    
      const {
          register, 
-         handleSubmit, 
-         formState: {errors},
+         handleSubmit,
          watch,
          reset,
          } =  useForm<CreateCommentFormData>({
          resolver: zodResolver(createCommentFormSchema)
      })
 
-     const commentFieldChange = watch('content')
+    const commentFieldChange = watch('content')
     
     function handleDeletePost(){
         if(deletePostFunction){
@@ -70,11 +74,37 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     async function handleSetPostAsFavorite(){
         if(setPostAsFavorite){
             await setPostAsFavorite(_id, currentUserId);
-            if (setPostState) {
-                setPostState(false);
-            }
+            setPostState(false);
+            
         }
     }
+
+
+    async function getNumberOfLikesInPost() {
+       const response = await api.get(`/api/posts/likes/${_id}`)
+       setNumberOfLikes(response.data.likes)
+    }
+
+    useEffect(() => {
+        getNumberOfLikesInPost()
+    }, [numberOfLikes])
+
+    
+    
+    async function handleSetPostAsLiked() {
+         const config = {
+             headers: {
+                 Authorization: `Bearer ${user.access_token}` 
+             }
+         };
+    
+         const data = {
+             postId: _id
+         }
+         await api.post(`/api/users/like/${currentUserId}`, data, config);
+         setPostState(false);
+        
+     }
     
     const isAuthor = currentUserId === userId
 
@@ -97,9 +127,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
 
     return(
         <PostContainer>
-
-            
-            
             <header>
                 <Author>
                     <InfoWrapper>
@@ -141,16 +168,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                     />
                     }
                 </Author>
-                
-                
-                
-                
-
-               
-
-
-                
-                
             </header>
             
             
@@ -184,7 +201,17 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             
 
             <PostFooter>
-               <LikeButton><ThumbsUp size={24} weight="fill"/> Like</LikeButton> 
+                {(userLikedPosts ?? []).includes(_id) ? (
+                                <UnlikeButton onClick={handleSetPostAsLiked}><ThumbsUp size={24} weight="fill"/> UnLike</UnlikeButton> 
+                            ) : (
+                                <LikeButton  onClick={handleSetPostAsLiked}><ThumbsUp size={24} weight="fill"/> Like</LikeButton> 
+                            )}
+
+
+
+
+               
+               <p>{numberOfLikes}</p>
                {/* {commentField && 
                 <CommentSection postId={_id}                      
                 />} */}

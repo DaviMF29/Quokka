@@ -15,6 +15,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     const [userId, setUserId] = useState<string>('')
     const [followers, setFollowers] = useState<userId[]>([])
     const [following, setFollowing] = useState<userId[]>([])
+    const [likedPosts, setLikedPosts] = useState<string[]>([])
     
 
     
@@ -54,6 +55,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setEmail(response.data.email)
         setFollowers(response.data.followers)
         setFollowing(response.data.following)
+        setLikedPosts(response.data.liked_posts)
 
         
     }
@@ -119,14 +121,49 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     }
     
 
-    async function addLike(token:string,postId:string) {
-
+    async function addLike(token:string,postId:string, userId:string) {
+        const data = {
+            postId : postId,
+        }	
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          };
+        const response = await api.put(`/api/posts/like/${userId}`,data,config)
+        return response.data
       
     }
 
     async function getPostLikes(postID:string) {
+        const response = await api.get(`/api/posts/likes/${postID}`)
+        return response.data
       
     }
+
+    async function getLikedPosts(token:string) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        };
+        const response = await api.get(`/api/users/liked_posts`,config)
+        setLikedPosts(response.data)
+        return response.data
+      
+    }
+
+    async function getUserPosts(token:string) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}` 
+        }
+      };
+      const response = await api.get(`/api/users/posts`,config)
+      setLikedPosts(response.data)
+      return response.data
+    
+  }
     
 
     function logout(){
@@ -137,6 +174,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setUsername('')
         setFollowers([])
         setFollowing([])
+        setLikedPosts([])
     }
 
 
@@ -149,13 +187,18 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             email,
             following,
             followers,
+            likedPosts,
             authenticate,
             logout, 
             getUserInfo, 
             updateUserInfo,
             setPostAsFavorite,
             getFavoritePostsId,
-            getPostById, 
+            getUserPosts,
+            getLikedPosts,
+            getPostById,
+            getPostLikes,
+            addLike,
             addComment
             }}>
             {children}

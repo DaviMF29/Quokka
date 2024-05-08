@@ -1,7 +1,7 @@
 import { Button, Tabs } from "@radix-ui/themes";
 import { Header } from "../../components/Header";
 import { useAuth } from "../../hooks/useAuth";
-import { Banner, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, StyledBox, StyledTabTrigger } from "./styles";
+import { Banner, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, StyledBox, StyledTabTrigger, StyledTabsContent } from "./styles";
 import '@radix-ui/themes/styles.css';
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +24,8 @@ export function Profile() {
     const user = useAuth()
     const [postsLoaded, setPostsLoaded] = useState(false);
     const [favoritePosts, setFavoritePosts] = useState<PostProps[]>([])
-
+    const [myPosts, setMyPosts] = useState<PostProps[]>([])
+    
     
 
     
@@ -94,11 +95,11 @@ export function Profile() {
                             <StyledTabTrigger value="settings">Settings</StyledTabTrigger>
                         </Tabs.List>
 
-                        <StyledBox pt="3">
-                            <Tabs.Content value="publications">
+                        <StyledBox pt="3" >
+                            <StyledTabsContent value="publications">
                                 <p>Minhas publicações</p>
-                            </Tabs.Content>
-                            <Tabs.Content value="favoritePosts">
+                            </StyledTabsContent>
+                            <StyledTabsContent value="favoritePosts">
                                 
                             {favoritePosts.length === 0 ? (
                                 <p>Não existem posts favoritados</p>
@@ -119,9 +120,9 @@ export function Profile() {
                                     />
                                 ))
                             )}
-                            </Tabs.Content>
+                            </StyledTabsContent>
 
-                            <Tabs.Content value="account">
+                            <StyledTabsContent value="account">
                                 <form style={{display:'flex',flexDirection:'column'}} onSubmit={handleSubmit(handleEditProfile)}>
                                     <div>
                                         <label htmlFor="username">Username:</label>
@@ -144,13 +145,13 @@ export function Profile() {
 
                                     <Button type="submit">Save</Button>
                                 </form>
-                            </Tabs.Content>
+                            </StyledTabsContent>
 
                             
 
-                            <Tabs.Content value="settings">
+                            <StyledTabsContent value="settings">
                                 <p>settings content</p>
-                            </Tabs.Content>
+                            </StyledTabsContent>
                         </StyledBox>
                     </Tabs.Root>
                 

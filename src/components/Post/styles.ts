@@ -181,17 +181,40 @@ export const LikeButton = styled.button`
     background: transparent;
     border: 1px solid red;
     border: none;
-    color: white;
+    color: ${props => props.theme['gray-100']} ;
     transition: 0.2s;
+
+
+    
+
+
     &:hover{
-        color: ${props => props.theme['blue-300']};
+        color: ${props => props.theme['blue-300']} ;
+    }
+`
+
+
+export const UnlikeButton = styled.button`
+    background: transparent;
+    border: none;
+    color: ${props => props.theme['blue-300']} ;
+    transition: 0.2s;
+
+    &:hover{
+        color: ${props => props.theme['gray-100']} ;
     }
 `
 
 export const PostFooter = styled.footer`
     margin-top: 2rem;
     display: flex;
+    align-items: center;
+    
     gap: 1rem;
+
+    p{
+        margin-top: 0.9rem;
+    }
 
 `
 

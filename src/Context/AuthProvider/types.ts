@@ -1,3 +1,4 @@
+import { PostProps } from "../../components/Post";
 
 
 export interface userId {
@@ -10,6 +11,7 @@ export interface IUser {
     username?: string;
     followers?: Array<userId> | undefined;
     following?: Array<userId> | undefined;
+    likedPosts?: Array<string> | undefined;
     access_token?: string;
 }
 
@@ -22,6 +24,10 @@ export interface IContext extends IUser {
     getFavoritePostsId: (token: string) => Promise<any>;
     getPostById: (postId: string) => Promise<any>;
     addComment: (token:string,previousPostId:string,text:string, userId:string, username:string) => Promise<void>;
+    getPostLikes: (postId: string) => Promise<any>;
+    addLike: (token: string, postId: string, userId:string) => Promise<void>;
+    getUserPosts: (token: string) => Promise<any>;
+    getLikedPosts: (token: string) => Promise<any>;
 }
 
 

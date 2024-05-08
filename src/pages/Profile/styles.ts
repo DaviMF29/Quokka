@@ -52,6 +52,7 @@ export const StyledBox = styled(Box)`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 2rem;
     padding: 2rem;
     border-radius: 10px;
@@ -112,6 +113,12 @@ export const ProfileText = styled.div`
     h3 {
         font-size: 20px;
     }
+
+`
+
+export const StyledTabsContent = styled(Tabs.Content)`
+    max-width: 40rem;
+    min-width: 30rem;
 
 `
 

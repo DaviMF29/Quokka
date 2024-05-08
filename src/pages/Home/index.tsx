@@ -18,24 +18,28 @@ export function Home() {
     
     const user = useAuth()
     const [open, setOpen] = useState(false)
-
     const [posts, setPosts] = useState<PostProps[]>([])
     const [postsLoaded, setPostsLoaded] = useState(false);
     const [favoritePosts, setFavoritePosts] = useState<string[]>([])
+    const [likedPosts, setLikedPosts] = useState<string[]>([])
     
+
+    
+
 
     async function callFavoritePostsList(){
         if(user.access_token){
             const postsId = await user.getFavoritePostsId(user.access_token)
             setFavoritePosts(postsId)
-            
         }
     }
 
-    
-    
-    
-    
+    async function callLikedPostsList(){
+        if(user.access_token){
+            const postsId = await user.getLikedPosts(user.access_token)
+            setLikedPosts(postsId)
+        }
+    }
 
     async function callPostList(){
         const postList = await api.get('api/posts')
@@ -49,6 +53,8 @@ export function Home() {
                user.getUserInfo(user.access_token) 
             }
         }
+        
+        
 
         fetchData()
     }, [])
@@ -58,14 +64,14 @@ export function Home() {
     useEffect(() => {
         if (!postsLoaded) {
             callFavoritePostsList();
+            callLikedPostsList();
             callPostList();
             setPostsLoaded(true);
-            
             }
     }, [postsLoaded]);
 
     
-        
+    
 
     async function handleDeletePost(postId:string, userId:string){
         const postIndex = posts.findIndex(post => post._id == postId)
@@ -120,6 +126,8 @@ export function Home() {
                                 currentUserId={user.userId ?? ''}
                                 setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                 userFavoritePosts={favoritePosts}
+                                userLikedPosts={likedPosts}
+                                setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
                                 commentField={true}
                             />
 
