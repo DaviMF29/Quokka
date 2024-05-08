@@ -27,14 +27,14 @@ class User:
         return str(result.inserted_id)
 
     @staticmethod
-    def get_all_posts():
+    def get_all_users():
         users_collection = db.users
         users = users_collection.find()
-        serialized_posts = []
+        serialized_users = []
         for user in users:
             user["_id"] = str(user["_id"])
-            serialized_posts.append(user)
-        return serialized_posts
+            serialized_users.append(user)
+        return serialized_users
 
     @staticmethod
     def get_all_posts_from_user(user_id):

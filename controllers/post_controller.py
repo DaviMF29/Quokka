@@ -1,5 +1,6 @@
 from models.Post import Post
-from utils.user_posts import add_post_in_user, delete_post_from_user
+from utils.user_posts import (
+    add_post_in_user, delete_post_from_user,delete_post_if_was_favorited)
 from middleware.global_middleware import (
     verify_post, verify_change_in_text, verify_post_is_a_comment)
 
@@ -22,6 +23,7 @@ def delete_post_controller(postId, userId):
 
     Post.delete_comment_from_post_model(previous_post_id, postId) if previous_post_id else None
     Post.delete_post_by_id_model(postId)
+    delete_post_if_was_favorited(postId)
     delete_post_from_user(userId, postId)
 
     return {"message": message}

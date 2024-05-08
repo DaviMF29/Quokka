@@ -39,3 +39,11 @@ def remove_like_from_post(post_id):
     likes -= 1
     Post.update_post_model(post_id, {"likes": likes})
     return jsonify({"message": "Like removed"}), 200
+
+def delete_post_if_was_favorited(post_id):
+    users = User.get_all_users()
+    for user in users:
+        posts = user.get("favorites", [])
+        posts = [post for post in posts if post.get("_id") != post_id]
+        User.update_user(user.get("_id"), {"favorites": posts})
+    return jsonify({"message": "Post deleted from favorites"}), 200
