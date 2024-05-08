@@ -102,6 +102,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
              postId: _id
          }
          await api.post(`/api/users/like/${currentUserId}`, data, config);
+         getNumberOfLikesInPost()
          setPostState(false);
         
      }
