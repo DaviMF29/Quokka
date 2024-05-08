@@ -10,7 +10,6 @@ def add_post_in_user(user_id, post):
     posts.append(post)
     User.update_user(user_id, {"posts": posts})
 
-
 def order_posts_by_createdAt(posts_list):
     for posts in posts_list:
         sorted_posts = sorted(posts, key=lambda x: datetime.strptime(x['createdAt'], '%H:%M:%S:%d/%m/%Y'))
@@ -40,10 +39,15 @@ def remove_like_from_post(post_id):
     Post.update_post_model(post_id, {"likes": likes})
     return jsonify({"message": "Like removed"}), 200
 
+
 def delete_post_if_was_favorited(post_id):
     users = User.get_all_users()
     for user in users:
-        posts = user.get("favorites", [])
-        posts = [post for post in posts if post.get("_id") != post_id]
-        User.update_user(user.get("_id"), {"favorites": posts})
-    return jsonify({"message": "Post deleted from favorites"}), 200
+        favorites = user.get("favorites", [])
+        if post_id in favorites:
+            favorites = [fav for fav in favorites if fav != post_id]
+            User.update_user(user.get("_id"), {"favorites": favorites})
+    return jsonify({"message": "Post removed from favorites"}), 200
+
+
+

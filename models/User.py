@@ -49,7 +49,7 @@ class User:
         user = users_collection.find_one({"_id":ObjectId(user_id)})
         liked_posts = user.get("liked_posts",[])
         return liked_posts
-
+    
     @staticmethod
     def get_user_by_username_model(username):
         users_collection = db.users
@@ -75,6 +75,12 @@ class User:
         result = users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": updated_fields})
         return result
     
+    @staticmethod
+    def update_many_user(query, updated_fields):
+        users_collection = db.users
+        result = users_collection.update_many(query, {"$pull": updated_fields})
+        return result
+
     @staticmethod
     def get_followers_model(user_id):
         users_collection = db.users
