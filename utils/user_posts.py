@@ -21,9 +21,13 @@ def delete_post_from_user(user_id, post_id):
     posts = user.get("posts")
     if not posts:
         return jsonify({"message": "User has no posts"}), 400
-    posts = [post for post in posts if post.get("_id") != post_id]
+    if post_id not in posts:
+        return jsonify({"message": "Post not found in user"}), 404
+    else:
+        posts.remove(post_id)
     User.update_user(user_id, {"posts": posts})
     return posts
+
 
 def add_like_to_post(post_id):
     post = Post.get_post_by_id_model(post_id)
