@@ -4,10 +4,10 @@ from datetime import datetime
 from flask import jsonify
 
 
-def add_post_in_user(user_id, post):
+def add_post_in_user(user_id, postId):
     user = User.get_user_by_id_model(user_id)
     posts = user.get("posts", [])
-    posts.append(post)
+    posts.append(postId)
     User.update_user(user_id, {"posts": posts})
 
 def order_posts_by_createdAt(posts_list):

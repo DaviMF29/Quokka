@@ -8,8 +8,7 @@ from middleware.global_middleware import (
 
 def create_post_controller(userId, username, text,createdAt, isCode=False, language=None,previousPostId = None):
     post_id = Post.create_post_model(userId, username, text,createdAt, isCode, language, previousPostId)
-    post = get_post_by_id_controller(post_id)
-    add_post_in_user(userId, post)
+    add_post_in_user(userId, post_id)
     return post_id
 
 def get_all_posts_controller():
