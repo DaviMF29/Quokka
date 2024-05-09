@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Post, PostProps } from "../../components/Post";
 import profileImg from '../../assets/avatar_img.png'
+import { api } from "../../services/api";
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -74,6 +75,27 @@ export function Profile() {
 
     }
 
+    async function handleDeletePost(postId:string, userId:string){
+        const postIndex = myPosts.findIndex(post => post._id == postId)
+
+        if(postIndex !== -1){
+            const post = myPosts[postIndex]
+
+            if(post.userId === userId){
+                const url = `/api/posts/${postId}`
+                const config = {
+                    data: {userId},
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`
+                    }
+                }
+                await api.delete(url, config)
+                setPostsLoaded(false)
+
+            }
+        }
+    }
+
     
     return(
         <>
@@ -123,8 +145,7 @@ export function Profile() {
                                             _id={post._id}
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
-                                            userFavoritePosts={myPosts.map(post => post._id)} 
-                                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                            deletePostFunction={handleDeletePost}
                                             commentField={false}
                                         />
                                     )).reverse()
