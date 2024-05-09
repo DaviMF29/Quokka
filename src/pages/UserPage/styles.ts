@@ -145,4 +145,25 @@ export const Banner = styled.img`
 `
 
 
+export const FollowButton = styled.button`
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    background: ${props => props.theme['blue-300']};
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
 
+    &:hover{
+        background: ${props => props.theme['blue-400']};
+    }
+
+`
+
+export const UserPosts = styled.div`
+
+
+
+
+`

@@ -8,8 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Post, PostProps } from "../../components/Post";
-import { set } from "date-fns";
-
+import profileImg from '../../assets/avatar_img.png'
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -82,11 +81,21 @@ export function Profile() {
             <ProfileWrapper>
                 <Banner src="https://i.pinimg.com/originals/0b/a3/d6/0ba3d60362c7e6d256cfc1f37156bad9.jpg"></Banner>
                 <ProfileInfo>
-                   <ProfilePicture src="https://avatars.githubusercontent.com/eliasmedeiros898"></ProfilePicture>
+                   <ProfilePicture src={profileImg}></ProfilePicture>
                    <ProfileText>
                     <h1>{user?.username ? user.username : 'user not found'}</h1> 
                     <h3>{user?.email ? user.email : 'email not found'}</h3>
 
+                    {/* <div>
+                        <p>Posts: {myPosts.length}</p>
+                        <p>Posts favoritados: {favoritePosts.length}</p>
+                        <p>Seguidores: {user.followers?.length}</p>
+                        <p>Seguindo: {user.following?.length}</p>
+                    </div> */}
+                    
+                    
+                    
+                    
                    </ProfileText>
                 </ProfileInfo>
 
@@ -118,7 +127,7 @@ export function Profile() {
                                             setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                             commentField={false}
                                         />
-                                    ))
+                                    )).reverse()
                                 )}
                                 
 
