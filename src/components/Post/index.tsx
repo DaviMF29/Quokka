@@ -138,7 +138,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                         <AuthorInfo>
                             <strong>{username}</strong>
                             <time>
-                                {publishedDateRelativeToNow}
+                                 {publishedDateRelativeToNow} 
                             </time>
                         </AuthorInfo>
                     </InfoWrapper>

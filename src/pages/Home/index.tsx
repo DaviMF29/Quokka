@@ -59,6 +59,7 @@ export function Home() {
             }
           };
         const postList = await api.get('/api/users/following/posts',config)
+        console.log(postList)
         setFollowingPosts(postList.data.reverse())
     }
 
@@ -163,7 +164,7 @@ export function Home() {
                         </Tabs.Content>
 
                         <Tabs.Content value="following">
-                            {followingPosts.map(posts => {
+                            {/* {(followingPosts ? followingPosts.map(posts => {
                                 return(                  
                                         <Post 
                                             key={posts._id}
@@ -183,7 +184,17 @@ export function Home() {
                                         />
 
                                     )
-                                })}
+                                }) 
+                                :
+
+                                
+                                
+                            )} */}
+
+                                <div>
+                                    Não existem Posts
+                                </div>
+                            
                         </Tabs.Content>
                     </Box>
                 </Tabs.Root>
