@@ -9,6 +9,7 @@ import { Button } from "@radix-ui/themes"
 import { Tabs } from "phosphor-react"
 import { ProfileWrapper, Banner, ProfileInfo, ProfilePicture, ProfileText, FollowButton, StyledTabTrigger, StyledBox, StyledTabsContent, UserPosts, UnfollowButton } from "./styles"
 import avatarImg from '../../assets/avatar_img.png'
+import { get, set } from "react-hook-form"
 interface UserInfo {
     _id : string
     username: string
@@ -39,22 +40,23 @@ export function UserPage({userId}: {userId: string}) {
         useEffect(() => {
             getUserByUsername()
             user.getUserInfo(user.access_token ?? '')
-        }, [userName])
+        }, [pageOwner])
+
+
+        
 
     
         async function handleFollow() {
-
-            const config = {
-                headers: {
-                  Authorization: `Bearer ${user.access_token}` 
-                },
-                data: {
-                    userId : user.userId,
-                    followingId: pageOwner?._id
-                }
-              };
-            await api.post("/api/users/following",config)
+            
+            if(user.access_token && user.userId && pageOwner?._id){
+               user.followUser(user.access_token,user.userId,pageOwner?._id) 
+               getUserByUsername()
+               
+            }
+            
         }
+
+        
         
         return (
             

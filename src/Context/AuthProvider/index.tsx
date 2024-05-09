@@ -135,6 +135,20 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
       
     }
 
+    async function followUser(token:string, userId:string, followingId:string) {
+        const data = {
+          userId : userId,
+          followingId : followingId,
+      }	
+      const config = {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        };
+
+        const response = await api.put("/api/users/following",data,config)
+    }
+
     async function getPostLikes(postID:string) {
         const response = await api.get(`/api/posts/likes/${postID}`)
         return response.data
@@ -202,7 +216,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             getPostById,
             getPostLikes,
             addLike,
-            addComment
+            addComment,
+            followUser,
             }}>
             {children}
         </AuthContext.Provider>
