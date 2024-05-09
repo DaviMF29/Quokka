@@ -3,7 +3,7 @@ import bcrypt
 import base64
 import hashlib
 
-from utils.user_posts import order_posts_by_createdAt, add_like_to_post,remove_like_from_post
+from utils.user_posts import add_like_to_post,remove_like_from_post
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
@@ -101,7 +101,6 @@ def get_posts_from_following_controller(user_id):
     posts = []
     for following_id in following:
         posts.append(User.get_all_posts_from_user(following_id))
-    order_posts_by_createdAt(posts)
     return posts
 
 def get_favorite_posts_controller(user_id):
