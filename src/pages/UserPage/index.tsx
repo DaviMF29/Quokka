@@ -28,7 +28,7 @@ export function UserPage({userId}: {userId: string}) {
     const user = useAuth()
     const {userName} = useParams()
     const [pageOwner, setPageOwner] = useState<UserInfo | null>(null)
-    
+    const [pageLoaded, setPageLoaded] = useState(false)
     
     async function getUserByUsername() {
         const response = await api.get(`/api/users/${userName}`)
@@ -40,7 +40,8 @@ export function UserPage({userId}: {userId: string}) {
         useEffect(() => {
             getUserByUsername()
             user.getUserInfo(user.access_token ?? '')
-        }, [pageOwner])
+            setPageLoaded(true)
+        }, [pageLoaded])
 
 
         
@@ -49,8 +50,9 @@ export function UserPage({userId}: {userId: string}) {
         async function handleFollow() {
             
             if(user.access_token && user.userId && pageOwner?._id){
-               user.followUser(user.access_token,user.userId,pageOwner?._id) 
+               await user.followUser(user.access_token,user.userId,pageOwner?._id) 
                getUserByUsername()
+               setPageLoaded(false)
                
             }
             
