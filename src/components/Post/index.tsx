@@ -203,7 +203,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
 
             <PostFooter>
                 {(userLikedPosts ?? []).includes(_id) ? (
-                                <UnlikeButton onClick={handleSetPostAsLiked}><ThumbsUp size={24} weight="fill"/> UnLike</UnlikeButton> 
+                                <UnlikeButton onClick={handleSetPostAsLiked}><ThumbsUp size={24} weight="fill"/> Like</UnlikeButton> 
                             ) : (
                                 <LikeButton  onClick={handleSetPostAsLiked}><ThumbsUp size={24} weight="fill"/> Like</LikeButton> 
                             )}

@@ -34,11 +34,27 @@ export function UserPage({userId}: {userId: string}) {
         setPageOwner(response.data)
     }
 
+    
+
         useEffect(() => {
             getUserByUsername()
             user.getUserInfo(user.access_token ?? '')
         }, [userName])
 
+    
+        async function handleFollow() {
+
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${user.access_token}` 
+                },
+                data: {
+                    user_id : user.userId,
+                    following_id: pageOwner?._id
+                }
+              };
+            await api.post("/api/users/following",config)
+        }
         
         return (
             
@@ -54,6 +70,7 @@ export function UserPage({userId}: {userId: string}) {
                     <h3>{pageOwner?.email ? pageOwner.email : 'email not found'}</h3>
 
                      <div>
+                        <p>Id: {pageOwner?._id}</p>
                         <p>Posts: {pageOwner?.posts.length}</p>
                         <p>Posts favoritados: {pageOwner?.favorites.length}</p>
                         <p>Seguidores: {pageOwner?.followers?.length}</p>
@@ -61,7 +78,7 @@ export function UserPage({userId}: {userId: string}) {
                     </div> 
                     
                     {pageOwner && pageOwner._id !== userId && (
-                        <FollowButton>Follow</FollowButton>
+                        <FollowButton onClick={handleFollow}>Follow</FollowButton>
                     )}
                     
                     

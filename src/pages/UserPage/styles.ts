@@ -146,7 +146,8 @@ export const Banner = styled.img`
 
 
 export const FollowButton = styled.button`
-    padding: 0.5rem 1rem;
+    margin-top: 1.5rem;
+    padding: 0.25rem 0.75rem;
     border-radius: 5px;
     border: none;
     background: ${props => props.theme['blue-300']};
