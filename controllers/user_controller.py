@@ -98,10 +98,12 @@ def get_all_following_controller(user_id):
 def get_posts_from_following_controller(user_id):
     verify_user(user_id)
     following = User.get_following_model(user_id)
-    posts = []
+    final_posts = []
     for following_id in following:
-        posts.append(User.get_all_posts_from_user(following_id))
-    return posts
+        posts = User.get_all_posts_from_user(following_id)
+        final_posts.extend(posts)                              #obg phind por me apresentar o extend 
+    return final_posts
+
 
 def get_favorite_posts_controller(user_id):
     verify_user(user_id)

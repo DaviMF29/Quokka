@@ -104,7 +104,6 @@ def get_following_route(userId):
 @users_app.route("/api/users/following/posts", methods=["GET"])
 @jwt_required()
 def get_following_posts_route():
-    print("oi")
     userId = get_jwt_identity()
     response = get_posts_from_following_controller(userId)
     return jsonify(response), 200
