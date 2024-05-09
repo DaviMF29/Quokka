@@ -7,7 +7,7 @@ import { Header } from "../../components/Header"
 import { Profile } from "../Profile"
 import { Button } from "@radix-ui/themes"
 import { Tabs } from "phosphor-react"
-import { ProfileWrapper, Banner, ProfileInfo, ProfilePicture, ProfileText, FollowButton, StyledTabTrigger, StyledBox, StyledTabsContent, UserPosts } from "./styles"
+import { ProfileWrapper, Banner, ProfileInfo, ProfilePicture, ProfileText, FollowButton, StyledTabTrigger, StyledBox, StyledTabsContent, UserPosts, UnfollowButton } from "./styles"
 import avatarImg from '../../assets/avatar_img.png'
 interface UserInfo {
     _id : string
@@ -49,8 +49,8 @@ export function UserPage({userId}: {userId: string}) {
                   Authorization: `Bearer ${user.access_token}` 
                 },
                 data: {
-                    user_id : user.userId,
-                    following_id: pageOwner?._id
+                    userId : user.userId,
+                    followingId: pageOwner?._id
                 }
               };
             await api.post("/api/users/following",config)
@@ -70,7 +70,6 @@ export function UserPage({userId}: {userId: string}) {
                     <h3>{pageOwner?.email ? pageOwner.email : 'email not found'}</h3>
 
                      <div>
-                        <p>Id: {pageOwner?._id}</p>
                         <p>Posts: {pageOwner?.posts.length}</p>
                         <p>Posts favoritados: {pageOwner?.favorites.length}</p>
                         <p>Seguidores: {pageOwner?.followers?.length}</p>
@@ -78,8 +77,11 @@ export function UserPage({userId}: {userId: string}) {
                     </div> 
                     
                     {pageOwner && pageOwner._id !== userId && (
-                        <FollowButton onClick={handleFollow}>Follow</FollowButton>
-                    )}
+                    
+                    (pageOwner.followers && pageOwner.followers.includes(userId)) ?
+                        <UnfollowButton onClick={handleFollow}>Seguindo</UnfollowButton> : 
+                        <FollowButton onClick={handleFollow}>Seguir</FollowButton> 
+                )}
                     
                     
                    </ProfileText>

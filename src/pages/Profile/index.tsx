@@ -152,7 +152,7 @@ export function Profile() {
                                         setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                         commentField={false}
                                     />
-                                ))
+                                )).reverse()
                             )}
                             </StyledTabsContent>
 

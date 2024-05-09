@@ -115,7 +115,6 @@ export const ProfileText = styled.div`
     }
 
     div {
-        border: 1px solid ${props => props.theme['gray-800']};
         width: 100%;
         margin-top: 1.5rem;
         display: flex;
@@ -161,6 +160,24 @@ export const FollowButton = styled.button`
     }
 
 `
+
+export const UnfollowButton = styled.button`
+    margin-top: 1.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 5px;
+    border: none;
+    background: ${props => props.theme['gray-100']};
+    color: ${props => props.theme['gray-800']};
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover{
+        background: ${props => props.theme['red-500']};
+    }
+
+`
+
 
 export const UserPosts = styled.div`
 
