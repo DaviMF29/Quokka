@@ -8,12 +8,13 @@ auth_app = Blueprint("auth_app", __name__)
 @auth_app.route("/api/login", methods=["POST"])
 def login_route():
     data = request.get_json()
-   
+    if "email" not in data or "password" not in data:
+        return jsonify({"error": "A field is missing"}), 400
     email = data["email"]
     password = data["password"]
 
     response, status_code = login(email, password)
-    return jsonify(response), status_code
+    return jsonify(response), 200 if status_code == 200 else 401
 
 @auth_app.route('/api/data_user', methods=['GET'])
 @jwt_required()
