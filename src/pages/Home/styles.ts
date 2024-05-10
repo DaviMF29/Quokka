@@ -1,4 +1,3 @@
-import { Tabs } from "@radix-ui/themes";
 import styled from "styled-components";
 
 
@@ -51,15 +50,5 @@ export const OpenCreateNewPostButton = styled.button`
 
 export const Posts = styled.div`
     color: white;
-
-`
-
-
-
-export const NotPostList = styled.div`
-    font-size: 32px;
-    margin-top: 5rem;
-    color: white;
-
 
 `
