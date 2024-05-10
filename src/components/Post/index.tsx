@@ -14,11 +14,13 @@ import { useAuth } from "../../hooks/useAuth";
 import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import React from "react";
 import { JSX } from "react/jsx-runtime";
 
-
+=======
+>>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
 
 
 
@@ -178,7 +180,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             
             
             <PostContent>
-
+<<<<<<< HEAD
                  {text.split('<br>').map((line, index) => (
                     <React.Fragment key={index}>
                     {line}
@@ -186,8 +188,9 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                     </React.Fragment>
                 ))} 
                 
-
-
+=======
+                {text}
+>>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
             </PostContent>
 
             {commentField && (
