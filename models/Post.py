@@ -50,6 +50,7 @@ class Post:
         serialized_posts = []
         for post in posts:
             post["_id"] = str(post["_id"])
+            post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
             serialized_posts.append(post)
         return serialized_posts
 
@@ -57,6 +58,8 @@ class Post:
     def get_post_by_username_model(username):
         posts_collection = db.posts
         post = posts_collection.find_one({"username": username})
+        post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
+
         return post
 
     @staticmethod
@@ -68,7 +71,6 @@ class Post:
             post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
         return post
 
-
     @staticmethod
     def get_post_by_text_model(text):
         palavras = text.split()
@@ -79,7 +81,11 @@ class Post:
         posts_collection = db.posts
         posts = posts_collection.find({"text": regex})
         
+        for post in posts:
+            post["text"] = post["text"].replace("\n", "<br>")  # Substituir quebras de linha
+            
         return list(posts)
+
     
     @staticmethod
     def update_post_by_id_model(userId,updated_fields):
