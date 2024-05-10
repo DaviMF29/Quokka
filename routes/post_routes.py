@@ -59,8 +59,7 @@ def create_post_route():
 
     if data is None or data == {}:
         return jsonify({"message": "Empty body"}), 400
-
-
+    
     if "username" not in data or "userId" not in data or "text" not in data or "createdAt" not in data:
         return jsonify({"message": "Missing required fields"}), 400
 

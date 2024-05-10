@@ -15,7 +15,7 @@ class PostBuilder:
     @staticmethod
     def anPost(userId, username, text, createdAt):
         builder = PostBuilder()
-
+        
         builder.post['userId'] = userId
         builder.post['username'] = username
         builder.post['text'] = text

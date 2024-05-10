@@ -22,7 +22,7 @@ class UserBuilder:
         password = "Teste123"
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(10))
         hashed_password_base64 = base64.b64encode(hashed_password).decode()
-
+        builder.user['_id'] = "123"
         builder.user['username'] = username
         builder.user['email'] = email
         builder.user['image'] = image
