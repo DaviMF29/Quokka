@@ -80,7 +80,7 @@ export function Home() {
         if (!postsLoaded) {
             callFavoritePostsList();
             callLikedPostsList();
-             callFollowingPostList();
+            // callFollowingPostList();
             callPostList();
             setPostsLoaded(true);
             }
