@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Post, PostProps } from "../../components/Post";
 import profileImg from '../../assets/avatar_img.png'
+import { api } from "../../services/api";
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -44,10 +45,13 @@ export function Profile() {
                 const postsId = await user.getFavoritePostsId(user.access_token);
                 const postsPromises = postsId.map((postId: string) => user.getPostById(postId));
                 const resolvedPosts = await Promise.all(postsPromises);
-
+                
 
                 const userPosts = await user.getUserPosts(user.access_token, user.userId ?? '');
-                setMyPosts(userPosts);
+                const userPostsPromises = userPosts.map((postId: string) => user.getPostById(postId));
+                const resolvedUserPosts = await Promise.all(userPostsPromises);
+                console.log(userPosts)
+                setMyPosts(resolvedUserPosts);
                 setFavoritePosts(resolvedPosts);
                 setPostsLoaded(true);
             }
@@ -72,6 +76,27 @@ export function Profile() {
             user.getUserInfo(user.access_token)
         }
 
+    }
+
+    async function handleDeletePost(postId:string, userId:string){
+        const postIndex = myPosts.findIndex(post => post._id == postId)
+
+        if(postIndex !== -1){
+            const post = myPosts[postIndex]
+
+            if(post.userId === userId){
+                const url = `/api/posts/${postId}`
+                const config = {
+                    data: {userId},
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`
+                    }
+                }
+                await api.delete(url, config)
+                setPostsLoaded(false)
+
+            }
+        }
     }
 
     
@@ -123,8 +148,7 @@ export function Profile() {
                                             _id={post._id}
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
-                                            userFavoritePosts={myPosts.map(post => post._id)} 
-                                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                            deletePostFunction={handleDeletePost}
                                             commentField={false}
                                         />
                                     )).reverse()
