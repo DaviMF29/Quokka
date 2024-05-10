@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Post, PostProps } from "../../components/Post";
 import profileImg from '../../assets/avatar_img.png'
+import { api } from "../../services/api";
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -76,7 +77,6 @@ export function Profile() {
 
     }
 
-<<<<<<< HEAD
     async function callLikedPostsList(){
         if(user.access_token){
             const postsId = await user.getLikedPosts(user.access_token)
@@ -84,29 +84,8 @@ export function Profile() {
         }
     }
 
-    async function handleDeletePost(postId:string, userId:string){
-        const postIndex = myPosts.findIndex(post => post._id == postId)
+    
 
-        if(postIndex !== -1){
-            const post = myPosts[postIndex]
-
-            if(post.userId === userId){
-                const url = `/api/posts/${postId}`
-                const config = {
-                    data: {userId},
-                    headers: {
-                        Authorization: `Bearer ${user.access_token}`
-                    }
-                }
-                await api.delete(url, config)
-                setPostsLoaded(false)
-
-            }
-        }
-    }
-
-=======
->>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
     
     return(
         <>
@@ -157,13 +136,7 @@ export function Profile() {
                                             _id={post._id}
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
-<<<<<<< HEAD
-                                            userLikedPosts={likedPosts}
                                             deletePostFunction={handleDeletePost}
-=======
-                                            userFavoritePosts={myPosts.map(post => post._id)} 
-                                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
->>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
                                             commentField={false}
                                         />
                                     )).reverse()
@@ -186,7 +159,7 @@ export function Profile() {
                                         text={post.text}
                                         _id={post._id}
                                         setPostState={setPostsLoaded}
-                                        userFollowing={user.following?.map(userId => userId.toString())}
+                                        
                                         currentUserId={user.userId ?? ''}
                                         userLikedPosts={likedPosts}
                                         userFavoritePosts={favoritePosts.map(post => post._id)} 
