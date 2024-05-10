@@ -119,13 +119,14 @@ export function Profile() {
                    <ProfileText>
                     <h1>{user?.username ? user.username : 'user not found'}</h1> 
                     <h3>{user?.email ? user.email : 'email not found'}</h3>
+                    
 
-                    {/* <div>
+                    { <div>
                         <p>Posts: {myPosts.length}</p>
                         <p>Posts favoritados: {favoritePosts.length}</p>
                         <p>Seguidores: {user.followers?.length}</p>
                         <p>Seguindo: {user.following?.length}</p>
-                    </div> */}
+                    </div> }
                     
                     
                     
