@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Post, PostProps } from "../../components/Post";
 import profileImg from '../../assets/avatar_img.png'
-import { api } from "../../services/api";
 
 const createEditFormSchema = z.object({
     username: z.string(),
@@ -136,7 +135,8 @@ export function Profile() {
                                             _id={post._id}
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
-                                            deletePostFunction={handleDeletePost}
+                                            userFavoritePosts={myPosts.map(post => post._id)} 
+                                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                             commentField={false}
                                         />
                                     )).reverse()
