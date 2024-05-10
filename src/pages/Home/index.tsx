@@ -4,7 +4,7 @@ import { Header } from "../../components/Header"
 import { Post, PostProps } from "../../components/Post"
 import { SideProfile } from "../../components/SideProfile"
 import { useAuth } from "../../hooks/useAuth"
-import { CreateNewPostDiv, HomeContainer, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
+import { CreateNewPostDiv, HomeContainer, NotPostList, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
 import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -49,18 +49,18 @@ export function Home() {
         
     }
 
-    // async function callFollowingPostList() {
-    //     const config = {
-    //         headers: {
-    //           Authorization: `Bearer ${user.access_token}` 
-    //         },
-    //         data: {
-    //             userId : user.userId
-    //         }
-    //       };
-    //     const postList = await api.get('/api/users/following/posts',config)
-    //     setFollowingPosts(postList.data.reverse())
-    // }
+    async function callFollowingPostList() {
+        const config = {
+            headers: {
+              Authorization: `Bearer ${user.access_token}` 
+            },
+            data: {
+                userId : user.userId
+            }
+          };
+        const postList = await api.get('/api/users/following/posts',config)
+        setFollowingPosts(postList.data.reverse())
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -150,6 +150,7 @@ export function Home() {
                                         currentUserId={user.userId ?? ''}
                                         setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                         userFavoritePosts={favoritePosts}
+                                        userFollowing={user.following?.map(userId => userId.toString())}
                                         userLikedPosts={likedPosts}
                                         setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
                                         commentField={true}
@@ -163,7 +164,7 @@ export function Home() {
                         </Tabs.Content>
 
                         <Tabs.Content value="following">
-                            {followingPosts.map(posts => {
+                             {(followingPosts.length !== 0 ? followingPosts.map(posts => {
                                 return(                  
                                         <Post 
                                             key={posts._id}
@@ -176,6 +177,7 @@ export function Home() {
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
                                             setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                            userFollowing={user.following?.map(userId => userId.toString())}
                                             userFavoritePosts={favoritePosts}
                                             userLikedPosts={likedPosts}
                                             setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
@@ -183,7 +185,17 @@ export function Home() {
                                         />
 
                                     )
-                                })}
+                                }) 
+                                :
+                                
+                                <NotPostList>
+                                    Não existem Posts
+                                </NotPostList>
+                                
+                            )} 
+
+                                
+                            
                         </Tabs.Content>
                     </Box>
                 </Tabs.Root>

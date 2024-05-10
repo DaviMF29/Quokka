@@ -1,4 +1,5 @@
 import { Button } from "@radix-ui/themes";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const PostContainer = styled.article`
@@ -34,6 +35,16 @@ export const InfoWrapper = styled.div`
 
 `
 
+export const LinkDiv = styled(Link)`
+    text-decoration: none;
+    display: flex;
+    gap: 1rem;
+    cursor: pointer;
+
+`
+
+
+
 
 export const Author = styled.div`
     display: flex;
@@ -44,6 +55,7 @@ export const Author = styled.div`
 
 `
 export const AuthorInfo = styled.div`
+    
     strong {
         display: block;
         color: ${props => props.theme['gray-100']};
@@ -214,6 +226,44 @@ export const PostFooter = styled.footer`
 
     p{
         margin-top: 0.9rem;
+        color: ${props => props.theme['gray-100']};
+    }
+
+`
+
+
+export const FollowButton = styled.button`
+    font-size: 12px;
+    padding: 0.20rem 0.50rem;
+    margin-left: 2rem;
+    border-radius: 5px;
+    border: none;
+    background: ${props => props.theme['blue-300']};
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover{
+        background: ${props => props.theme['blue-400']};
+    }
+
+`
+
+export const UnfollowButton = styled.button`
+    font-size: 12px;
+    padding: 0.25rem 0.75rem;
+    margin-left: 2rem;
+    border-radius: 5px;
+    border: none;
+    background: ${props => props.theme['gray-100']};
+    color: ${props => props.theme['gray-800']};
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover{
+        background: ${props => props.theme['red-500']};
     }
 
 `

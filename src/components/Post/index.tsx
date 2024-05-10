@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { get, useForm } from "react-hook-form";
 import { number, z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnlikeButton } from "./styles";
-import { formatDistanceToNow } from "date-fns";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, LinkDiv, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
+import { formatDistanceToNow, set } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
@@ -14,13 +14,10 @@ import { useAuth } from "../../hooks/useAuth";
 import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
-<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import React from "react";
 import { JSX } from "react/jsx-runtime";
 
-=======
->>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
 
 
 
@@ -41,6 +38,7 @@ export interface PostProps {
     currentUserId: string
     userFavoritePosts?: string[]
     userLikedPosts?: string[]
+    userFollowing?: string[]
     commentField?: boolean
     deletePostFunction?: (postId:string, userId:string) => void
     setPostState: React.Dispatch<React.SetStateAction<boolean>>
@@ -50,12 +48,14 @@ export interface PostProps {
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,userFollowing,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
 
     const user = useAuth()
     const [comments, setComments] = useState<CreateCommentFormData[]>([])
-    
+    const [localPostState, setLocalPostState] = useState<boolean>(false)
     const [numberOfLikes, setNumberOfLikes] = useState<number>(0)
+    
+    
     
     
    
@@ -77,6 +77,14 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
         
     }
     
+    async function handleFollowUser() {
+        if(user.access_token && user.userId){
+            await user.followUser(user.access_token, user.userId, userId)
+            setLocalPostState(false)
+            setPostState(false)
+        }
+    }
+    
 
     async function handleSetPostAsFavorite(){
         if(setPostAsFavorite){
@@ -90,11 +98,14 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     async function getNumberOfLikesInPost() {
        const response = await api.get(`/api/posts/likes/${_id}`)
        setNumberOfLikes(response.data.likes)
+       
     }
 
     useEffect(() => {
         getNumberOfLikesInPost()
-    }, [numberOfLikes])
+        user.getUserInfo(user.access_token ?? '')
+        setLocalPostState(true)
+    }, [numberOfLikes, localPostState])
 
     
     
@@ -131,23 +142,41 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
      }
      
     
-
+    
+    
 
     return(
         <PostContainer>
             <header>
                 <Author>
                     <InfoWrapper>
-                        <Avatar
-                        src={avatarImg2}>
+                        <LinkDiv to={`/${username}`}>
+                            <Avatar
+                            src={avatarImg2}>
+                                
+                            </Avatar> 
+                            <AuthorInfo>
+                                <strong>{username}</strong>
+                                <time>
+                                    {publishedDateRelativeToNow} 
+                                </time>
+                            </AuthorInfo>
+                        </LinkDiv>
+                        
+                        {!isAuthor &&(
+                            <>
+                                {(userFollowing ?? []).includes(userId) ? (
+                                    <UnfollowButton onClick={handleFollowUser}>Seguindo</UnfollowButton>
+                                ) : (
+                                    <FollowButton onClick={handleFollowUser}>Seguir</FollowButton>
+                                )}
                             
-                        </Avatar> 
-                        <AuthorInfo>
-                            <strong>{username}</strong>
-                            <time>
-                                {publishedDateRelativeToNow}
-                            </time>
-                        </AuthorInfo>
+                            </>
+                        )}
+                        
+
+                        
+                        
                     </InfoWrapper>
                    
 
@@ -180,7 +209,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             
             
             <PostContent>
-<<<<<<< HEAD
                  {text.split('<br>').map((line, index) => (
                     <React.Fragment key={index}>
                     {line}
@@ -188,9 +216,6 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                     </React.Fragment>
                 ))} 
                 
-=======
-                {text}
->>>>>>> parent of f8dfa56 (Merge branch 'feature/frontend' of https://github.com/DaviMF29/Quokka into feature/frontend)
             </PostContent>
 
             {commentField && (
