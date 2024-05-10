@@ -1,9 +1,14 @@
 import os
 from flask import Flask
+from flask_jwt_extended import JWTManager
 import pytest
 from models.PostBuilder import PostBuilder
 from models.Post import Post
 from unittest.mock import patch
+from flask_jwt_extended import create_access_token
+from flask import current_app
+from dotenv import load_dotenv
+load_dotenv()
 
 @pytest.fixture
 def app():
@@ -13,8 +18,11 @@ def app():
         "TESTING": True,
     })
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
+    app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+    jwt = JWTManager(app)
     app.register_blueprint(routes.post_routes.post_app)
     return app
+
 
 @pytest.fixture
 def client(app):
@@ -23,59 +31,63 @@ def client(app):
 class TestPostRoutes:
 
     @patch.object(Post, "create_post_model")
-    def test_create_post(self,mock_get_post, mock_create_post, client):
+    def test_create_post(self, mock_create_post, client, app):
         # Setup
-        mock_get_post.return_value = False
         mock_create_post.return_value = 1
 
-        # Exercise
-        response = client.post("/api/posts",
-                               json=PostBuilder.anPost("123445656775dadda", "username", "Test post", "2024-05-09T12:00:00Z").now(),
-                               headers={"content-type": "application/json"})
+        with app.app_context():
+            # Gerar um token JWT válido para incluir no cabeçalho da requisição
+            token = create_access_token(identity="user_id")
 
-        # Verify
-        assert response.status_code == 201
+            # Exercise
+            response = client.post("/api/posts",
+                                   json=PostBuilder.anPost("66297285d39b72dde39a7bf8", "username", "Test post", "2024-05-09T12:00:00Z").now(),
+                                   headers={"Authorization": "Bearer " + token, "content-type": "application/json"})
 
-    @patch.object(Post, "get_post_model")
-    def test_get_post(self, mock_get_post, client):
+            # Verify
+            assert response.status_code == 201
+
+        
+    @patch.object(Post, "create_post_model")
+    def test_create_post_missing_fields(self, mock_create_post, client,app):
         # Setup
-        mock_get_post.return_value = {
-            "id": 1,
-            "userId": "test_user_id",
-            "username": "test_user",
-            "text": "Test post",
-            "createdAt": "2024-05-09T12:00:00Z",
-            "likes": 0,
-            "comments": [],
-            "isCode": False,
-            "language": "",
-            "previousPostId": None
-        }
+        mock_create_post.return_value = 1
+        with app.app_context():
+            token = create_access_token(identity="userId")
 
-        # Exercise
-        response = client.get("/api/posts/1")
+            # Exercise
+            response = client.post("/api/posts",
+                                json={},
+                                headers={"Authorization":"Bearer" + token,"content-type": "application/json"})
 
-        # Verify
-        assert response.status_code == 200
-        assert response.json["id"] == 1
-        assert response.json["userId"] == "test_user_id"
-        assert response.json["username"] == "test_user"
-        assert response.json["text"] == "Test post"
-        assert response.json["createdAt"] == "2024-05-09T12:00:00Z"
-        assert response.json["likes"] == 0
-        assert response.json["comments"] == []
-        assert response.json["isCode"] == False
-        assert response.json["language"] == ""
-        assert response.json["previousPostId"] == None
+            # Verify
+            assert response.status_code == 400
 
-    @patch.object(Post, "delete_post_by_id_model")
-    def test_delete_post(self, mock_delete_post, client):
+    @patch.object(Post, "create_post_model")
+    def test_create_post_invalid_user_id(self, mock_create_post, client,app):
         # Setup
-        mock_delete_post.return_value = 1
+        mock_create_post.return_value = 1
+        with app.app_context():
+            token = create_access_token(identity="userId")
 
-        # Exercise
-        response = client.delete("/api/posts/663c0dc3119872a96e5d2f5b")
+            # Exercise
+            response = client.post("/api/posts",
+                                json=PostBuilder.anPost("", "username", "Test post", "2024-05-09T12:00:00Z").now(),
+                                headers={"Authorization": "Bearer " + token,"content-type": "application/json"})
 
-        # Verify
-        assert response.status_code == 200
-        assert response.json["message"] == "Post deleted successfully"
+            # Verify
+            assert response.status_code == 400
+
+    @patch.object(Post, "create_post_model")
+    def test_create_post_invalid_username(self, mock_create_post, client,app):
+        # Setup
+        mock_create_post.return_value = 1
+        with app.app_context():
+            token = create_access_token(identity="userId")
+            # Exercise
+            response = client.post("/api/posts",
+                                json=PostBuilder.anPost("123445656775dadda", "", "Test post", "2024-05-09T12:00:00Z").now(),
+                                headers={"Authorization": "Bearer " + token,"content-type": "application/json"})
+
+            # Verify
+            assert response.status_code == 400

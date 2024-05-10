@@ -22,5 +22,13 @@ class PostBuilder:
         builder.post['createdAt'] = createdAt
         return builder
 
+    def withLikes(self, likes):
+        self.post['likes'] = likes
+        return self
+
+    def withComments(self, comments):
+        self.post['comments'] = comments
+        return self
+
     def now(self):
         return self.post
