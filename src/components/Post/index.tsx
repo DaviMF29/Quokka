@@ -15,6 +15,7 @@ import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
 import { Link } from "react-router-dom";
+import React from "react";
 
 
 
@@ -207,7 +208,12 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             
             
             <PostContent>
-                {text}
+                {text.split('<br>').map((line, index) => (
+                    <React.Fragment key={index}>
+                    {line}
+                    {index !== text.split('<br>').length - 1 && <br />}
+                    </React.Fragment>
+                ))}
             </PostContent>
 
             {commentField && (
