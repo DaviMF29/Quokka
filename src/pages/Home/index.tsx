@@ -49,18 +49,18 @@ export function Home() {
         
     }
 
-    async function callFollowingPostList() {
-         const config = {
-             headers: {
-               Authorization: `Bearer ${user.access_token}` 
-             },
-             data: {
-                 userId : user.userId
-             }
-           };
-         const postList = await api.get('/api/users/following/posts',config)
-         setFollowingPosts(postList.data.reverse())
-     }
+    // async function callFollowingPostList() {
+    //     const config = {
+    //         headers: {
+    //           Authorization: `Bearer ${user.access_token}` 
+    //         },
+    //         data: {
+    //             userId : user.userId
+    //         }
+    //       };
+    //     const postList = await api.get('/api/users/following/posts',config)
+    //     setFollowingPosts(postList.data.reverse())
+    // }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -80,7 +80,7 @@ export function Home() {
         if (!postsLoaded) {
             callFavoritePostsList();
             callLikedPostsList();
-            callFollowingPostList();
+             callFollowingPostList();
             callPostList();
             setPostsLoaded(true);
             }
