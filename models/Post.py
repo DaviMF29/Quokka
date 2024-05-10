@@ -65,7 +65,9 @@ class Post:
         post = posts_collection.find_one({"_id": ObjectId(userId)})
         if post:
             post["_id"] = str(post["_id"])  
+            post["content"] = post["content"].replace("\n", "<br>")    #para a quebra de linha
         return post
+
 
     @staticmethod
     def get_post_by_text_model(text):
