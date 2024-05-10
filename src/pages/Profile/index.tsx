@@ -45,10 +45,13 @@ export function Profile() {
                 const postsId = await user.getFavoritePostsId(user.access_token);
                 const postsPromises = postsId.map((postId: string) => user.getPostById(postId));
                 const resolvedPosts = await Promise.all(postsPromises);
-
+                
 
                 const userPosts = await user.getUserPosts(user.access_token, user.userId ?? '');
-                setMyPosts(userPosts);
+                const userPostsPromises = userPosts.map((postId: string) => user.getPostById(postId));
+                const resolvedUserPosts = await Promise.all(userPostsPromises);
+                console.log(userPosts)
+                setMyPosts(resolvedUserPosts);
                 setFavoritePosts(resolvedPosts);
                 setPostsLoaded(true);
             }

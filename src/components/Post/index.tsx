@@ -2,8 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { number, z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnlikeButton } from "./styles";
-import { formatDistanceToNow } from "date-fns";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
+import { formatDistanceToNow, set } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
 import { Comments } from "../Comment";
@@ -14,6 +14,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
+
 
 
 
@@ -34,6 +35,7 @@ export interface PostProps {
     currentUserId: string
     userFavoritePosts?: string[]
     userLikedPosts?: string[]
+    userFollowers?: string[]
     commentField?: boolean
     deletePostFunction?: (postId:string, userId:string) => void
     setPostState: React.Dispatch<React.SetStateAction<boolean>>
@@ -43,12 +45,14 @@ export interface PostProps {
 
 
 
-export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
+export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,userFollowers,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
 
     const user = useAuth()
     const [comments, setComments] = useState<CreateCommentFormData[]>([])
     
     const [numberOfLikes, setNumberOfLikes] = useState<number>(0)
+    
+    
     
     
    
@@ -70,6 +74,13 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
         
     }
     
+    async function handleFollowUser() {
+        if(user.access_token && user.userId){
+            await user.followUser(user.access_token, user.userId, userId)
+            setPostState(false)
+        }
+    }
+    
 
     async function handleSetPostAsFavorite(){
         if(setPostAsFavorite){
@@ -87,6 +98,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
 
     useEffect(() => {
         getNumberOfLikesInPost()
+       
     }, [numberOfLikes])
 
     
@@ -124,6 +136,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
      }
     
     
+    
 
 
     return(
@@ -141,6 +154,13 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                                  {publishedDateRelativeToNow} 
                             </time>
                         </AuthorInfo>
+
+                        
+
+                        
+
+                        
+                        
                     </InfoWrapper>
                    
 

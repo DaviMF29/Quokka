@@ -58,9 +58,11 @@ export function Home() {
                 userId : user.userId
             }
           };
-        const postList = await api.get('/api/users/following/posts',config)
-        console.log(postList)
-        setFollowingPosts(postList.data.reverse())
+        const followingPostsId = await api.get('/api/users/following/posts',config)
+        const followingPostPromises = followingPostsId.data.map((postId: string) => user.getPostById(postId))
+        const postList = await Promise.all(followingPostPromises)
+        
+        setFollowingPosts(postList)
     }
 
     useEffect(() => {
@@ -151,6 +153,7 @@ export function Home() {
                                         currentUserId={user.userId ?? ''}
                                         setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                         userFavoritePosts={favoritePosts}
+                                        userFollowers={user.followers?.map(userId => userId.toString())}
                                         userLikedPosts={likedPosts}
                                         setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
                                         commentField={true}
@@ -164,7 +167,7 @@ export function Home() {
                         </Tabs.Content>
 
                         <Tabs.Content value="following">
-                            {/* {(followingPosts ? followingPosts.map(posts => {
+                             {(followingPosts ? followingPosts.map(posts => {
                                 return(                  
                                         <Post 
                                             key={posts._id}
@@ -177,6 +180,7 @@ export function Home() {
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
                                             setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                            userFollowers={user.followers?.map(userId => userId.toString())}
                                             userFavoritePosts={favoritePosts}
                                             userLikedPosts={likedPosts}
                                             setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
@@ -187,13 +191,13 @@ export function Home() {
                                 }) 
                                 :
 
-                                
-                                
-                            )} */}
-
                                 <div>
                                     Não existem Posts
                                 </div>
+                                
+                            )} 
+
+                                
                             
                         </Tabs.Content>
                     </Box>
