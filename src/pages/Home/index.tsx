@@ -58,11 +58,8 @@ export function Home() {
                 userId : user.userId
             }
           };
-        const followingPostsId = await api.get('/api/users/following/posts',config)
-        const followingPostPromises = followingPostsId.data.map((postId: string) => user.getPostById(postId))
-        const postList = await Promise.all(followingPostPromises)
-        
-        setFollowingPosts(postList.reverse())
+        const postList = await api.get('/api/users/following/posts',config)
+        setFollowingPosts(postList.data.reverse())
     }
 
     useEffect(() => {
@@ -83,7 +80,7 @@ export function Home() {
         if (!postsLoaded) {
             callFavoritePostsList();
             callLikedPostsList();
-            callFollowingPostList();
+            // callFollowingPostList();
             callPostList();
             setPostsLoaded(true);
             }
