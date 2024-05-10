@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { get, useForm } from "react-hook-form";
 import { number, z } from "zod";
 import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, LinkDiv, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
 import { formatDistanceToNow, set } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import avatarImg2 from '../../assets/avatar_img2.avif';
@@ -14,6 +14,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { CommentSection } from "./components/CommentSection";
 import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
+import { Link } from "react-router-dom";
 
 
 
@@ -147,17 +148,18 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             <header>
                 <Author>
                     <InfoWrapper>
-                        <Avatar
-                        src={avatarImg2}>
-                            
-                        </Avatar> 
-                        <AuthorInfo>
-                            <strong>{username}</strong>
-                            <time>
-                                 {publishedDateRelativeToNow} 
-                            </time>
-                        </AuthorInfo>
-
+                        <LinkDiv to={`/${username}`}>
+                            <Avatar
+                            src={avatarImg2}>
+                                
+                            </Avatar> 
+                            <AuthorInfo>
+                                <strong>{username}</strong>
+                                <time>
+                                    {publishedDateRelativeToNow} 
+                                </time>
+                            </AuthorInfo>
+                        </LinkDiv>
                         
                         {!isAuthor &&(
                             <>

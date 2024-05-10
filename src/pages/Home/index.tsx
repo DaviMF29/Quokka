@@ -62,7 +62,7 @@ export function Home() {
         const followingPostPromises = followingPostsId.data.map((postId: string) => user.getPostById(postId))
         const postList = await Promise.all(followingPostPromises)
         
-        setFollowingPosts(postList)
+        setFollowingPosts(postList.reverse())
     }
 
     useEffect(() => {

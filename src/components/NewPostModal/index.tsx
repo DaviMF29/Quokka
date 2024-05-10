@@ -3,7 +3,7 @@ import { SubmitButton,CloseButton} from "../NewRegisterModal/styles";
 import { TextAreaPost, Title, Overlay, Content,  } from "./styles";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction} from "react";
 import { X } from "phosphor-react";
 import { api } from "../../services/api";
 
@@ -66,9 +66,10 @@ export function NewPostModal({userId, username, setPostState, setOpenState}:NewP
                             <X size={32}/>
                         </CloseButton>
                         <TextAreaPost 
-                            placeholder="O que quer compartilhar hoje?"
-                            {...register("text")}
-                        />
+                        placeholder="O que quer compartilhar hoje?"
+                        {...register("text")}
+                        
+                    />
                         <SubmitButton type="submit">Criar Post</SubmitButton>
                     </form>
                     

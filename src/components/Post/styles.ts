@@ -1,4 +1,5 @@
 import { Button } from "@radix-ui/themes";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const PostContainer = styled.article`
@@ -34,6 +35,16 @@ export const InfoWrapper = styled.div`
 
 `
 
+export const LinkDiv = styled(Link)`
+    text-decoration: none;
+    display: flex;
+    gap: 1rem;
+    cursor: pointer;
+
+`
+
+
+
 
 export const Author = styled.div`
     display: flex;
@@ -44,6 +55,7 @@ export const Author = styled.div`
 
 `
 export const AuthorInfo = styled.div`
+    
     strong {
         display: block;
         color: ${props => props.theme['gray-100']};
