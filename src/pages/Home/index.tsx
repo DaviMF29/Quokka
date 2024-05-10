@@ -4,7 +4,7 @@ import { Header } from "../../components/Header"
 import { Post, PostProps } from "../../components/Post"
 import { SideProfile } from "../../components/SideProfile"
 import { useAuth } from "../../hooks/useAuth"
-import { CreateNewPostDiv, HomeContainer, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
+import { CreateNewPostDiv, HomeContainer, NotPostList, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
 import { NewPostModal } from "../../components/NewPostModal"
 import { Plus } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -153,7 +153,7 @@ export function Home() {
                                         currentUserId={user.userId ?? ''}
                                         setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                         userFavoritePosts={favoritePosts}
-                                        userFollowers={user.followers?.map(userId => userId.toString())}
+                                        userFollowing={user.following?.map(userId => userId.toString())}
                                         userLikedPosts={likedPosts}
                                         setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
                                         commentField={true}
@@ -167,7 +167,7 @@ export function Home() {
                         </Tabs.Content>
 
                         <Tabs.Content value="following">
-                             {(followingPosts ? followingPosts.map(posts => {
+                             {(followingPosts.length !== 0 ? followingPosts.map(posts => {
                                 return(                  
                                         <Post 
                                             key={posts._id}
@@ -180,7 +180,7 @@ export function Home() {
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
                                             setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
-                                            userFollowers={user.followers?.map(userId => userId.toString())}
+                                            userFollowing={user.following?.map(userId => userId.toString())}
                                             userFavoritePosts={favoritePosts}
                                             userLikedPosts={likedPosts}
                                             setPostAsLiked={(postId: string,userId: string) => user.addLike(user.access_token??'', postId, userId)}
@@ -190,10 +190,10 @@ export function Home() {
                                     )
                                 }) 
                                 :
-
-                                <div>
+                                
+                                <NotPostList>
                                     Não existem Posts
-                                </div>
+                                </NotPostList>
                                 
                             )} 
 

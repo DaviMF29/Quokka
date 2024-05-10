@@ -74,6 +74,7 @@ export function UserPage({userId}: {userId: string}) {
                     <h3>{pageOwner?.email ? pageOwner.email : 'email not found'}</h3>
 
                      <div>
+                        <p>Id: {pageOwner?._id}</p>
                         <p>Posts: {pageOwner?.posts.length}</p>
                         <p>Posts favoritados: {pageOwner?.favorites.length}</p>
                         <p>Seguidores: {pageOwner?.followers?.length}</p>
