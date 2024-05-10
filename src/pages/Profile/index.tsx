@@ -24,6 +24,7 @@ export function Profile() {
     const user = useAuth()
     const [postsLoaded, setPostsLoaded] = useState(false);
     const [favoritePosts, setFavoritePosts] = useState<PostProps[]>([])
+    const [likedPosts, setLikedPosts] = useState<string[]>([])
     const [myPosts, setMyPosts] = useState<PostProps[]>([])
     
     
@@ -63,19 +64,27 @@ export function Profile() {
         const fetchData = async () => {
             if(user.access_token){
                user.getUserInfo(user.access_token) 
-               
+               callLikedPostsList()
             }
         }
 
         fetchData()
-    }, [user.username])
+        setPostsLoaded(true)
+    }, [user.username, user.following])
 
-    function handleEditProfile(data: CreateEditFormData){
+    async function handleEditProfile(data: CreateEditFormData){
         if(user.access_token && user.userId){
-            user.updateUserInfo(user.access_token,user.userId,data.username)
-            user.getUserInfo(user.access_token)
+            await user.updateUserInfo(user.access_token,user.userId,data.username)
+            await user.getUserInfo(user.access_token)
         }
 
+    }
+
+    async function callLikedPostsList(){
+        if(user.access_token){
+            const postsId = await user.getLikedPosts(user.access_token)
+            setLikedPosts(postsId)
+        }
     }
 
     async function handleDeletePost(postId:string, userId:string){
@@ -148,6 +157,7 @@ export function Profile() {
                                             _id={post._id}
                                             setPostState={setPostsLoaded}
                                             currentUserId={user.userId ?? ''}
+                                            userLikedPosts={likedPosts}
                                             deletePostFunction={handleDeletePost}
                                             commentField={false}
                                         />
@@ -171,7 +181,9 @@ export function Profile() {
                                         text={post.text}
                                         _id={post._id}
                                         setPostState={setPostsLoaded}
+                                        userFollowing={user.following?.map(userId => userId.toString())}
                                         currentUserId={user.userId ?? ''}
+                                        userLikedPosts={likedPosts}
                                         userFavoritePosts={favoritePosts.map(post => post._id)} 
                                         setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                                         commentField={false}
