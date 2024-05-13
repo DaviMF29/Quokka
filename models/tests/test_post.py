@@ -3,7 +3,7 @@ import warnings
 from flask import Flask
 from flask_jwt_extended import JWTManager
 import pytest
-from models.PostBuilder import PostBuilder
+from models.build.PostBuilder import PostBuilder
 from models.Post import Post
 from unittest.mock import patch
 from flask_jwt_extended import create_access_token
@@ -46,11 +46,28 @@ class TestPostRoutes:
 
             # Exercise
             response = client.post("/api/posts",
-                                   json=PostBuilder.anPost("663e5b3c781e127d0a3468ff", "username", "Test post", "2024-05-09T12:00:00Z").now(),
+                                   json=PostBuilder.anPost("1", "username", "Test post", "2024-05-09T12:00:00Z").now(),
                                    headers={"Authorization": "Bearer " + token, "content-type": "application/json"})
 
             # Verify
             assert response.status_code == 201
+
+    @patch.object(Post, "create_post_model")
+    def test_create_post_with_invalid_userId(self, mock_create_post, client, app):
+        # Setup
+        mock_create_post.return_value = 125
+
+        with app.app_context():
+            # Gerar um token JWT válido para incluir no cabeçalho da requisição
+            token = create_access_token(identity="user_id")
+
+            # Exercise
+            response = client.post("/api/posts",
+                                   json=PostBuilder.anPost("1", "username", "Test post", "2024-05-09T12:00:00Z").now(),
+                                   headers={"Authorization": "Bearer " + token, "content-type": "application/json"})
+
+            # Verify
+            assert response.status_code == 400
 
         
     @patch.object(Post, "create_post_model")
