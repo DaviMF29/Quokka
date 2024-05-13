@@ -9,6 +9,10 @@ from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
     verify_post_in_user_favorites)
 
+from utils.user_posts import (
+    delete_all_notifications_from_user, delete_all_posts_from_user)
+
+
 def create_user_controller(email,username, password):
     verify_email_registered(email)
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(10))
@@ -32,6 +36,8 @@ def add_or_remove_favorite_post_controller(user_id, postId):
 
 def delete_user_controller(userId):
     verify_user(userId)
+    delete_all_notifications_from_user(userId)
+    delete_all_posts_from_user(userId)
     User.delete_account_model(userId)
     return {"message": "User deleted"}, 200
 

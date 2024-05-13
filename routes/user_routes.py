@@ -9,7 +9,6 @@ from controllers.user_controller import (
     get_all_posts_from_user,get_posts_likeds_controller)
 
 from flask_jwt_extended import jwt_required
-from utils.user_posts import delete_all_posts_from_user
 from models.User import User
 
 from flask_jwt_extended import get_jwt_identity
@@ -54,8 +53,6 @@ def add_favorite_post_route():
 @jwt_required()
 def delete_user_route(userId):
     response, status_code = delete_user_controller(userId)
-    if status_code == 200:
-        delete_all_posts_from_user(userId)
     return jsonify(response), status_code
 
 

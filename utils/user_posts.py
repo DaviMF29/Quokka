@@ -1,6 +1,6 @@
+from models.Notification import Notification
 from models.User import User
 from models.Post import Post
-from datetime import datetime
 from flask import jsonify
 
 
@@ -9,12 +9,6 @@ def add_post_in_user(user_id, postId):
     posts = user.get("posts", [])
     posts.append(postId)
     User.update_user(user_id, {"posts": posts})
-
-def order_posts_by_createdAt(posts_list):
-    for posts in posts_list:
-        sorted_posts = sorted(posts, key=lambda x: datetime.strptime(x['createdAt'], '%H:%M:%S:%d/%m/%Y'))
-        for post in sorted_posts:
-            print(post['createdAt'])
 
 def delete_post_from_user(user_id, post_id):
     user = User.get_user_by_id_model(user_id)
@@ -70,3 +64,7 @@ def delete_all_posts_from_user(userId):
         Post.delete_post_by_id_model(post_id) 
     
     return True
+
+def delete_all_notifications_from_user(userId):
+    return Notification.delete_all_notifications_by_userId(userId)
+    
