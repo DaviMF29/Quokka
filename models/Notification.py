@@ -33,10 +33,11 @@ class Notification:
             serialized_notifications.append(notification)
         return serialized_notifications
 
-    def delete_notification_by_id(notificationId):
+    def delete_notification_by_id(notificationId,userId):
         notification_collection = db.notifications
-        result = notification_collection.delete_one({"_id": ObjectId(notificationId)})
+        result = notification_collection.delete_one({"_id": ObjectId(notificationId), "userId": userId})
         return result.deleted_count > 0
+
 
     def delete_all_notifications_by_userId(userId):
         notification_collection = db.notifications
