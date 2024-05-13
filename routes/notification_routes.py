@@ -1,7 +1,8 @@
 from flask import request, jsonify, Blueprint
 
 from controllers.notification_controller import (
-    create_notification_controller)
+    create_notification_controller,get_notifications_by_userId_controller,
+    delete_notification_by_id_controller,delete_all_notifications_by_userId_controller)
 
 
 notification_app = Blueprint("notification_app", __name__)
@@ -26,3 +27,12 @@ def create_notification():
         return jsonify({"notification_id": notification_id}), 201
     except Exception as e:
         return jsonify({"message": str(e)}), 500
+
+@notification_app.route("/api/notifications/<userId>", methods=["GET"])
+def get_notifications_by_userId(userId):
+    try:
+        notifications = get_notifications_by_userId_controller(userId)
+        return jsonify(notifications), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+    
