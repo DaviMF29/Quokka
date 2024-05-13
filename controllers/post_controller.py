@@ -3,12 +3,15 @@ from utils.user_posts import (
     add_post_in_user, delete_post_from_user,delete_post_if_was_favorited,
     delete_post_if_was_liked)
 from middleware.global_middleware import (
-    verify_post, verify_change_in_text, verify_post_is_a_comment)
+    verify_post, verify_change_in_text, verify_post_is_a_comment,
+    verify_post_is_from_user,verify_user,validate_text_length)
 
 
 def create_post_controller(userId, username, text,createdAt, isCode=False, language=None,previousPostId = None):
+    verify_user(userId)
     post_id = Post.create_post_model(userId, username, text,createdAt, isCode, language, previousPostId)
     add_post_in_user(userId, post_id)
+    validate_text_length(text)
     return post_id
 
 def get_all_posts_controller():
@@ -21,10 +24,12 @@ def delete_post_controller(postId, userId):
     else:
         message = "Post deleted"
 
+    verify_post_is_from_user(postId,userId)
     Post.delete_comment_from_post_model(previous_post_id, postId) if previous_post_id else None
     Post.delete_post_by_id_model(postId)
     delete_post_if_was_favorited(postId)
     delete_post_if_was_liked(postId)
+
     delete_post_from_user(userId, postId)
 
     return {"message": message}
@@ -59,7 +64,9 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
         "likes": 0,
         "previousPost": previousPostId
     }
-
+    validate_text_length(text)
+    verify_user(userId)
+    verify_post(previousPostId)
     post['comments'].append(new_comment)
     updated_fields = {"comments": post["comments"]}
     Post.update_post_by_id_model(previousPostId, updated_fields)

@@ -1,9 +1,6 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
 
-from middleware.global_middleware import (
-    verify_user, verify_post,validate_text_length, verify_post_is_from_user)
-
 from controllers.post_controller import (
     create_post_controller, add_comment_to_post_controller,
     delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
@@ -28,7 +25,6 @@ def get_post_by_id(postId):
 def delete_post_route(postId):
     data = request.get_json()
     userId = data["userId"]
-    verify_post_is_from_user(postId,userId)
     delete_post_controller(postId,userId)
     return jsonify({"message": "Post deleted"}), 200
 
@@ -68,11 +64,6 @@ def create_post_route():
         return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
     language = data.get("language")
 
-    try:
-        verify_user(userId)
-    except:
-        return jsonify({"message": "User not exist"}), 400
-
     post_id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language)
     return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
 
@@ -97,14 +88,6 @@ def add_comment_route():
 
     if isCode and "language" not in data:
         return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-
-    try:
-        verify_user(userId)
-        verify_post(previousPostId)
-    except:
-        return jsonify({"message": "User or initial post does not exist"}), 404
-    
-    validate_text_length(text)
 
     result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
     
