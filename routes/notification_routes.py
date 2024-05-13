@@ -1,5 +1,4 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import jwt_required
 
 from controllers.notification_controller import (
     create_notification_controller)
@@ -15,7 +14,7 @@ def create_notification():
     text = data["text"]
     createdAt = data["createdAt"]
     type = data["type"]
-
+    seen = data.get("seen", False)
     if data is None or data == {}:
         return jsonify({"message": "Data is required"}), 400
 
@@ -23,7 +22,7 @@ def create_notification():
         return jsonify({"message": "Missing required fields"}), 400
 
     try:
-        notification_id = create_notification_controller(userId, username, text, createdAt, type)
+        notification_id = create_notification_controller(userId, username, text, createdAt, type, seen)
         return jsonify({"notification_id": notification_id}), 201
     except Exception as e:
         return jsonify({"message": str(e)}), 500
