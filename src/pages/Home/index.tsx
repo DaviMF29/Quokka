@@ -1,16 +1,15 @@
 
 import { Box, Dialog, Tabs } from "@radix-ui/themes"
+import { Plus } from "phosphor-react"
+import { useEffect, useState } from "react"
 import { Header } from "../../components/Header"
+import { NewPostModal } from "../../components/NewPostModal"
 import { Post, PostProps } from "../../components/Post"
 import { SideProfile } from "../../components/SideProfile"
 import { useAuth } from "../../hooks/useAuth"
-import { CreateNewPostDiv, HomeContainer, NotPostList, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
-import { NewPostModal } from "../../components/NewPostModal"
-import { Plus } from "phosphor-react"
-import { useEffect, useState } from "react"
 import { api } from "../../services/api"
-import { set } from "date-fns"
 import { StyledTabTrigger } from "../Profile/styles"
+import { CreateNewPostDiv, HomeContainer, NotPostList, OpenCreateNewPostButton, Posts, Wrapper } from "./styles"
 
 
 

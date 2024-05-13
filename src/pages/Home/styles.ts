@@ -1,4 +1,3 @@
-import { Tabs } from "@radix-ui/themes";
 import styled from "styled-components";
 
 

@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import quokkaLogo from '../../assets/urso branco 1.svg'
 import { useAuth } from '../../hooks/useAuth'
 import { HeaderContainer, Logo } from './styles'
-import {motion} from 'framer-motion'
 
 
 export function Header() {

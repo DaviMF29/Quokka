@@ -1,4 +1,3 @@
-import { PostProps } from "../../components/Post";
 
 
 export interface userId {

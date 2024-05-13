@@ -37,7 +37,7 @@ export function CommentSection({postId}:CommentProps) {
         resolver: zodResolver(createCommentFormSchema)
     })
 
-    const commentFieldChange = watch('content')
+    //const commentFieldChange = watch('content')
 
     async function addNewComment(data: CreateCommentFormData) {
         console.log('comentado:', data.content);

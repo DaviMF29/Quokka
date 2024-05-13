@@ -1,15 +1,11 @@
-import { useParams } from "react-router-dom"
-import { useAuth } from "../../hooks/useAuth"
 import { useEffect, useState } from "react"
-import { api } from "../../services/api"
-import { Post, PostProps } from "../../components/Post"
-import { Header } from "../../components/Header"
-import { Profile } from "../Profile"
-import { Button } from "@radix-ui/themes"
-import { Tabs } from "phosphor-react"
-import { ProfileWrapper, Banner, ProfileInfo, ProfilePicture, ProfileText, FollowButton, StyledTabTrigger, StyledBox, StyledTabsContent, UserPosts, UnfollowButton } from "./styles"
+import { useParams } from "react-router-dom"
 import avatarImg from '../../assets/avatar_img.png'
-import { get, set } from "react-hook-form"
+import { Header } from "../../components/Header"
+import { PostProps } from "../../components/Post"
+import { useAuth } from "../../hooks/useAuth"
+import { api } from "../../services/api"
+import { Banner, FollowButton, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, UnfollowButton, UserPosts } from "./styles"
 interface UserInfo {
     _id : string
     username: string

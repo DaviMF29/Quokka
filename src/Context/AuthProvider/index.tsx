@@ -10,7 +10,7 @@ export const AuthContext = createContext<IContext>({} as IContext)
 export const AuthProvider = ({ children } : IAuthProvider) => {
     const [ user, setUser ] = useState<IUser | null>()
     const [username, setUsername] = useState<string>('')
-    const [profilePicture, setProfilePicture] = useState<string>('')
+    //const [profilePicture, setProfilePicture] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [userId, setUserId] = useState<string>('')
     const [followers, setFollowers] = useState<userId[]>([])

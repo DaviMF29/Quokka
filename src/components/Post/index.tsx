@@ -1,22 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { get, useForm } from "react-hook-form";
-import { number, z } from "zod";
-import { Avatar } from "../SideProfile/styles";
-import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, LinkDiv, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
-import { formatDistanceToNow, set } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
-import avatarImg2 from '../../assets/avatar_img2.avif';
-import { Comments } from "../Comment";
-import { DropDownPost } from "./components/DropDownMenu";
-import { useEffect, useRef, useState } from "react";
 import { BookmarksSimple, ThumbsUp } from "phosphor-react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import avatarImg2 from '../../assets/avatar_img2.avif';
 import { useAuth } from "../../hooks/useAuth";
-import { CommentSection } from "./components/CommentSection";
-import { Comment } from "../Comment/styles";
 import { api } from "../../services/api";
-import { Link } from "react-router-dom";
-import React from "react";
-import { JSX } from "react/jsx-runtime";
+import { Comments } from "../Comment";
+import { Avatar } from "../SideProfile/styles";
+import { DropDownPost } from "./components/DropDownMenu";
+import { Author, AuthorInfo, CommentButton, CommentForm, CommentList, FavoriteButton, FollowButton, InfoWrapper, LikeButton, LinkDiv, PostContainer, PostContent, PostFooter, UnfavoriteButton, UnfollowButton, UnlikeButton } from "./styles";
 
 
 

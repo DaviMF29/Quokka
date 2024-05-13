@@ -35,7 +35,7 @@ export function DropDownPost({setPostState,deleteFunction, _id, currentUserId, t
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const {register, handleSubmit, reset} = useForm<EditPostFormData>({
+    const {register, handleSubmit} = useForm<EditPostFormData>({
         resolver: zodResolver(editPostFormSchema)
     })
 

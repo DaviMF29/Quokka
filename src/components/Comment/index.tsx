@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { Avatar } from "../SideProfile/styles";
-import { Trash, ThumbsUp } from "phosphor-react";
-import { Comment,CommentBox, CommentContent, AuthorAndTime, DeleteCommentButton, LikeButton } from "./styles";
-import profileImg from '../../assets/avatar_img2.avif';
-import { useAuth } from "../../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import { Trash } from "phosphor-react";
+import profileImg from '../../assets/avatar_img2.avif';
+import { useAuth } from "../../hooks/useAuth";
+import { Avatar } from "../SideProfile/styles";
+import { AuthorAndTime, Comment, CommentBox, CommentContent, DeleteCommentButton } from "./styles";
 
 
 
