@@ -9,7 +9,7 @@ from controllers.user_controller import (
     get_all_posts_from_user,get_posts_likeds_controller)
 
 from flask_jwt_extended import jwt_required
-from middleware.global_middleware import delete_all_posts_from_user
+from utils.user_posts import delete_all_posts_from_user
 from models.User import User
 
 from flask_jwt_extended import get_jwt_identity

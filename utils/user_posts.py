@@ -62,3 +62,11 @@ def delete_post_if_was_liked(post_id):
             likes = [like for like in likes if like != post_id]
             User.update_user(user.get("_id"), {"liked_posts": likes})
     return jsonify({"message": "Post removed from likes"}), 200
+
+def delete_all_posts_from_user(userId):
+    posts = Post.get_all_posts_from_user_model(userId)
+    post_ids = [post.get("_id") for post in posts if post.get("userId") == userId]
+    for post_id in post_ids:
+        Post.delete_post_by_id_model(post_id) 
+    
+    return True
