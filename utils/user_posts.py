@@ -68,7 +68,10 @@ def delete_all_posts_from_user(userId):
 def delete_all_notifications_from_user(userId):
     return Notification.delete_all_notifications_by_userId(userId)
     
-def add_tag_to_post(text):
+def add_tag_to_post(text, arr=None):
+    if arr is None:
+        arr = []
+    
     if "@" in text:
         start_index = text.index("@")
         end_index = start_index
@@ -76,7 +79,10 @@ def add_tag_to_post(text):
             end_index += 1
         tag = text[start_index:end_index]
         remaining_text = text[end_index:]
-        print(tag)
-        add_tag_to_post(remaining_text)
+        if tag != "@" and "@@" not in tag:
+            tag = "<a>" + tag + "</a>"
+            arr.append(tag)
+        add_tag_to_post(remaining_text, arr)
     else:
-        print("acabou")
+        for tag in arr:
+            print(tag)   
