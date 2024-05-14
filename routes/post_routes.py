@@ -97,7 +97,13 @@ def add_comment_route():
 def get_likes_from_posts(postId):
     return jsonify(get_likes_from_post_controller(postId)), 200
 
-
+@post_app.route("/teste", methods=["POST"])
+def teste():
+    data = request.get_json()
+    text = data["text"]
+    from utils.user_posts import add_tag_to_post
+    add_tag_to_post(text)
+    return jsonify({"message": "Tag added"}), 200
 
 
 
