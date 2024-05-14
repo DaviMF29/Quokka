@@ -61,15 +61,6 @@ def verify_change_in_user(user_id, field_name, new_value):
     else:
         abort(400, f"User data is missing '{field_name}' field")
 
-
-def delete_all_posts_from_user(userId):
-    posts = Post.get_all_posts_from_user_model(userId)
-    post_ids = [post.get("_id") for post in posts if post.get("userId") == userId]
-    for post_id in post_ids:
-        Post.delete_post_by_id_model(post_id) 
-    
-    return True
-
 def verify_post_in_user_favorites(userId, postId):
     user = verify_user(userId)
     favorites = user.get("favorites", [])
