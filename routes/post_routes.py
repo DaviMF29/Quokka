@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required
 from controllers.post_controller import (
     create_post_controller, add_comment_to_post_controller,
     delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
-    get_post_by_id_controller,get_likes_from_post_controller
+    get_post_by_id_controller,get_likes_from_post_controller,get_comments_from_post_controller
     
 )
 
@@ -96,6 +96,12 @@ def add_comment_route():
 @post_app.route("/api/posts/likes/<postId>", methods=["GET"])
 def get_likes_from_posts(postId):
     return jsonify(get_likes_from_post_controller(postId)), 200
+
+
+@post_app.route("/api/posts/comments/<postId>", methods=["GET"])
+def get_comments_from_post(postId):
+    response, status_code = get_comments_from_post_controller(postId)
+    return jsonify(response), status_code
 
 @post_app.route("/teste", methods=["POST"])
 def teste():
