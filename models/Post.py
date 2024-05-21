@@ -35,8 +35,9 @@ class Post:
         for post in posts:
             post["_id"] = str(post["_id"])
             if post["text"] is not None and "\n" in post["text"]:
-                post["text"] = post["text"].replace("\n", "<br>")    # para a quebra de linha
-            serialized_posts.append(post)
+                post["text"] = post["text"].replace("\n", "<br>") 
+            if post["previousPostId"] is None: # para a quebra de linha
+                serialized_posts.append(post)
         return serialized_posts
 
 
