@@ -55,19 +55,11 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
     if 'comments' not in post:
         post['comments'] = []
     _id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language, previousPostId=previousPostId)
-    new_comment = {
-        "_id": _id,
-        "userId": userId,
-        "username": username,
-        "text": text,
-        "createdAt": createdAt,
-        "likes": 0,
-        "previousPost": previousPostId
-    }
+
     validate_text_length(text)
     verify_user(userId)
     verify_post(previousPostId)
-    post['comments'].append(new_comment)
+    post['comments'].append(_id)
     updated_fields = {"comments": post["comments"]}
     Post.update_post_by_id_model(previousPostId, updated_fields)
 
@@ -78,3 +70,11 @@ def get_likes_from_post_controller(postId):
     if not post:
         return {"message": "Post not found"}, 404
     return {"likes": post["likes"]}
+
+def get_comments_from_post_controller(postId):
+    post = verify_post(postId)
+    if not post:
+        return {"message": "Post not found"}, 404
+    comments = Post.get_posts_by_id_model(postId)
+    return {"comments": comments}, 200
+

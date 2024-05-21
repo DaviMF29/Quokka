@@ -89,6 +89,25 @@ class Post:
 
     
     @staticmethod
+    def get_posts_by_id_model(postId):
+        posts_collection = db.posts
+        post = posts_collection.find_one({"_id": ObjectId(postId)})
+        comments = post.get("comments", [])
+        return comments
+
+
+    @staticmethod                                           #talvez use esse método no futuro
+    def get_comment_by_previousPostId_model(previousPostId):
+        posts = []
+        posts_collection = db.posts
+        cursor = posts_collection.find({"previousPostId": previousPostId})
+        for post in cursor:
+            post["_id"] = str(post["_id"])
+            post["text"] = post["text"].replace("\n", "<br>")
+            posts.append(post)
+        return posts
+
+    @staticmethod
     def update_post_by_id_model(userId,updated_fields):
         posts_collection = db.posts
         result = posts_collection.update_many({"_id": ObjectId(userId)}, {"$set": updated_fields})
