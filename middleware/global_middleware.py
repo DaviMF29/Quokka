@@ -1,6 +1,7 @@
 from flask import abort
 from models.User import User
 from models.Post import Post
+#from functools import wraps
 
 #CONSTANTES
 MAX_TEXT_LENGTH = 300
