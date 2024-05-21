@@ -114,7 +114,7 @@ class Post:
         posts_collection = db.posts
         result = posts_collection.update_one(
             {"_id": ObjectId(postId)},
-            {"$pull": {"comments": {"_id": commentId}}}
+            {"$pull": {"comments": commentId}}
         )
         
         return result.modified_count > 0

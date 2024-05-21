@@ -18,19 +18,15 @@ def get_all_posts_controller():
     return Post.get_all_posts()
 
 def delete_post_controller(postId, userId):
+    verify_post_is_from_user(postId, userId)
     previous_post_id = verify_post_is_a_comment(postId)
+    
+    message = "Post deleted successfully"
     if previous_post_id:
-        message = "Comment deleted"
-    else:
-        message = "Post deleted"
-
-    verify_post_is_from_user(postId,userId)
-    Post.delete_comment_from_post_model(previous_post_id, postId) if previous_post_id else None
+        message = "Comment deleted successfully"
+        Post.delete_comment_from_post_model(previous_post_id, postId)
+    
     Post.delete_post_by_id_model(postId)
-    delete_post_if_was_favorited(postId)
-    delete_post_if_was_liked(postId)
-
-    delete_post_from_user(userId, postId)
 
     return {"message": message}
 
@@ -55,19 +51,11 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
     if 'comments' not in post:
         post['comments'] = []
     _id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language, previousPostId=previousPostId)
-    new_comment = {
-        "_id": _id,
-        "userId": userId,
-        "username": username,
-        "text": text,
-        "createdAt": createdAt,
-        "likes": 0,
-        "previousPost": previousPostId
-    }
+    
     validate_text_length(text)
     verify_user(userId)
     verify_post(previousPostId)
-    post['comments'].append(new_comment)
+    post['comments'].append(_id)
     updated_fields = {"comments": post["comments"]}
     Post.update_post_by_id_model(previousPostId, updated_fields)
 
