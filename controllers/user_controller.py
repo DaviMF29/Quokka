@@ -19,7 +19,8 @@ def create_user_controller(email,username, password):
     hashed_password_base64 = base64.b64encode(hashed_password).decode()
     hashed_email_sha256 = hashlib.sha256(email.encode()).hexdigest()
     image = f"https://www.gravatar.com/avatar/{hashed_email_sha256}"
-    user_id = User.create_user_model(email,username,image, hashed_password_base64)
+    user = User(email,username,image, hashed_password_base64)
+    user_id = user.create_user_model()
     return {"id": user_id, "message": f"User {username} created"}, 201
 
 def add_or_remove_favorite_post_controller(user_id, postId):

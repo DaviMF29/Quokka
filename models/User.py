@@ -9,23 +9,8 @@ db = client[db_name]
 
 class User:
 
-    def __init__(self):
-        self.post = {
-            "userId": "",
-            "username": "",
-            "text": "",
-            "createdAt": "",
-            "likes": 0,
-            "comments": [],
-            "isCode": False,
-            "language": "",
-            "previousPostId": ""
-        }
-
-    @staticmethod
-    def create_user_model(email,username,image, hashed_password_base64):
-        users_collection = db.users
-        new_user = {
+    def __init__(self, username, email, image, hashed_password_base64):
+        self.user = {
             "username": username,
             "email": email,
             "image":image,
@@ -36,7 +21,10 @@ class User:
             "liked_posts":[],
             "posts": []
         }
-        result = users_collection.insert_one(new_user)
+
+    def create_user_model(self):
+        users_collection = db.users
+        result = users_collection.insert_one(self.user)
         return str(result.inserted_id)
 
     @staticmethod
