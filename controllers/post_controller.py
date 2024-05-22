@@ -1,7 +1,6 @@
 from models.Post import Post
 from utils.user_posts import (
-    add_post_in_user, delete_post_from_user,delete_post_if_was_favorited,
-    delete_post_if_was_liked)
+    add_post_in_user)
 from middleware.global_middleware import (
     verify_post, verify_change_in_text, verify_post_is_a_comment,
     verify_post_is_from_user,verify_user,validate_text_length)
@@ -18,19 +17,15 @@ def get_all_posts_controller():
     return Post.get_all_posts()
 
 def delete_post_controller(postId, userId):
+    verify_post_is_from_user(postId, userId)
     previous_post_id = verify_post_is_a_comment(postId)
+    
+    message = "Post deleted successfully"
     if previous_post_id:
-        message = "Comment deleted"
-    else:
-        message = "Post deleted"
-
-    verify_post_is_from_user(postId,userId)
-    Post.delete_comment_from_post_model(previous_post_id, postId) if previous_post_id else None
+        message = "Comment deleted successfully"
+        Post.delete_comment_from_post_model(previous_post_id, postId)
+    
     Post.delete_post_by_id_model(postId)
-    delete_post_if_was_favorited(postId)
-    delete_post_if_was_liked(postId)
-
-    delete_post_from_user(userId, postId)
 
     return {"message": message}
 
@@ -55,7 +50,7 @@ def add_comment_to_post_controller(previousPostId, userId, username, text,create
     if 'comments' not in post:
         post['comments'] = []
     _id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language, previousPostId=previousPostId)
-
+    
     validate_text_length(text)
     verify_user(userId)
     verify_post(previousPostId)

@@ -34,8 +34,10 @@ class Post:
         serialized_posts = []
         for post in posts:
             post["_id"] = str(post["_id"])
-            post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
-            serialized_posts.append(post)
+            if post["text"] is not None and "\n" in post["text"]:
+                post["text"] = post["text"].replace("\n", "<br>") 
+            if post["previousPostId"] is None: # para a quebra de linha
+                serialized_posts.append(post)
         return serialized_posts
 
     @staticmethod
@@ -130,7 +132,7 @@ class Post:
         posts_collection = db.posts
         result = posts_collection.update_one(
             {"_id": ObjectId(postId)},
-            {"$pull": {"comments": {"_id": commentId}}}
+            {"$pull": {"comments": commentId}}
         )
         
         return result.modified_count > 0
