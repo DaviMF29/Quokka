@@ -5,8 +5,7 @@ from middleware.global_middleware import (
     verify_user,validate_text_length
 )
     
-
-
+    
 def create_comment_controller(postId, userId, username, text, createdAt):
     verify_user(userId)
     comment = Comment(postId, userId, username, text, createdAt)

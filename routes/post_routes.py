@@ -50,7 +50,6 @@ def create_post_route():
     userId = data["userId"]
     text = data["text"] 
     createdAt = data["createdAt"]
-    isCode = data.get("isCode", False)
 
     if data is None or data == {}:
         return jsonify({"message": "Empty body"}), 400
@@ -58,12 +57,8 @@ def create_post_route():
     if "username" not in data or "userId" not in data or "text" not in data or "createdAt" not in data:
         return jsonify({"message": "Missing required fields"}), 400
 
-    language = None
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-    language = data.get("language")
 
-    post_id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language)
+    post_id = create_post_controller(userId, username, text,createdAt)
     return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
 
 
@@ -76,19 +71,12 @@ def add_comment_route():
     userId = data["userId"]
     text = data["text"]
     createdAt = data["createdAt"]
-    isCode = data.get("isCode", False)
-    language = None
+
 
     if not all([previousPostId, username, userId, text]):
         return jsonify({"message": "Missing required fields"}), 400
 
-    if isCode:
-        language = data["language"]
-
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-
-    result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
+    result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
     
     return jsonify(result)
 

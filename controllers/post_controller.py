@@ -6,9 +6,10 @@ from middleware.global_middleware import (
     verify_post_is_from_user,verify_user,validate_text_length)
 
 
-def create_post_controller(userId, username, text,createdAt, isCode=False, language=None,previousPostId = None):
+def create_post_controller(userId, username, text,createdAt):
     verify_user(userId)
-    post_id = Post.create_post_model(userId, username, text,createdAt, isCode, language, previousPostId)
+    post = Post(userId, username, text,createdAt)
+    post_id = post.create_post_model()
     add_post_in_user(userId, post_id)
     validate_text_length(text)
     return post_id
