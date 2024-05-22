@@ -40,8 +40,6 @@ class Post:
                 serialized_posts.append(post)
         return serialized_posts
 
-
-
     @staticmethod
     def update_post_model(postId, update_data):
         posts_collection = db.posts
