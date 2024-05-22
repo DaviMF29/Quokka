@@ -1,15 +1,15 @@
 from models.Comment import Comment
-from utils.user_posts import (
-    add_post_in_user)
+
 from middleware.global_middleware import (
     verify_user,validate_text_length
 )
-    
+
+from utils.user_posts import add_comments_in_post
     
 def create_comment_controller(postId, userId, username, text, createdAt):
     verify_user(userId)
     comment = Comment(postId, userId, username, text, createdAt)
-    post_id = comment.create_comment_model()
-    add_post_in_user(userId, post_id)
+    comment_id = comment.create_comment_model()
     validate_text_length(text)
-    return post_id
+    add_comments_in_post(postId, comment_id)
+    return comment_id

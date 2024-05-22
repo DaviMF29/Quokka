@@ -10,6 +10,12 @@ def add_post_in_user(user_id, postId):
     posts.append(postId)
     User.update_user(user_id, {"posts": posts})
 
+def add_comments_in_post(post_id,comment_id):
+    post = Post.get_post_by_id_model(post_id)
+    comments = post.get("comments", [])
+    comments.append(comment_id)
+    Post.update_post_model(post_id, {"comments": comments})
+
 def delete_post_from_user(user_id, post_id):
     user = User.get_user_by_id_model(user_id)
     posts = user.get("posts")
