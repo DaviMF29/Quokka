@@ -10,6 +10,20 @@ db = client[db_name]
 
 class Post:
 
+
+    def __init__(self, userId, username, text, createdAt, isCode=False, language = None, previousPostId = None):
+        self.post = {
+            "userId": userId,
+            "username": username,
+            "text": text,
+            "createdAt": createdAt,
+            "likes": 0,
+            "comments": [],
+            "isCode": isCode,
+            "language": language,
+            "previousPostId": previousPostId
+        }
+
     @staticmethod
     def create_post_model(userId, username, text,createdAt, isCode=False, language = None, previousPostId = None):
         posts_collection = db.posts

@@ -9,6 +9,19 @@ db = client[db_name]
 
 class User:
 
+    def __init__(self):
+        self.post = {
+            "userId": "",
+            "username": "",
+            "text": "",
+            "createdAt": "",
+            "likes": 0,
+            "comments": [],
+            "isCode": False,
+            "language": "",
+            "previousPostId": ""
+        }
+
     @staticmethod
     def create_user_model(email,username,image, hashed_password_base64):
         users_collection = db.users
