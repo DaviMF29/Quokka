@@ -2,8 +2,8 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
 
 from controllers.post_controller import (
-    create_post_controller, add_comment_to_post_controller,
-    delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
+    create_post_controller,delete_post_controller,
+    update_post_by_id_controller, get_all_posts_controller,
     get_post_by_id_controller,get_likes_from_post_controller
     
 )
@@ -60,25 +60,6 @@ def create_post_route():
 
     post_id = create_post_controller(userId, username, text,createdAt)
     return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
-
-
-
-@post_app.route("/api/posts/comment", methods=["PUT"])
-def add_comment_route():
-    data = request.get_json()
-    previousPostId = data["previousPostId"]
-    username = data["username"]
-    userId = data["userId"]
-    text = data["text"]
-    createdAt = data["createdAt"]
-
-
-    if not all([previousPostId, username, userId, text]):
-        return jsonify({"message": "Missing required fields"}), 400
-
-    result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
-    
-    return jsonify(result)
 
 @post_app.route("/api/posts/likes/<postId>", methods=["GET"])
 def get_likes_from_posts(postId):

@@ -22,3 +22,7 @@ class Comment:
         comment_collection = db.comments
         result = comment_collection.insert_one(self.comment)
         return str(result.inserted_id)  
+
+    def delete_comment_model(comment_id):
+        comment_collection = db.comments
+        comment_collection.delete_one({"_id": ObjectId(comment_id)})
