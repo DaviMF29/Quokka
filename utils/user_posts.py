@@ -1,7 +1,7 @@
 from models.Notification import Notification
 from models.User import User
 from models.Post import Post
-from flask import jsonify
+from flask import abort, jsonify
 
 
 def add_post_in_user(user_id, postId):
@@ -19,16 +19,16 @@ def add_comments_in_post(post_id,comment_id):
 def delete_comment_from_post(post_id, comment_id):
     post = Post.get_post_by_id_model(post_id)
     comments = post.get("comments")
-    print("comment_id:", comment_id)  # Debug statement
-    print("Comments:", comments)  # Debug statement
-    if not comments:
-        return jsonify({"message": "Post has no comments"}), 400
+    print(comments)
+    if comments is None:
+        return abort(404, description="Post has no comments")
     if comment_id not in comments:
-        return jsonify({"message": "Comment not found in post"}), 404
+        return abort(404, description="Comment not found in post")
+    Post.delete_comment_from_post_model(post_id, comment_id)
     comments.remove(comment_id)
-    print("Comments after removal:", comments)  # Debug statement
     Post.update_post_model(post_id, {"comments": comments})
     return comments
+
 
 
 def delete_post_from_user(user_id, post_id):
@@ -88,7 +88,10 @@ def delete_all_posts_from_user(userId):
 
 def delete_all_notifications_from_user(userId):
     return Notification.delete_all_notifications_by_userId(userId)
-    
+
+
+
+ ###############################################################   
 def add_tag_to_post(text, arr=None):
     if arr is None:
         arr = []

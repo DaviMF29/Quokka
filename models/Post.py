@@ -129,5 +129,4 @@ class Post:
             {"_id": ObjectId(postId)},
             {"$pull": {"comments": commentId}}
         )
-        
         return result.modified_count > 0
