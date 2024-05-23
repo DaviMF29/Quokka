@@ -37,15 +37,6 @@ def verify_change_in_text(postId, new_text):
         abort(400, "The text is the same")
     return text
 
-def verify_post_is_a_comment(postId):
-    verify_post(postId)
-    post = Post.get_post_by_id_model(postId)
-    previous_post = post.get("previousPostId")
-    if previous_post:
-        return previous_post
-    return False
-
-
 def verify_post_is_from_user(postId, userId):
     post = verify_post(postId)
     if post.get("userId") == userId:

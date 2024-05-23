@@ -7,7 +7,7 @@ from utils.user_posts import add_like_to_post,remove_like_from_post
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
-    verify_post_in_user_favorites,verify_post_is_a_comment)
+    verify_post_in_user_favorites)
 
 from utils.user_posts import (
     delete_all_notifications_from_user, delete_all_posts_from_user)
@@ -108,8 +108,7 @@ def get_posts_from_following_controller(user_id):
     final_posts = []
     for following_id in following:
         posts = User.get_all_posts_from_user(following_id)
-        if not verify_post_is_a_comment:
-            final_posts.extend(posts)                              #obg phind por me apresentar o extend 
+        final_posts.extend(posts)                            
     return final_posts
 
 
