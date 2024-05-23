@@ -1,3 +1,4 @@
+from flask import abort
 from models.Post import Post
 from utils.user_posts import (
     add_post_in_user)

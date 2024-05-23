@@ -16,7 +16,7 @@ def get_posts():
     posts = get_all_posts_controller()
     return jsonify(posts), 200
 
-@post_app.route("/api/posts")
+@post_app.route("/api/posts/limited")
 def get_limited_posts():
     page = request.args.get('page', default=1, type=int)
     limit = request.args.get('limit', default=10, type=int)
