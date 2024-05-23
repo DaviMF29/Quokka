@@ -11,7 +11,7 @@ comment_app = Blueprint("comment_app", __name__)
 
 @comment_app.route("/api/comments", methods=["POST"])
 @jwt_required()
-def create_post_route():
+def create_comment_route():
     data = request.get_json()
 
     if data is None or data == {}:
