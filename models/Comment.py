@@ -26,3 +26,9 @@ class Comment:
     def delete_comment_model(comment_id):
         comment_collection = db.comments
         comment_collection.delete_one({"_id": ObjectId(comment_id)})
+
+    def get_comments_model(comment_id):
+        comment_collection = db.comments
+        comment = comment_collection.find_one({"_id": ObjectId(comment_id)})
+        comment["_id"] = str(comment["_id"])
+        return comment

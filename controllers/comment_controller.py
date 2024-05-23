@@ -19,3 +19,7 @@ def delete_comment_controller(post_id,comment_id):
     delete_comment_from_post(post_id,comment_id)
     Comment.delete_comment_model(comment_id)
     return {"message": message}
+
+def get_comments_controller(comment_id):
+    comment = Comment.get_comments_model(comment_id)
+    return comment

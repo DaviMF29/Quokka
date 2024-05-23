@@ -2,7 +2,8 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
 
 from controllers.comment_controller import (
-    create_comment_controller,delete_comment_controller
+    create_comment_controller,delete_comment_controller,
+    get_comments_controller
 )
 
 comment_app = Blueprint("comment_app", __name__)
@@ -35,3 +36,8 @@ def delete_comment_route(comment_id):
     post_id = data["postId"]
     delete_comment_controller(post_id,comment_id)
     return jsonify({"message": "Comment deleted successfully"}), 200
+
+@comment_app.route("/api/comments/<comment_id>", methods=["GET"])
+def get_comment_route(comment_id):
+    comment = get_comments_controller(comment_id)
+    return jsonify(comment), 200
