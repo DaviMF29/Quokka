@@ -22,10 +22,11 @@ def get_all_posts_limited_controller(page, limit):
     initialPos = 0
     if page <= 0:
         abort(400, "Invalid page number")
-    if page > 1:
-        initialPos = (page - 1) * limit
+
+    initialPos = (page - 1) * limit
     finalPos = (page * limit)
     posts = Post.get_all_posts()[initialPos:finalPos]
+    print(len(posts))
     return posts
 
 def delete_post_controller(postId, userId):
