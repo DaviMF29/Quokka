@@ -2,9 +2,9 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
 
 from controllers.post_controller import (
-    create_post_controller, add_comment_to_post_controller,
-    delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
-    get_post_by_id_controller,get_likes_from_post_controller,get_comments_from_post_controller
+    create_post_controller,delete_post_controller,
+    update_post_by_id_controller, get_all_posts_controller,
+    get_post_by_id_controller,get_likes_from_post_controller
     
 )
 
@@ -50,7 +50,6 @@ def create_post_route():
     userId = data["userId"]
     text = data["text"] 
     createdAt = data["createdAt"]
-    isCode = data.get("isCode", False)
 
     if data is None or data == {}:
         return jsonify({"message": "Empty body"}), 400
@@ -58,39 +57,9 @@ def create_post_route():
     if "username" not in data or "userId" not in data or "text" not in data or "createdAt" not in data:
         return jsonify({"message": "Missing required fields"}), 400
 
-    language = None
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-    language = data.get("language")
 
-    post_id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language)
+    post_id = create_post_controller(userId, username, text,createdAt)
     return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
-
-
-
-@post_app.route("/api/posts/comment", methods=["PUT"])
-def add_comment_route():
-    data = request.get_json()
-    previousPostId = data["previousPostId"]
-    username = data["username"]
-    userId = data["userId"]
-    text = data["text"]
-    createdAt = data["createdAt"]
-    isCode = data.get("isCode", False)
-    language = None
-
-    if not all([previousPostId, username, userId, text]):
-        return jsonify({"message": "Missing required fields"}), 400
-
-    if isCode:
-        language = data["language"]
-
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-
-    result = add_comment_to_post_controller(previousPostId, userId, username, text,createdAt, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text,createdAt)
-    
-    return jsonify(result)
 
 @post_app.route("/api/posts/likes/<postId>", methods=["GET"])
 def get_likes_from_posts(postId):

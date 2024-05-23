@@ -10,6 +10,27 @@ def add_post_in_user(user_id, postId):
     posts.append(postId)
     User.update_user(user_id, {"posts": posts})
 
+def add_comments_in_post(post_id,comment_id):
+    post = Post.get_post_by_id_model(post_id)
+    comments = post.get("comments", [])
+    comments.append(comment_id)
+    Post.update_post_model(post_id, {"comments": comments})
+
+def delete_comment_from_post(post_id, comment_id):
+    post = Post.get_post_by_id_model(post_id)
+    comments = post.get("comments")
+    print("comment_id:", comment_id)  # Debug statement
+    print("Comments:", comments)  # Debug statement
+    if not comments:
+        return jsonify({"message": "Post has no comments"}), 400
+    if comment_id not in comments:
+        return jsonify({"message": "Comment not found in post"}), 404
+    comments.remove(comment_id)
+    print("Comments after removal:", comments)  # Debug statement
+    Post.update_post_model(post_id, {"comments": comments})
+    return comments
+
+
 def delete_post_from_user(user_id, post_id):
     user = User.get_user_by_id_model(user_id)
     posts = user.get("posts")
