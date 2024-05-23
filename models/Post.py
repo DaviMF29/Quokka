@@ -64,6 +64,14 @@ class Post:
 
         return post
 
+
+    @staticmethod
+    def get_comments_from_post_model(postId):
+        posts_collection = db.posts
+        post = posts_collection.find_one({"_id": ObjectId(postId)})
+        comments = post.get("comments", [])
+        return comments
+
     @staticmethod
     def get_post_by_id_model(userId):
         posts_collection = db.posts
@@ -95,18 +103,6 @@ class Post:
         post = posts_collection.find_one({"_id": ObjectId(postId)})
         comments = post.get("comments", [])
         return comments
-
-
-    @staticmethod                                           #talvez use esse método no futuro
-    def get_comment_by_previousPostId_model(previousPostId):
-        posts = []
-        posts_collection = db.posts
-        cursor = posts_collection.find({"previousPostId": previousPostId})
-        for post in cursor:
-            post["_id"] = str(post["_id"])
-            post["text"] = post["text"].replace("\n", "<br>")
-            posts.append(post)
-        return posts
 
     @staticmethod
     def update_post_by_id_model(userId,updated_fields):
