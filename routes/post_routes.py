@@ -5,7 +5,7 @@ from controllers.post_controller import (
     create_post_controller,delete_post_controller,
     update_post_by_id_controller, get_all_posts_controller,
     get_post_by_id_controller,get_likes_from_post_controller,
-    get_comments_from_post_controller
+    get_comments_from_post_controller,get_all_posts_limited_controller
     
 )
 
@@ -15,6 +15,12 @@ post_app = Blueprint("post_app", __name__)
 def get_posts():
     posts = get_all_posts_controller()
     return jsonify(posts), 200
+
+@post_app.route("/api/posts/test")
+def get_limited_posts():
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=10, type=int)
+    return jsonify(get_all_posts_limited_controller(page, limit)), 200
 
 @post_app.route("/api/posts/<postId>")
 def get_post_by_id(postId):

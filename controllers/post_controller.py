@@ -17,6 +17,14 @@ def create_post_controller(userId, username, text,createdAt):
 def get_all_posts_controller():
     return Post.get_all_posts()
 
+def get_all_posts_limited_controller(page, limit):
+    initialPos = 0
+    if page > 1:
+        initialPos = (page - 1) * limit
+    finalPos = (page * limit)
+    posts = Post.get_all_posts()[initialPos:finalPos]
+    return posts
+
 def delete_post_controller(postId, userId):
     verify_post_is_from_user(postId, userId)  
     message = "Post deleted successfully"
