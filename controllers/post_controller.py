@@ -19,15 +19,16 @@ def get_all_posts_controller():
     return Post.get_all_posts()
 
 def get_all_posts_limited_controller(page, limit):
-    initialPos = 0
     if page <= 0:
         abort(400, "Invalid page number")
-
+    all_posts = Post.get_all_posts()[::-1]
     initialPos = (page - 1) * limit
-    finalPos = (page * limit)
-    posts = Post.get_all_posts()[initialPos:finalPos]
-    print(len(posts))
+    finalPos = page * limit
+    if initialPos >= len(all_posts):
+        return []
+    posts = all_posts[initialPos:finalPos]
     return posts
+
 
 def delete_post_controller(postId, userId):
     verify_post_is_from_user(postId, userId)  
