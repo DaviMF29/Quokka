@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const LoginContainer = styled.div`
+
     width: 100vw;
     height: 100vh;
-    background-color: ${props => props.theme['gray-800']};
+    background-image: linear-gradient(283deg, rgba(228, 228, 228,0.04) 0%, rgba(228, 228, 228,0.04) 30%,rgba(130, 130, 130,0.04) 30%, rgba(130, 130, 130,0.04) 49%,rgba(31, 31, 31,0.04) 49%, rgba(31, 31, 31,0.04) 100%),linear-gradient(297deg, rgba(228, 228, 228,0.04) 0%, rgba(228, 228, 228,0.04) 20%,rgba(130, 130, 130,0.04) 20%, rgba(130, 130, 130,0.04) 60%,rgba(31, 31, 31,0.04) 60%, rgba(31, 31, 31,0.04) 100%),linear-gradient(242deg, rgba(228, 228, 228,0.04) 0%, rgba(228, 228, 228,0.04) 29%,rgba(130, 130, 130,0.04) 29%, rgba(130, 130, 130,0.04) 48%,rgba(31, 31, 31,0.04) 48%, rgba(31, 31, 31,0.04) 100%),linear-gradient(90deg, rgb(0,0,0),rgb(0,0,0));
     color: white;
     display: flex;
     justify-content: space-around;
@@ -17,7 +18,6 @@ export const LoginContainer = styled.div`
         justify-content: center
         
     }
-    
     
 `
 

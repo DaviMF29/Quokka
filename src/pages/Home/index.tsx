@@ -54,8 +54,6 @@ export function Home() {
             }
         };
         const followingPostsId = await api.get('/api/users/following/posts', config);
-
-        console.log(followingPostsId.data)
         const followingPostPromises = followingPostsId.data.map((postId: string) => user.getPostById(postId));
         const postList = await Promise.all(followingPostPromises);
         setFollowingPosts(postList.reverse());

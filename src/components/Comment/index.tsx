@@ -7,6 +7,7 @@ import { Avatar } from "../SideProfile/styles";
 import { AuthorAndTime, Comment, CommentBox, CommentContent, DeleteCommentButton } from "./styles";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
+import { LinkDiv } from "../Post/styles";
 
 
 
@@ -80,15 +81,21 @@ export function Comments({commentId, setPostState, handleDeleteComment}:CommentP
 
     return(
         <Comment>
-            <Avatar src={profileImg}/>
+            <LinkDiv to={`/${comment.username}`}>
+               <Avatar src={profileImg}/> 
+            </LinkDiv>
+            
             <CommentBox>
                 <CommentContent>
                     <header>
                         <AuthorAndTime>
+                        <LinkDiv to={`/${comment.username}`}>
                             <strong>{comment.username}</strong>
                             <time>
                                 {comment.createdAt && formatTimeAgo(comment.createdAt.toString())}
                             </time>
+                        </LinkDiv>
+                            
                         </AuthorAndTime>
 
                         {isAuthor && <DeleteCommentButton onClick={ () => handleDeleteComment(commentId, comment.postId)}>
