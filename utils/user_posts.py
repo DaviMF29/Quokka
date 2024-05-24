@@ -89,7 +89,13 @@ def delete_all_posts_from_user(userId):
 def delete_all_notifications_from_user(userId):
     return Notification.delete_all_notifications_by_userId(userId)
 
-
+def delete_comments_from_post(post_id):
+    comments = Post.get_post_by_id_model(post_id).get("comments")
+    if comments is None:
+        return jsonify({"message": "Post has no comments"}), 400
+    for comment_id in comments:
+        Post.delete_comment_from_post_model(post_id, comment_id)
+    return jsonify({"message": "Comments deleted"}), 200
 
  ###############################################################   
 def add_tag_to_post(text, arr=None):

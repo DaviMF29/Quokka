@@ -38,6 +38,7 @@ def delete_post_controller(postId, userId):
     delete_post_from_user(userId, postId)
     delete_post_if_was_favorited(postId)
     delete_post_if_was_liked(postId)
+    delete_comments_from_post(postId)
     Post.delete_post_by_id_model(postId)
     return {"message": message}
 
