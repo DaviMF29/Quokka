@@ -56,5 +56,7 @@ def verify_change_in_user(user_id, field_name, new_value):
 def verify_post_in_user_favorites(userId, postId):
     user = verify_user(userId)
     favorites = user.get("favorites", [])
-    return postId in favorites, "Post already in favorites" if postId in favorites else None
+    if favorites:
+        return True
+    return False
 
