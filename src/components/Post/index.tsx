@@ -240,7 +240,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                             placeholder="Escreva um comentário" 
                             {...register('content')}
                         />
-                        <CommentButton type="submit" disabled={!commentFieldChange}> Comentar </CommentButton>
+                        <CommentButton type="submit" hidden={!commentFieldChange}> Comentar </CommentButton>
                     </CommentForm>
 
                     <CommentList>
