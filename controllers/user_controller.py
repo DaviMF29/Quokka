@@ -135,6 +135,22 @@ def get_user_by_username_controller(username):
     user.pop('password', None)
     return user
 
+def get_user_by_id_controller(user_id):
+    try:
+        user = User.get_user_by_id_model(user_id)
+        if not user:
+            return {"message": "User not found"}, 404
+
+        filtered_user = {
+            '_id': user.get('_id'),
+            'email': user.get('email'),
+            'image': user.get('image'),
+            'username': user.get('username')
+        }
+        return filtered_user
+    except Exception as e:
+        return {"message": "Failed to retrieve user"}, 500
+
 def get_all_posts_from_user(userId):
     verify_user(userId)
     posts = User.get_all_posts_from_user(userId)
