@@ -1,6 +1,7 @@
 from flask import abort
 from models.User import User
 from models.Post import Post
+#from functools import wraps
 
 #CONSTANTES
 MAX_TEXT_LENGTH = 300
@@ -36,15 +37,6 @@ def verify_change_in_text(postId, new_text):
         abort(400, "The text is the same")
     return text
 
-def verify_post_is_a_comment(postId):
-    verify_post(postId)
-    post = Post.get_post_by_id_model(postId)
-    previous_post = post.get("previousPostId")
-    if previous_post:
-        return previous_post
-    return False
-
-
 def verify_post_is_from_user(postId, userId):
     post = verify_post(postId)
     if post.get("userId") == userId:
@@ -64,5 +56,7 @@ def verify_change_in_user(user_id, field_name, new_value):
 def verify_post_in_user_favorites(userId, postId):
     user = verify_user(userId)
     favorites = user.get("favorites", [])
-    return postId in favorites, "Post already in favorites" if postId in favorites else None
+    if favorites:
+        return True
+    return False
 

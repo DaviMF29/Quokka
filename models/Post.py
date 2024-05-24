@@ -10,10 +10,8 @@ db = client[db_name]
 
 class Post:
 
-    @staticmethod
-    def create_post_model(userId, username, text,createdAt, isCode=False, language = None, previousPostId = None):
-        posts_collection = db.posts
-        new_post = {
+    def __init__(self, userId, username, text, createdAt, isCode=False, language=None):
+        self.post = {
             "userId": userId,
             "username": username,
             "text": text,
@@ -22,9 +20,11 @@ class Post:
             "comments": [],
             "isCode": isCode,
             "language": language,
-            "previousPostId": previousPostId
         }
-        result = posts_collection.insert_one(new_post)
+
+    def create_post_model(self):
+        posts_collection = db.posts
+        result = posts_collection.insert_one(self.post)
         return str(result.inserted_id)
 
     @staticmethod
@@ -34,7 +34,8 @@ class Post:
         serialized_posts = []
         for post in posts:
             post["_id"] = str(post["_id"])
-            post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
+            if post["text"] is not None and "\n" in post["text"]:
+                post["text"] = post["text"].replace("\n", "<br>") 
             serialized_posts.append(post)
         return serialized_posts
 
@@ -62,6 +63,14 @@ class Post:
         post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
 
         return post
+
+
+    @staticmethod
+    def get_comments_from_post_model(postId):
+        posts_collection = db.posts
+        post = posts_collection.find_one({"_id": ObjectId(postId)})
+        comments = post.get("comments", [])
+        return comments
 
     @staticmethod
     def get_post_by_id_model(userId):
@@ -95,18 +104,6 @@ class Post:
         comments = post.get("comments", [])
         return comments
 
-
-    @staticmethod                                           #talvez use esse método no futuro
-    def get_comment_by_previousPostId_model(previousPostId):
-        posts = []
-        posts_collection = db.posts
-        cursor = posts_collection.find({"previousPostId": previousPostId})
-        for post in cursor:
-            post["_id"] = str(post["_id"])
-            post["text"] = post["text"].replace("\n", "<br>")
-            posts.append(post)
-        return posts
-
     @staticmethod
     def update_post_by_id_model(userId,updated_fields):
         posts_collection = db.posts
@@ -130,7 +127,6 @@ class Post:
         posts_collection = db.posts
         result = posts_collection.update_one(
             {"_id": ObjectId(postId)},
-            {"$pull": {"comments": {"_id": commentId}}}
+            {"$pull": {"comments": commentId}}
         )
-        
         return result.modified_count > 0

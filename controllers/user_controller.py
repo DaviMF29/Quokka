@@ -19,11 +19,12 @@ def create_user_controller(email,username, password):
     hashed_password_base64 = base64.b64encode(hashed_password).decode()
     hashed_email_sha256 = hashlib.sha256(email.encode()).hexdigest()
     image = f"https://www.gravatar.com/avatar/{hashed_email_sha256}"
-    user_id = User.create_user_model(email,username,image, hashed_password_base64)
+    user = User(username,email,image, hashed_password_base64)
+    user_id = user.create_user_model()
     return {"id": user_id, "message": f"User {username} created"}, 201
 
 def add_or_remove_favorite_post_controller(user_id, postId):
-    already_in_favorites, message = verify_post_in_user_favorites(user_id, postId)
+    already_in_favorites = verify_post_in_user_favorites(user_id, postId)
     user = verify_user(user_id)
     favorites = user.get("favorites", [])
     if already_in_favorites:
@@ -107,7 +108,7 @@ def get_posts_from_following_controller(user_id):
     final_posts = []
     for following_id in following:
         posts = User.get_all_posts_from_user(following_id)
-        final_posts.extend(posts)                              #obg phind por me apresentar o extend 
+        final_posts.extend(posts)                            
     return final_posts
 
 

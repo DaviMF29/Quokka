@@ -1,7 +1,8 @@
 from models.Notification import Notification
 from models.User import User
 from models.Post import Post
-from flask import jsonify
+from models.Comment import Comment
+from flask import abort, jsonify
 
 
 def add_post_in_user(user_id, postId):
@@ -9,6 +10,27 @@ def add_post_in_user(user_id, postId):
     posts = user.get("posts", [])
     posts.append(postId)
     User.update_user(user_id, {"posts": posts})
+
+def add_comments_in_post(post_id,comment_id):
+    post = Post.get_post_by_id_model(post_id)
+    comments = post.get("comments", [])
+    comments.append(comment_id)
+    Post.update_post_model(post_id, {"comments": comments})
+
+def delete_comment_from_post(post_id, comment_id):
+    post = Post.get_post_by_id_model(post_id)
+    comments = post.get("comments")
+    print(comments)
+    if comments is None:
+        return abort(404, description="Post has no comments")
+    if comment_id not in comments:
+        return abort(404, description="Comment not found in post")
+    Post.delete_comment_from_post_model(post_id, comment_id)
+    comments.remove(comment_id)
+    Post.update_post_model(post_id, {"comments": comments})
+    return comments
+
+
 
 def delete_post_from_user(user_id, post_id):
     user = User.get_user_by_id_model(user_id)
@@ -67,22 +89,26 @@ def delete_all_posts_from_user(userId):
 
 def delete_all_notifications_from_user(userId):
     return Notification.delete_all_notifications_by_userId(userId)
-    
-def add_tag_to_post(text, arr=None):
-    if arr is None:
-        arr = []
-    
-    if "@" in text:
-        start_index = text.index("@")
-        end_index = start_index
-        while end_index < len(text) and text[end_index] != " ":
-            end_index += 1
-        tag = text[start_index:end_index]
-        remaining_text = text[end_index:]
-        if tag != "@" and "@@" not in tag:
-            tag = "<a>" + tag + "</a>"
-            arr.append(tag)
-        add_tag_to_post(remaining_text, arr)
-    else:
-        for tag in arr:
-            print(tag)   
+
+def delete_comments_from_post(post_id):
+    comments = Post.get_post_by_id_model(post_id).get("comments")
+    if comments is None:
+        return jsonify({"message": "Post has no comments"}), 400
+    for comment_id in comments:
+        Comment.delete_comment_model(comment_id)
+    return jsonify({"message": "Comments deleted"}), 200
+
+ ###############################################################   
+import re
+
+def add_tag_to_post(text):
+    def replace_at(match):
+        username = match.group(1)
+        user = User.get_user_by_username_model(username)
+        if user:
+            return f"<a href=/{username}>@{username}</a>"
+        return f"@{username}"
+
+    pattern = r"@(\w+)"
+    replaced_text = re.sub(pattern, replace_at, text)
+    return replaced_text
