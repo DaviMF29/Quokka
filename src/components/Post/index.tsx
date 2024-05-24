@@ -102,6 +102,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
         const response = await api.get(`/api/posts/comments/${_id}`)
         setCommentList(response.data.comments)
     }
+    
     useEffect(() => {
         getNumberOfLikesInPost()
         getCommentsOfPost()

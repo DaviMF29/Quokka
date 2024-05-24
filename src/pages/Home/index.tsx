@@ -36,15 +36,15 @@ export function Home() {
         }
     }
 
-    async function callPostList() {
-        const postList = await api.get('api/posts');
-        setPosts(postList.data.reverse());
+    // async function callPostList() {
+    //     const postList = await api.get('api/posts');
+    //     setPosts(postList.data.reverse());
         
-    }
+    // }
 
     async function callLimitedPosts() {
-        const postList = await api.get(`api/posts/limited?${page}?limit=10`);
-        setPosts(postList.data.reverse());
+        const postList = await api.get(`api/posts/limited?page=${page}&limit=10`);
+        setPosts(postList.data);
     }
 
     async function callFollowingPostList() {

@@ -70,7 +70,7 @@ export function Profile() {
 
         fetchData()
         setPostsLoaded(true)
-    }, [user.username, user.following])
+    }, [])
 
     async function handleEditProfile(data: CreateEditFormData){
         if(user.access_token && user.userId){
