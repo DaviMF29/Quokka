@@ -103,19 +103,23 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         return response.data
     }
 
-    async function addComment(token:string,previousPostId:string,text:string, userId:string, username:string) {
+    async function addComment(token:string,postId:string,text:string, userId:string, username:string) {
+        const createdAt = new Date()
         const data = {
-            previousPostId : previousPostId,
+            postId : postId,
             text : text,
             userId : userId,
             username: username,
+            createdAt: createdAt
         }	
+
         const config = {
-            headers: {
-              Authorization: `Bearer ${token}` 
-            }
-          };
-        const response = await api.put("/api/posts/comment",data,config)
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        };
+        
+        const response = await api.post("/api/comments",data,config)
         return response.data
       
     }

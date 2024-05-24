@@ -46,7 +46,8 @@ export interface PostProps {
 export function Post({ _id,username, userId, text, createdAt, currentUserId,userFavoritePosts, userLikedPosts,userFollowing,commentField,deletePostFunction, setPostState, setPostAsFavorite, setPostAsLiked}:PostProps) {
 
     const user = useAuth()
-    const [comments, setComments] = useState<CreateCommentFormData[]>([])
+    const [comment, setComment] = useState<CreateCommentFormData[]>([])
+    const [commentList, setCommentList] = useState<string[]>([])
     const [localPostState, setLocalPostState] = useState<boolean>(false)
     const [numberOfLikes, setNumberOfLikes] = useState<number>(0)
     
@@ -77,6 +78,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
             await user.followUser(user.access_token, user.userId, userId)
             setLocalPostState(false)
             setPostState(false)
+            user.getUserInfo(user.access_token ?? '')
         }
     }
     
@@ -96,11 +98,20 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
        
     }
 
+    async function getCommentsOfPost() {
+        const response = await api.get(`/api/posts/comments/${_id}`)
+        setCommentList(response.data.comments)
+    }
     useEffect(() => {
         getNumberOfLikesInPost()
-        user.getUserInfo(user.access_token ?? '')
+        getCommentsOfPost()
+    }, [])
+
+
+    useEffect(() => {
         setLocalPostState(true)
-    }, [numberOfLikes, localPostState])
+        setPostState(true)
+    }, [localPostState])
 
     
     
@@ -130,12 +141,20 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
      async function addNewComment(data: CreateCommentFormData) {
          console.log('comentado:', data.content);
          if (user.access_token && user.userId && user.username) { 
-             await user.addComment(user.access_token, _id, data.content, user.userId, user.username);
+             await user.addComment(user.access_token,_id, data.content, user.userId, user.username);
          }
-         setComments(prevComments => [...prevComments, data]);
+         setComment(prevComments => [...prevComments, data]);
+         setPostState(false)
          reset()
+         getCommentsOfPost()
      }
      
+     async function handleDeleteComment(commentId: string, postId: string) {
+        console.log(commentId)
+        await api.delete(`/api/comments/${commentId}`, { data: { postId: postId } });
+        getCommentsOfPost()
+        setPostState(false);
+    }
     
     
     
@@ -224,10 +243,13 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
                     </CommentForm>
 
                     <CommentList>
-                        {comments.map((comment: CreateCommentFormData) => {
+                        {commentList.map((comment) => {
                             return (
                                 <Comments 
-                                    content={comment.content}
+                                    key={comment}
+                                    commentId = {comment}
+                                    setPostState = {setPostState}
+                                    handleDeleteComment={handleDeleteComment}
                                 />
                             );
                         })}
