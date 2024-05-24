@@ -5,11 +5,12 @@ from middleware.global_middleware import verify_user
 typesOfNotifications = ["like", "comment", "post", "follow", "mention",]
 
 
-def create_notification_controller(userId, username, text, createdAt, type, seen):
-    verify_user(userId)
+def create_notification_controller(senderId,recipientId, text, createdAt, type, seen):
+    verify_user(senderId)
+    verify_user(recipientId)
     if type not in typesOfNotifications:
         raise Exception("Invalid type of notification")
-    notification = Notification(userId, username, text, createdAt, type, seen)
+    notification = Notification(senderId,recipientId, text, createdAt, type, seen)
     return notification.create_notification_model()
 
 def get_notifications_by_userId_controller(userId):
