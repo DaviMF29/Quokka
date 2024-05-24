@@ -16,6 +16,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     const [followers, setFollowers] = useState<userId[]>([])
     const [following, setFollowing] = useState<userId[]>([])
     const [likedPosts, setLikedPosts] = useState<string[]>([])
+    const [favoritePosts, setFavoritePosts] = useState<string[]>([])
     
 
     
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setFollowers(response.data.followers)
         setFollowing(response.data.following)
         setLikedPosts(response.data.liked_posts)
+        setFavoritePosts(response.data.favorites)
 
         
     }
@@ -208,6 +210,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             email,
             following,
             followers,
+            favoritePosts,
             likedPosts,
             authenticate,
             logout, 

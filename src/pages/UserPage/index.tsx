@@ -25,7 +25,7 @@ export function UserPage({ userId }: { userId: string }) {
     const [pageOwner, setPageOwner] = useState<UserInfo | null>(null);
     const [pageOwnerPosts, setPageOwnerPosts] = useState<PostProps[]>([]);
     const [pageLoaded, setPageLoaded] = useState(false);
-
+    
     async function getUserByUsername() {
         try {
             const response = await api.get(`/api/users/${userName}`);
@@ -94,6 +94,8 @@ export function UserPage({ userId }: { userId: string }) {
         }
     }
 
+
+
     return (
         <>
             <Header />
@@ -129,6 +131,7 @@ export function UserPage({ userId }: { userId: string }) {
                             userFollowing={user.following?.map(userId => userId.toString())}
                             currentUserId={user.userId ?? ''}
                             userLikedPosts={user.likedPosts}
+                            userFavoritePosts={user.favoritePosts}
                             deletePostFunction={handleDeletePost}
                             setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
                             commentField={false}

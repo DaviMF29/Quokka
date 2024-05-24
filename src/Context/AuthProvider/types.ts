@@ -10,6 +10,7 @@ export interface IUser {
     username?: string;
     followers?: Array<userId> | undefined;
     following?: Array<userId> | undefined;
+    favoritePosts?: Array<string> | undefined;
     likedPosts?: Array<string> | undefined;
     access_token?: string;
 }
