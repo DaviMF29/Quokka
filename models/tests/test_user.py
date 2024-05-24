@@ -1,12 +1,10 @@
 import os
 from flask import Flask
 import pytest
-import mongomock
 from models.User import User
 from models.build.UserBuilder import UserBuilder
 from flask_jwt_extended import JWTManager
 from unittest.mock import patch
-import jwt
 
 
 import warnings
