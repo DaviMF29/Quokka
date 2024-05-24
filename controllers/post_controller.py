@@ -1,7 +1,9 @@
 from flask import abort
 from models.Post import Post
 from utils.user_posts import (
-    add_post_in_user,delete_post_from_user,delete_post_if_was_favorited,delete_post_if_was_liked)
+    add_post_in_user,delete_post_from_user,
+    delete_post_if_was_favorited,delete_post_if_was_liked,
+    delete_comments_from_post)
 from middleware.global_middleware import (
     verify_post, verify_change_in_text,verify_post_is_from_user,
     verify_user,validate_text_length)
