@@ -13,7 +13,7 @@ def login(email, password):
         access_token = create_access_token(identity=str(user["_id"]))
         return {"access_token": access_token}, 200
     else:
-        return {"message": "Invalid username or password"}, 401
+        return {"message": "Invalid email or password"}, 401
 
     
 def get_user_data():
