@@ -16,14 +16,13 @@ warnings.filterwarnings("ignore")
 
 @pytest.fixture
 def app():
-    import routes.post_routes
+    import routes.user_routes
+    import routes.auth_routes
     app = Flask(__name__)
     app.config.update({
         "TESTING": True,
-        "MONGO_URI": "mongomock://localhost",  # Use mongomock
-        "JWT_SECRET_KEY": os.getenv("SECRET_KEY"),
-        "JWT_TOKEN_LOCATION": ["headers"],
     })
+    app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
     jwt = JWTManager(app)
     app.register_blueprint(routes.post_routes.post_app)
     return app
