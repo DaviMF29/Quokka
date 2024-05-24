@@ -3,7 +3,7 @@ from models.Post import Post
 from utils.user_posts import (
     add_post_in_user,delete_post_from_user,
     delete_post_if_was_favorited,delete_post_if_was_liked,
-    delete_comments_from_post)
+    delete_comments_from_post,add_tag_to_post)
 from middleware.global_middleware import (
     verify_post, verify_change_in_text,verify_post_is_from_user,
     verify_user,validate_text_length)
@@ -17,7 +17,13 @@ def create_post_controller(userId, username, text,createdAt):
     return post_id
 
 def get_all_posts_controller():
-    return Post.get_all_posts()
+    posts = Post.get_all_posts()
+    texts_with_tags = []
+    for post in posts:
+        text = post.get("text")
+        text_with_tag = add_tag_to_post(text)
+        texts_with_tags.append(text_with_tag)
+    return texts_with_tags
 
 def get_all_posts_limited_controller(page, limit):
     if page <= 0:

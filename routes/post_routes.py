@@ -83,8 +83,8 @@ def teste():
     data = request.get_json()
     text = data["text"]
     from utils.user_posts import add_tag_to_post
-    add_tag_to_post(text)
-    return jsonify({"message": "Tag added"}), 200
+    return jsonify(add_tag_to_post(text)), 200
+
 
 
 

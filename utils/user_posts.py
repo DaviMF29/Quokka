@@ -99,21 +99,16 @@ def delete_comments_from_post(post_id):
     return jsonify({"message": "Comments deleted"}), 200
 
  ###############################################################   
-def add_tag_to_post(text, arr=None):
-    if arr is None:
-        arr = []
-    
-    if "@" in text:
-        start_index = text.index("@")
-        end_index = start_index
-        while end_index < len(text) and text[end_index] != " ":
-            end_index += 1
-        tag = text[start_index:end_index]
-        remaining_text = text[end_index:]
-        if tag != "@" and "@@" not in tag:
-            tag = "<a>" + tag + "</a>"
-            arr.append(tag)
-        add_tag_to_post(remaining_text, arr)
-    else:
-        for tag in arr:
-            print(tag)   
+import re
+
+def add_tag_to_post(text):
+    def replace_at(match):
+        username = match.group(1)
+        user = User.get_user_by_username_model(username)
+        if user:
+            return f"<a href=/{username}>@{username}</a>"
+        return f"@{username}"
+
+    pattern = r"@(\w+)"
+    replaced_text = re.sub(pattern, replace_at, text)
+    return replaced_text

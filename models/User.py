@@ -55,8 +55,10 @@ class User:
     def get_user_by_username_model(username):
         users_collection = db.users
         user = users_collection.find_one({"username": username})
-        user["_id"] = str(user["_id"])
-        return user
+        if user:
+            user["_id"] = str(user["_id"])
+            return user
+        return False
     
     @staticmethod
     def get_user_by_email_model(email):
