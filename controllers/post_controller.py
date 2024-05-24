@@ -8,9 +8,6 @@ from middleware.global_middleware import (
     verify_post, verify_change_in_text,verify_post_is_from_user,
     verify_user,validate_text_length)
 
-
-
-
 def create_post_controller(userId, username, text,createdAt):
     verify_user(userId)
     post = Post(userId, username, text,createdAt)

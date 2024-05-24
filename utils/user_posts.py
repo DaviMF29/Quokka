@@ -1,6 +1,7 @@
 from models.Notification import Notification
 from models.User import User
 from models.Post import Post
+from models.Comment import Comment
 from flask import abort, jsonify
 
 
@@ -94,7 +95,7 @@ def delete_comments_from_post(post_id):
     if comments is None:
         return jsonify({"message": "Post has no comments"}), 400
     for comment_id in comments:
-        Post.delete_comment_from_post_model(post_id, comment_id)
+        Comment.delete_comment_model(comment_id)
     return jsonify({"message": "Comments deleted"}), 200
 
  ###############################################################   
