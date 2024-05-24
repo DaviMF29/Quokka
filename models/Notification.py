@@ -10,10 +10,10 @@ db = client[db_name]
 
 class Notification:
 
-    def __init__(self,userId, username, text, createdAt, type, seen = False):
+    def __init__(self,senderId,recipientId, text, createdAt, type, seen = False):
         self.notification = {
-            "userId": userId,
-            "username": username,
+            "senderId": senderId,
+            "recipientId": recipientId,
             "text": text,
             "createdAt": createdAt,
             "type": type,

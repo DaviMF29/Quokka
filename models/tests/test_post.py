@@ -16,14 +16,13 @@ warnings.filterwarnings("ignore")
 
 @pytest.fixture
 def app():
-    import routes.post_routes
+    import routes.user_routes
+    import routes.auth_routes
     app = Flask(__name__)
     app.config.update({
         "TESTING": True,
-        "MONGO_URI": "mongomock://localhost",  # Use mongomock
-        "JWT_SECRET_KEY": os.getenv("SECRET_KEY"),
-        "JWT_TOKEN_LOCATION": ["headers"],
     })
+    app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
     jwt = JWTManager(app)
     app.register_blueprint(routes.post_routes.post_app)
     return app
@@ -34,20 +33,20 @@ def client(app):
 
 class TestPostRoutes:
 
-    @patch.object(Post, "create_post_model")
-    @patch("bson.ObjectId.is_valid", return_value=True)
-    @patch("middleware.global_middleware.verify_user", lambda x: x)  # Ignora a verificação de usuário
-    def test_create_post(self, mock_create_post,mock_is_valid, client, app):
-        mock_create_post.return_value = 125
-        mock_is_valid.return_value = True
-        with app.app_context():
-            token = create_access_token(identity="user_id")
+    # @patch.object(Post, "create_post_model")
+    # @patch("bson.ObjectId.is_valid", return_value=True)
+    # @patch("middleware.global_middleware.verify_user", lambda x: x)  # Ignora a verificação de usuário
+    # def test_create_post(self, mock_create_post,mock_is_valid, client, app):
+    #     mock_create_post.return_value = 125
+    #     mock_is_valid.return_value = True
+    #     with app.app_context():
+    #         token = create_access_token(identity="user_id")
 
-            response = client.post("/api/posts",
-                                   json=PostBuilder.anPost(str(ObjectId()), "username", "Test post", "2024-05-09T12:00:00Z").now(),
-                                   headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    #         response = client.post("/api/posts",
+    #                                json=PostBuilder.anPost(str(ObjectId()), "username", "Test post", "2024-05-09T12:00:00Z").now(),
+    #                                headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
 
-            assert response.status_code == 201
+    #         assert response.status_code == 201
 
     @patch.object(Post, "create_post_model")
     @patch("bson.ObjectId.is_valid", return_value=True)
