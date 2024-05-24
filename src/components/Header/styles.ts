@@ -9,6 +9,7 @@ export const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
     padding: 1rem 0;
     z-index: 1;
     opacity: 0.8;
@@ -19,7 +20,18 @@ export const HeaderContainer = styled.header`
         color: ${props => props.theme['blue-300']};;
     }
 
-    button {
+    
+
+    div {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+    }
+
+`
+
+export const ExitButton = styled.button`
+
         background-color: ${props => props.theme['blue-300']};
         border: none;
         border-radius: 4px;
@@ -35,9 +47,24 @@ export const HeaderContainer = styled.header`
             background-color: ${props => props.theme['gray-100']};
             color: ${props => props.theme['blue-300']};
         }
+`
+
+
+export const NotificationButton = styled.button`
+    
+    background-color:transparent;
+    color: white;
+    border: none;
+    transition: 0.3s;
+
+    &:hover{
+        
+        color: ${props => props.theme['blue-300']};
     }
 
 `
+
+    
 
 
 export const Logo = styled.img`

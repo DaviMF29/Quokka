@@ -1,100 +1,141 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import avatarImg from '../../assets/avatar_img.png'
-import { Header } from "../../components/Header"
-import { PostProps } from "../../components/Post"
-import { useAuth } from "../../hooks/useAuth"
-import { api } from "../../services/api"
-import { Banner, FollowButton, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, UnfollowButton, UserPosts } from "./styles"
-interface UserInfo {
-    _id : string
-    username: string
-    email: string
-    favorites: Array<string>
-    followers: Array<string>
-    following: Array<string>
-    liked_posts:Array<string>
-    posts: Array<PostProps>
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import avatarImg from '../../assets/avatar_img.png';
+import { Header } from "../../components/Header";
+import { Post, PostProps } from "../../components/Post";
+import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../services/api";
+import { Banner, FollowButton, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, UnfollowButton, UserPosts } from "./styles";
+import { CloudSnow } from "phosphor-react";
 
+interface UserInfo {
+    _id: string;
+    username: string;
+    email: string;
+    favorites: Array<string>;
+    followers: Array<string>;
+    following: Array<string>;
+    liked_posts: Array<string>;
+    posts: Array<string>;
 }
 
-export function UserPage({userId}: {userId: string}) {
+export function UserPage({ userId }: { userId: string }) {
+    const user = useAuth();
+    const { userName } = useParams();
+    const [pageOwner, setPageOwner] = useState<UserInfo | null>(null);
+    const [pageOwnerPosts, setPageOwnerPosts] = useState<PostProps[]>([]);
+    const [pageLoaded, setPageLoaded] = useState(false);
 
-
-    const user = useAuth()
-    const {userName} = useParams()
-    const [pageOwner, setPageOwner] = useState<UserInfo | null>(null)
-    const [pageLoaded, setPageLoaded] = useState(false)
-    
     async function getUserByUsername() {
-        const response = await api.get(`/api/users/${userName}`)
-        setPageOwner(response.data)
+        try {
+            const response = await api.get(`/api/users/${userName}`);
+            setPageOwner(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Failed to fetch user by username:", error);
+        }
     }
 
-    
-
-        useEffect(() => {
-            getUserByUsername()
-            user.getUserInfo(user.access_token ?? '')
-            setPageLoaded(true)
-        }, [pageLoaded])
-
-
-        
-
-    
-        async function handleFollow() {
-            
-            if(user.access_token && user.userId && pageOwner?._id){
-               await user.followUser(user.access_token,user.userId,pageOwner?._id) 
-               getUserByUsername()
-               setPageLoaded(false)
-               
-            }
-            
+    async function getPostById(postId: string) {
+        try {
+            const response = await api.get(`/api/posts/${postId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Failed to fetch post by ID:", error);
         }
+    }
 
-        
-        
-        return (
-            
-                
+    useEffect(() => {
+        const fetchData = async () => {
+            const owner = await getUserByUsername();
+            if (owner?.posts) {
+                const postsPromises = owner.posts.map((postId:string) => getPostById(postId));
+                const resolvedPosts = await Promise.all(postsPromises);
+                setPageOwnerPosts(resolvedPosts.reverse());
+            }
+            setPageLoaded(true);
+            if (user.access_token) { 
+                user.getUserInfo(user.access_token);
+            }
+        };
+
+        fetchData();
+    }, [userName,pageLoaded]);
+
+    async function handleFollow() {
+        try {
+            if (user.access_token && user.userId && pageOwner?._id) {
+                await user.followUser(user.access_token, user.userId, pageOwner._id);
+                getUserByUsername();
+            }
+        } catch (error) {
+            console.error("Failed to follow/unfollow user:", error);
+        }
+    }
+
+    async function handleDeletePost(postId:string, userId:string){
+        const postIndex = pageOwnerPosts.findIndex(post => post._id == postId)
+
+        if(postIndex !== -1){
+            const post = pageOwnerPosts[postIndex]
+
+            if(post.userId === userId){
+                const url = `/api/posts/${postId}`
+                const config = {
+                    data: {userId},
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`
+                    }
+                }
+                await api.delete(url, config)
+                setPageLoaded(false)
+
+            }
+        }
+    }
+
+    return (
         <>
             <Header />
             <ProfileWrapper>
-                <Banner src="https://i.pinimg.com/originals/0b/a3/d6/0ba3d60362c7e6d256cfc1f37156bad9.jpg"></Banner>
+                <Banner src="https://i.pinimg.com/originals/0b/a3/d6/0ba3d60362c7e6d256cfc1f37156bad9.jpg" />
                 <ProfileInfo>
-                   <ProfilePicture src={avatarImg}></ProfilePicture>
-                   <ProfileText>
-                    <h1>{pageOwner?.username ? pageOwner.username : 'user not found'}</h1> 
-                    <h3>{pageOwner?.email ? pageOwner.email : 'email not found'}</h3>
-
-                     <div>
-                        <p>Id: {pageOwner?._id}</p>
-                        <p>Posts: {pageOwner?.posts.length}</p>
-                        <p>Posts favoritados: {pageOwner?.favorites.length}</p>
-                        <p>Seguidores: {pageOwner?.followers?.length}</p>
-                        <p>Seguindo: {pageOwner?.following?.length}</p>
-                    </div> 
-                    
-                    {pageOwner && pageOwner._id !== userId && (
-                    
-                    (pageOwner.followers && pageOwner.followers.includes(userId)) ?
-                        <UnfollowButton onClick={handleFollow}>Seguindo</UnfollowButton> : 
-                        <FollowButton onClick={handleFollow}>Seguir</FollowButton> 
-                )}
-                    
-                    
-                   </ProfileText>
+                    <ProfilePicture src={avatarImg} />
+                    <ProfileText>
+                        <h1>{pageOwner?.username || 'User not found'}</h1>
+                        <h3>{pageOwner?.email || 'Email not found'}</h3>
+                        <div>
+                            <p>Posts: {pageOwner?.posts.length}</p>
+                            <p>Seguidores: {pageOwner?.followers?.length}</p>
+                            <p>Seguindo: {pageOwner?.following?.length}</p>
+                        </div>
+                        {pageOwner && pageOwner._id !== userId && (
+                            pageOwner.followers?.includes(userId) ?
+                                <UnfollowButton onClick={handleFollow}>Seguindo</UnfollowButton> :
+                                <FollowButton onClick={handleFollow}>Seguir</FollowButton>
+                        )}
+                    </ProfileText>
                 </ProfileInfo>
-
                 <UserPosts>
-                    
+                    {pageOwnerPosts.map((post) => (
+                        <Post
+                        key={post._id}
+                            username={post.username}
+                            userId={post.userId}
+                            createdAt={post.createdAt}
+                            text={post.text}
+                            _id={post._id}
+                            setPostState={setPageLoaded}
+                            userFollowing={user.following?.map(userId => userId.toString())}
+                            currentUserId={user.userId ?? ''}
+                            userLikedPosts={user.likedPosts}
+                            deletePostFunction={handleDeletePost}
+                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                            commentField={false}
+                        />
+                    ))}
                 </UserPosts>
-                      
             </ProfileWrapper>
-
-
         </>
-    )
+    );
 }

@@ -79,7 +79,7 @@ export const DeleteCommentButton = styled.button`
     color: ${props => props.theme['gray-400']};
     cursor: pointer;
     border-radius: 2px;
-
+    transition: 0.3s;
     &:hover {
         color: ${props => props.theme['red-500']};
     }
