@@ -48,6 +48,7 @@ class TestPostRoutes:
     #         assert response.status_code == 201
 
     @patch.object(Post, "create_post_model")
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning")
     @patch("bson.ObjectId.is_valid", return_value=True)
     def test_create_post_with_invalid_userId(self, mock_is_valid, mock_create_post, client, app):
         mock_create_post.return_value = 125
