@@ -70,7 +70,6 @@ class User:
     def get_user_by_id_model(id):
         users_collection = db.users
         user = users_collection.find_one({"_id": ObjectId(id)})
-        user["_id"] = str(user["_id"])
         return user
     
     @staticmethod

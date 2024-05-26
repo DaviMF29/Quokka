@@ -16,8 +16,7 @@ warnings.filterwarnings("ignore")
 
 @pytest.fixture
 def app():
-    import routes.user_routes
-    import routes.auth_routes
+    import routes.post_routes
     app = Flask(__name__)
     app.config.update({
         "TESTING": True,
