@@ -2,6 +2,7 @@ from models.User import User
 import bcrypt
 import base64
 import hashlib
+from bson import ObjectId
 
 from utils.user_posts import add_like_to_post,remove_like_from_post
 
@@ -136,18 +137,20 @@ def get_user_by_username_controller(username):
 
 def get_user_by_id_controller(user_id):
     try:
+        user_id = ObjectId(user_id)  # Converte user_id para ObjectId
         user = User.get_user_by_id_model(user_id)
         if not user:
             return {"message": "User not found"}, 404
 
         filtered_user = {
-            '_id': user.get('_id'),
+            '_id': str(user.get('_id')),  # Converta _id para string
             'email': user.get('email'),
             'image': user.get('image'),
             'username': user.get('username')
         }
         return filtered_user
     except Exception as e:
+        print(f"Failed to retrieve user: {e}")
         return {"message": "Failed to retrieve user"}, 500
 
 def get_all_posts_from_user(userId):
