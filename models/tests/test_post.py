@@ -201,8 +201,63 @@ def test_find_all_posts(post_model, mock_db):
     assert posts[0]["title"] == "Post 1"
     assert posts[1]["title"] == "Post 2"
 
-def test_find_all_posts_empty(post_model, mock_db):
+def test_find_all_posts_empty(post_model):
     posts = post_model.get_all_posts()
     assert len(posts) == 0
 
+
+def test_find_all_posts_by_user(post_model, mock_db):
+    mock_db.posts.delete_many({})
+
+    title = "Test Post"
+    content = "This is a test post."
+    user_id = "user_id_string" 
+
+    mock_db.posts.insert_one({
+        "title": title,
+        "text": content,
+        "userId": user_id 
+    })
+
+    posts = post_model.get_all_posts_from_user_model(user_id)
     
+    assert len(posts) == 1
+    assert posts[0]["title"] == title
+    assert posts[0]["text"] == content.replace("\n", "<br>")  
+    assert posts[0]["userId"] == user_id
+
+def test_find_all_posts_by_user_empty(post_model):
+    posts = post_model.get_all_posts_from_user_model("user_id_1")
+    assert len(posts) == 0
+
+def test_find_all_posts_by_text(post_model, mock_db):
+    mock_db.posts.delete_many({})
+
+    title = "title"
+    text = "This is a test post."
+    user_id = "user_id_string"
+    likes = 5
+
+    mock_db.posts.insert_many([{
+        "title": title,
+        "text": text,
+        "user_id": user_id,
+        "likes": likes
+    }])
+    
+    posts = post_model.get_post_by_text_model("This is a test post.")
+    
+    assert len(posts) == 1
+    assert posts[0]["title"] == title
+    assert posts[0]["text"] == text.replace("\n", "<br>")  
+    assert posts[0]["user_id"] == user_id
+    assert posts[0]["likes"] == likes
+
+
+
+
+def test_find_all_posts_by_text_empty(post_model):
+    posts = post_model.get_post_by_text_model("Content 1")
+    assert len(posts) == 0
+
+

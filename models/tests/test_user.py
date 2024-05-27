@@ -246,7 +246,6 @@ def test_get_user_by_username_not_found(post_model, mock_db):
     assert user is False
 
 def test_get_all_users(post_model, mock_db):
-    # Limpa a coleção de usuários antes de cada teste
     mock_db.users.delete_many({})
 
     username = "username"

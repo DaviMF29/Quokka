@@ -93,10 +93,13 @@ class Post:
         posts_collection = db.posts
         posts = posts_collection.find({"text": regex})
         
+        serialized_posts = []
         for post in posts:
+            post["_id"] = str(post["_id"])
             post["text"] = post["text"].replace("\n", "<br>")  # Substituir quebras de linha
+            serialized_posts.append(post)
             
-        return list(posts)
+        return serialized_posts
 
     
     @staticmethod
