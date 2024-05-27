@@ -24,7 +24,11 @@ class Comment:
 
     def delete_comment_model(comment_id):
         comment_collection = db.comments
-        comment_collection.delete_one({"_id": ObjectId(comment_id)})
+        result = comment_collection.delete_one({"_id": comment_id})
+        if result and result.deleted_count == 1:
+            return str(comment_id)
+        return None
+
 
     def get_comments_model(comment_id):
         comment_collection = db.comments
