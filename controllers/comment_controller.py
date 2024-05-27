@@ -8,8 +8,7 @@ from utils.user_posts import add_comments_in_post,delete_comment_from_post
     
 def create_comment_controller(postId, userId, username, text, createdAt):
     verify_user(userId)
-    comment = Comment(postId, userId, username, text, createdAt)
-    comment_id = comment.create_comment_model()
+    comment_id = Comment.create_comment_model(postId, userId, username, text, createdAt)
     validate_text_length(text)
     add_comments_in_post(postId, comment_id)
     return comment_id

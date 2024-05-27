@@ -10,8 +10,10 @@ db = client[db_name]
 
 class Post:
 
-    def __init__(self, userId, username, text, createdAt, isCode=False, language=None):
-        self.post = {
+    @staticmethod
+    def create_post_model(userId, username, text,createdAt, isCode=False, language = None, previousPostId = None):
+        posts_collection = db.posts
+        new_post = {
             "userId": userId,
             "username": username,
             "text": text,
@@ -20,11 +22,9 @@ class Post:
             "comments": [],
             "isCode": isCode,
             "language": language,
+            "previousPostId": previousPostId
         }
-
-    def create_post_model(self):
-        posts_collection = db.posts
-        result = posts_collection.insert_one(self.post)
+        result = posts_collection.insert_one(new_post)
         return str(result.inserted_id)
 
     @staticmethod
@@ -34,10 +34,11 @@ class Post:
         serialized_posts = []
         for post in posts:
             post["_id"] = str(post["_id"])
-            if post["text"] is not None and "\n" in post["text"]:
+            if "text" in post and post["text"] is not None and "\n" in post["text"]:
                 post["text"] = post["text"].replace("\n", "<br>") 
             serialized_posts.append(post)
         return serialized_posts
+
 
     @staticmethod
     def update_post_model(postId, update_data):
@@ -73,12 +74,13 @@ class Post:
         return comments
 
     @staticmethod
-    def get_post_by_id_model(userId):
+    def get_post_by_id_model(post_id):
         posts_collection = db.posts
-        post = posts_collection.find_one({"_id": ObjectId(userId)})
+        post = posts_collection.find_one({"_id": ObjectId(post_id)})
         if post:
             post["_id"] = str(post["_id"])  
-            post["text"] = post["text"].replace("\n", "<br>")    #para a quebra de linha
+            if "content" in post:
+                post["content"] = post["content"].replace("\n", "<br>")    # para a quebra de linha
         return post
 
     @staticmethod
@@ -105,16 +107,22 @@ class Post:
         return comments
 
     @staticmethod
-    def update_post_by_id_model(userId,updated_fields):
+    def update_post_by_id_model(post_id, updated_fields):
         posts_collection = db.posts
-        result = posts_collection.update_many({"_id": ObjectId(userId)}, {"$set": updated_fields})
-        return result
-
+        result = posts_collection.update_one({"_id": ObjectId(post_id)}, {"$set": updated_fields})
+        if result.matched_count > 0:
+            return {"message": "Post updated successfully!"}, 200
+        else:
+            return {"message": "Post not found."}, 404
+        
     @staticmethod
-    def delete_post_by_id_model(postId):
-        posts_collection = db.posts
-        result = posts_collection.find_one_and_delete({"_id": ObjectId(postId)})
-        return result
+    def delete_post_by_id_model(post_id):
+            posts_collection = db.posts
+            result = posts_collection.find_one_and_delete({"_id": ObjectId(post_id)})
+            if result:
+                return {"message": "Comentário removido com sucesso!"}, 200
+            else:
+                return {"message": "Post não encontrado."}, 404
 
     @staticmethod
     def delete_all_post_by_userId_model(userId):

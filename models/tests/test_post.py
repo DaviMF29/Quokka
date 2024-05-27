@@ -9,7 +9,7 @@ from models.Post import Post
 from unittest.mock import patch
 from flask_jwt_extended import create_access_token
 from dotenv import load_dotenv
-
+import mongomock
 load_dotenv()
 
 warnings.filterwarnings("ignore")
@@ -87,3 +87,106 @@ class TestPostRoutes:
                                    headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
 
             assert response.status_code == 400
+
+
+###################################################### TESTES UNITÁRIOS ##############################################################
+
+
+
+@pytest.fixture
+def mock_db():
+    client = mongomock.MongoClient()
+    mock_db = client.db
+    with patch('models.Post.db', mock_db):
+        yield mock_db
+
+@pytest.fixture
+def post_model(mock_db):
+    with patch('models.Post.db', mock_db):
+        yield Post
+
+def test_create_post(post_model, mock_db):
+    userId = ObjectId()
+    username = "username"
+    text = "text"
+    createdAt = "2024-05-09T12:00:00Z"
+
+    response_id = post_model.create_post_model(
+        userId, username, text, createdAt
+    )
+
+    assert response_id is not None
+
+
+def test_find_all_posts_service(post_model, mock_db):
+    mock_db.posts.insert_many([
+        {"title": "Post 1", "content": "Content 1", "user_id": "user_id_1", "likes": 5},
+        {"title": "Post 2", "content": "Content 2", "user_id": "user_id_2", "likes": 10}
+    ])
+    posts = post_model.get_all_posts()
+    assert len(posts) == 2
+    assert posts[0]["title"] == "Post 1"
+    assert posts[1]["title"] == "Post 2"
+
+
+def test_get_post(mock_db):
+    post_id = mock_db.posts.insert_one({
+        "title": "Test Post",
+        "content": "This is a test post.\nWith a new line.",
+        "user_id": "test_user",
+        "comments": [
+            {
+                "comment_id": ObjectId(),
+                "user_id": "test_user",
+                "content": "This is a test comment."
+            }
+        ]
+    }).inserted_id
+    
+    post = Post.get_post_by_id_model(post_id)
+    assert post is not None
+    assert post["title"] == "Test Post"
+    assert post["content"] == "This is a test post.<br>With a new line."
+    assert post["user_id"] == "test_user"
+    assert len(post["comments"]) == 1
+    assert post["comments"][0]["content"] == "This is a test comment."
+    assert post["comments"][0]["user_id"] == "test_user"
+
+def test_update_post(mock_db):
+    comment_id = ObjectId()
+    post_id = mock_db.posts.insert_one({
+        "title": "Test Post",
+        "content": "This is a test post.",
+        "user_id": "test_user",
+        "comments": [
+            {
+                "comment_id": comment_id,
+                "user_id": "test_user",
+                "content": "This is a test comment."
+            }
+        ]
+    }).inserted_id
+    
+    updated_fields = {"title": "Updated Test Post", "content": "This is an updated test post."}
+    response, status_code = Post.update_post_by_id_model(post_id, updated_fields)
+    assert status_code == 200
+    assert response["message"] == "Post updated successfully!"
+    
+    updated_post = mock_db.posts.find_one({"_id": ObjectId(post_id)})
+    assert updated_post["title"] == "Updated Test Post"
+    assert updated_post["content"] == "This is an updated test post."
+
+
+def test_delete_post(mock_db):
+    post_id = mock_db.posts.insert_one({
+        "title": "Test Post",
+        "content": "This is a test post.",
+        "user_id": "test_user"
+    }).inserted_id
+    
+    response, status_code = Post.delete_post_by_id_model(post_id)
+    assert status_code == 200
+    assert response["message"] == "Comentário removido com sucesso!"
+    
+    post = mock_db.posts.find_one({"_id": ObjectId(post_id)})
+    assert post is None
