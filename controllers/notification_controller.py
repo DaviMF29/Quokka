@@ -10,8 +10,8 @@ def create_notification_controller(senderId,recipientId, text, createdAt, type, 
     verify_user(recipientId)
     if type not in typesOfNotifications:
         raise Exception("Invalid type of notification")
-    notification = Notification(senderId,recipientId, text, createdAt, type, seen)
-    return notification.create_notification_model()
+    notification_id = Notification.create_notification_model(senderId,recipientId, text, createdAt, type, seen)
+    return notification_id
 
 def get_notifications_by_userId_controller(userId):
     verify_user(userId)

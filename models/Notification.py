@@ -10,8 +10,10 @@ db = client[db_name]
 
 class Notification:
 
-    def __init__(self,senderId,recipientId, text, createdAt, type, seen = False):
-        self.notification = {
+
+    def create_notification_model(senderId, recipientId, text, createdAt, type, seen):
+        notification_collection = db.notifications
+        new_notification = {
             "senderId": senderId,
             "recipientId": recipientId,
             "text": text,
@@ -19,11 +21,7 @@ class Notification:
             "type": type,
             "seen": seen
         }
-
-
-    def create_notification_model(self):
-        notification_collection = db.notifications
-        result = notification_collection.insert_one(self.notification)
+        result = notification_collection.insert_one(new_notification)
         return str(result.inserted_id)
 
 
