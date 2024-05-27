@@ -11,7 +11,7 @@ class Comment:
 
     @staticmethod
     def create_comment_model(postId, userId, username, text, createdAt):
-        comment_collection = Comment.db.comments
+        comment_collection = db.comments
         new_comment ={
             "postId": postId,
             "userId": userId,
