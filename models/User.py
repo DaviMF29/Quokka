@@ -68,7 +68,7 @@ class User:
     @staticmethod
     def get_user_by_id_model(id):
         users_collection = db.users
-        user = users_collection.find_one({"_id": id})
+        user = users_collection.find_one({"_id": ObjectId(id)})
         if user:
             user["_id"] = str(user["_id"])
             return user

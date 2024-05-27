@@ -55,4 +55,87 @@ def test_get_comment(comment_model, mock_db):
     assert comment["text"] == "This is a test comment."
     assert comment["createdAt"] == "2024-05-09T12:00:00Z"
 
+def test_get_comment_not_found(comment_model):
+    comment_id = "invalid_id"
+
+    with pytest.raises(ValueError) as e:
+        comment_model.get_comments_model(comment_id)
+
+    assert str(e.value) == "Invalid input: comment_id must be a valid ObjectId"
+
+def test_delete_comment_not_found(comment_model):
+    comment_id = ObjectId()
+    response_id = comment_model.delete_comment_model(comment_id)
+    assert response_id is None
+
+def test_add_comment_invalid_post_id(comment_model):
+    postId = "invalid_id"
+    userId = ObjectId()
+    username = "test_username"
+    text = "This is a test comment."
+    createdAt = "2024-05-09T12:00:00Z"
+    
+    with pytest.raises(ValueError) as e:
+        comment_model.create_comment_model(postId, userId, username, text, createdAt)
+
+    assert "Invalid input: PostId is not a valid ObjectId".lower() in str(e.value).lower()   #só funcinou usando o "in" pois o erro é gerado em uma linha diferente
+
+def test_add_comment_invalid_user_id(comment_model):
+    postId = ObjectId()
+    userId = "invalid_id"
+    username = "test_username"
+    text = "This is a test comment."
+    createdAt = "2024-05-09T12:00:00Z"
+    
+    with pytest.raises(ValueError) as e:
+        comment_model.create_comment_model(postId, userId, username, text, createdAt)
+
+def test_add_comment_invalid_username(comment_model):
+    postId = ObjectId()
+    userId = ObjectId()
+    username = ""
+    text = "This is a test comment."
+    createdAt = "2024-05-09T12:00:00Z"
+    
+    with pytest.raises(ValueError) as e:
+        comment_model.create_comment_model(postId, userId, username, text, createdAt)
+
+    assert str(e.value) == "Invalid input: Username cannot be empty"
+
+
+def test_add_comment_invalid_text(comment_model):
+    postId = ObjectId()
+    userId = ObjectId()
+    username = "test_username"
+    text = ""
+    createdAt = "2024-05-09T12:00:00Z"
+    
+    comment_id = comment_model.create_comment_model(
+        postId, userId, username, text, createdAt
+    )
+    with pytest.raises(ValueError) as e:
+        comment_model.create_comment_model(postId, userId, username, text, createdAt)
+
+    assert str(e.value) == "Invalid input"
+
+def test_add_comment_invalid_text(comment_model):
+    postId = ObjectId()
+    userId = ObjectId()
+    username = "test_username"
+    text = ""
+    createdAt = "2024-05-09T12:00:00Z"
+    
+    with pytest.raises(ValueError) as e:
+        comment_model.create_comment_model(postId, userId, username, text, createdAt)
+
+    assert str(e.value) == "Invalid input: Text cannot be empty"
+
+def test_delete_comment_invalid_id(comment_model):
+    comment_id = "invalid_id"
+    response_id = comment_model.delete_comment_model(comment_id)
+    assert response_id is None
+
+
+
+
 

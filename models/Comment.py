@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson import ObjectId
 import os
+import re
 
 client = MongoClient(os.getenv("MONGODB_URI"))
 db_name = "redesocial"
@@ -9,8 +10,25 @@ db = client[db_name]
 
 class Comment:
 
+
     @staticmethod
     def create_comment_model(postId, userId, username, text, createdAt):
+        fields = {
+            "text": text,
+            "username": username,
+            "userId": userId,
+            "postId": postId
+        }
+
+        for field_name, field_value in fields.items():
+            if not field_value:
+                raise ValueError(f"Invalid input: {field_name.capitalize()} cannot be empty")
+            if field_name in ["userId", "postId"] and not ObjectId.is_valid(field_value):
+                raise ValueError(f"Invalid input: {field_name.capitalize()} is not a valid ObjectId")
+
+        if not re.match(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$', createdAt):
+            raise ValueError("Invalid input: createdAt must be in the format YYYY-MM-DDTHH:MM:SSZ")
+
         comment_collection = db.comments
         new_comment ={
             "postId": postId,
@@ -19,8 +37,11 @@ class Comment:
             "text": text,
             "createdAt": createdAt
         }
+        
         result = comment_collection.insert_one(new_comment)
-        return str(result.inserted_id)  
+        return str(result.inserted_id)
+
+  
 
     def delete_comment_model(comment_id):
         comment_collection = db.comments
@@ -30,8 +51,12 @@ class Comment:
         return None
 
 
+    @staticmethod
     def get_comments_model(comment_id):
         comment_collection = db.comments
+        if comment_id is None or not ObjectId.is_valid(comment_id):
+            raise ValueError("Invalid input: comment_id must be a valid ObjectId")
         comment = comment_collection.find_one({"_id": ObjectId(comment_id)})
-        comment["_id"] = str(comment["_id"])
+        if comment:
+            comment["_id"] = str(comment["_id"])
         return comment
