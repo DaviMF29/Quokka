@@ -10,7 +10,7 @@ db = client[db_name]
 class User:
 
     @staticmethod
-    def create_user_model(email,username,image, hashed_password_base64):
+    def create_user_model(username,email,image, hashed_password_base64):
         users_collection = db.users
         new_user = {
             "username": username,
@@ -68,8 +68,11 @@ class User:
     @staticmethod
     def get_user_by_id_model(id):
         users_collection = db.users
-        user = users_collection.find_one({"_id": ObjectId(id)})
-        return user
+        user = users_collection.find_one({"_id": id})
+        if user:
+            user["_id"] = str(user["_id"])
+            return user
+        return None
     
     @staticmethod
     def update_user(user_id, updated_fields):

@@ -190,3 +190,19 @@ def test_delete_post(mock_db):
     
     post = mock_db.posts.find_one({"_id": ObjectId(post_id)})
     assert post is None
+
+def test_find_all_posts(post_model, mock_db):
+    mock_db.posts.insert_many([
+        {"title": "Post 1", "content": "Content 1", "user_id": "user_id_1", "likes": 5},
+        {"title": "Post 2", "content": "Content 2", "user_id": "user_id_2", "likes": 10}
+    ])
+    posts = post_model.get_all_posts()
+    assert len(posts) == 2
+    assert posts[0]["title"] == "Post 1"
+    assert posts[1]["title"] == "Post 2"
+
+def test_find_all_posts_empty(post_model, mock_db):
+    posts = post_model.get_all_posts()
+    assert len(posts) == 0
+
+    

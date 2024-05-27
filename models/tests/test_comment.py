@@ -40,6 +40,19 @@ def test_delete_comment(comment_model, mock_db):
     response_id = comment_model.delete_comment_model(commentId)
     assert response_id == str(commentId)
 
-    
+def test_get_comment(comment_model, mock_db):
+    comment_id = mock_db.comments.insert_one({
+        "postId": ObjectId(),
+        "userId": ObjectId(),
+        "username": "test_username",
+        "text": "This is a test comment.",
+        "createdAt": "2024-05-09T12:00:00Z"
+    }).inserted_id
+
+    comment = comment_model.get_comments_model(comment_id)
+    assert comment is not None
+    assert comment["username"] == "test_username"
+    assert comment["text"] == "This is a test comment."
+    assert comment["createdAt"] == "2024-05-09T12:00:00Z"
 
 
