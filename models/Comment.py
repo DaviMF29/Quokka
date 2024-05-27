@@ -9,18 +9,17 @@ db = client[db_name]
 
 class Comment:
 
-    def __init__(self, postId, userId, username, text, createdAt):
-        self.comment = {
+    @staticmethod
+    def create_comment_model(postId, userId, username, text, createdAt):
+        comment_collection = Comment.db.comments
+        new_comment ={
             "postId": postId,
             "userId": userId,
             "username": username,
             "text": text,
             "createdAt": createdAt
         }
-
-    def create_comment_model(self):
-        comment_collection = db.comments
-        result = comment_collection.insert_one(self.comment)
+        result = comment_collection.insert_one(new_comment)
         return str(result.inserted_id)  
 
     def delete_comment_model(comment_id):
