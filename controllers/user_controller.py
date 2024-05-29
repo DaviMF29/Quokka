@@ -25,10 +25,9 @@ def create_user_controller(email,username, password):
     return {"id": user_id, "message": f"User {username} created"}, 201
 
 def add_or_remove_favorite_post_controller(user_id, postId):
-    already_in_favorites = verify_post_in_user_favorites(user_id, postId)
     user = verify_user(user_id)
     favorites = user.get("favorites", [])
-    if already_in_favorites:
+    if postId in favorites:
         favorites.remove(postId)
         User.update_user(user_id, {"favorites": favorites})
         return {"message": "Favorite removed"}, 200
