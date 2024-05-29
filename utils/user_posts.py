@@ -61,7 +61,7 @@ def remove_like_from_post(post_id):
 
 
 def delete_post_if_was_favorited(post_id):
-    users = User.get_all_users()
+    users = User.get_all_users_model()
     for user in users:
         favorites = user.get("favorites", [])
         if post_id in favorites:
@@ -71,7 +71,7 @@ def delete_post_if_was_favorited(post_id):
 
 
 def delete_post_if_was_liked(post_id):
-    users = User.get_all_users()
+    users = User.get_all_users_model()
     for user in users:
         likes = user.get("liked_posts", [])
         if post_id in likes:
