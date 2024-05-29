@@ -1,3 +1,4 @@
+from datetime import datetime
 import pytest
 from bson import ObjectId
 from models.Comment import Comment
@@ -21,10 +22,14 @@ def test_add_comment(comment_model, mock_db):
     userId = ObjectId()
     username = "test_username"
     text = "This is a test comment."
-    createdAt = "2024-05-09T12:00:00Z"
-    
+    createdAt = "2024-05-25T00:53:52.723Z"
+
+    dt = datetime.strptime(createdAt, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    createdAt_formatted = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
     comment_id = comment_model.create_comment_model(
-        postId, userId, username, text, createdAt
+        postId, userId, username, text, createdAt_formatted
     )
     assert comment_id is not None
 
@@ -34,7 +39,7 @@ def test_delete_comment(comment_model, mock_db):
         "userId": ObjectId(),
         "username": "test_username",
         "text": "This is a test comment.",
-        "createdAt": "2024-05-09T12:00:00Z"
+        "createdAt": "2024-05-25T00:53:52.723Z"
     }).inserted_id
 
     response_id = comment_model.delete_comment_model(commentId)
