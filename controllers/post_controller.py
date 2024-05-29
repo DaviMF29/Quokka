@@ -1,3 +1,5 @@
+import os
+import uuid
 from flask import abort
 from models.Post import Post
 from utils.user_posts import (
@@ -8,12 +10,34 @@ from middleware.global_middleware import (
     verify_post, verify_change_in_text,verify_post_is_from_user,
     verify_user,validate_text_length)
 
-def create_post_controller(userId, username, text,createdAt):
+from db.firebase import *
+
+def create_post_controller(userId, username, text, createdAt, images=[]):
+    upload_folder = 'uploads'
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+
     verify_user(userId)
-    post_id = Post.create_post_model(userId, username, text,createdAt)
+    images_urls = []
+
+    for image in images:
+        unique_filename = str(uuid.uuid4()) + "_" + image.filename
+        image_path = os.path.join(upload_folder, unique_filename)
+        image.save(image_path)
+
+        destination_blob_name = "images/" + unique_filename  
+        image_url = upload_image_to_firebase(image_path, destination_blob_name) 
+        images_urls.append(image_url)
+
+        os.remove(image_path)
+
+    post_id = Post.create_post_model(userId, username, text, createdAt, images_urls)
     add_post_in_user(userId, post_id)
     validate_text_length(text)
+
     return post_id
+
+
 
 def get_all_posts_controller():
     posts = Post.get_all_posts()

@@ -11,18 +11,18 @@ db = client[db_name]
 class Post:
 
     @staticmethod
-    def create_post_model(userId, username, text,createdAt, isCode=False, language = None, previousPostId = None):
+    def create_post_model(userId, username, text,createdAt,images = [], isCode=False, language = None):
         posts_collection = db.posts
         new_post = {
             "userId": userId,
             "username": username,
             "text": text,
             "createdAt": createdAt,
+            "images": images,
             "likes": 0,
             "comments": [],
             "isCode": isCode,
             "language": language,
-            "previousPostId": previousPostId
         }
         result = posts_collection.insert_one(new_post)
         return str(result.inserted_id)

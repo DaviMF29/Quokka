@@ -52,21 +52,23 @@ def update_post_route(postId):
 @post_app.route("/api/posts", methods=["POST"])
 @jwt_required()
 def create_post_route():
-    data = request.get_json()
-    username = data["username"]
-    userId = data["userId"]
-    text = data["text"] 
-    createdAt = data["createdAt"]
+    username = request.form.get("username")
+    userId = request.form.get("userId")
+    text = request.form.get("text")
+    createdAt = request.form.get("createdAt")
 
-    if data is None or data == {}:
-        return jsonify({"message": "Empty body"}), 400
-    
-    if "username" not in data or "userId" not in data or "text" not in data or "createdAt" not in data:
+    if not all([username, userId, text, createdAt]):
         return jsonify({"message": "Missing required fields"}), 400
 
+    images = request.files.getlist('file')
+    if len(images) > 4:
+        return jsonify({"error": "Exceeded maximum number of images (4)"}), 400
 
-    post_id = create_post_controller(userId, username, text,createdAt)
-    return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
+    try:
+        post_id = create_post_controller(userId, username, text, createdAt, images)
+        return jsonify({"id": post_id, "message": f"Post '{text}' created"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 @post_app.route("/api/posts/likes/<postId>", methods=["GET"])
 def get_likes_from_posts(postId):
