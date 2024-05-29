@@ -26,8 +26,8 @@ class Comment:
             if field_name in ["userId", "postId"] and not ObjectId.is_valid(field_value):
                 raise ValueError(f"Invalid input: {field_name.capitalize()} is not a valid ObjectId")
 
-        if not re.match(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$', createdAt):
-            raise ValueError("Invalid input: createdAt must be in the format YYYY-MM-DDTHH:MM:SSZ")
+        if not re.match(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$', createdAt[:-5] + 'Z'):
+            raise ValueError("Entrada inválida: createdAt deve estar no formato YYYY-MM-DDTHH:MM:SSZ")
 
         comment_collection = db.comments
         new_comment ={
