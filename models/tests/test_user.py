@@ -180,7 +180,6 @@ def test_get_user_by_email(post_model, mock_db):
     password = "password"
     user_id = post_model.create_user_model(username, email, image_url, password)
 
-    # Simula a inserção do usuário no banco de dados
     mock_db.users.insert_one({
         "username": username,
         "email": email,
@@ -260,7 +259,7 @@ def test_get_all_users(post_model, mock_db):
         "password": password
     })
 
-    users = post_model.get_all_users()
+    users = post_model.get_all_users_model()
     assert len(users) == 1
     assert users[0]["username"] == username
     assert users[0]["email"] == email
@@ -275,7 +274,6 @@ def test_get_all_posts_from_user(post_model, mock_db):
     password = "password"
     user_id = post_model.create_user_model(username, email, image_url, password)
 
-    # Simula a inserção do usuário no banco de dados
     mock_db.users.insert_one({
         "username": username,
         "email": email,
@@ -293,7 +291,6 @@ def test_get_posts_liked_by_user(post_model, mock_db):
     password = "password"
     user_id = post_model.create_user_model(username, email, image_url, password)
 
-    # Simula a inserção do usuário no banco de dados
     mock_db.users.insert_one({
         "username": username,
         "email": email,
@@ -319,7 +316,6 @@ def test_get_user_by_id(post_model, mock_db):
     mock_db.users.insert_one(inserted_user)
 
     user = post_model.get_user_by_id_model(ObjectId(inserted_user["_id"]))
-    assert user is not None
     assert user["username"] == username
     assert user["email"] == email
     assert user["image"] == image

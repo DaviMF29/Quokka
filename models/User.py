@@ -27,7 +27,7 @@ class User:
         return str(result.inserted_id)
 
     @staticmethod
-    def get_all_users():
+    def get_all_users_model():
         users_collection = db.users
         users = users_collection.find()
         serialized_users = []
@@ -126,3 +126,17 @@ class User:
         users_collection = db.users
         result = users_collection.update_many({}, {"$set": {new_field_name: []}})
         return result
+
+    
+    def update_user_image_model(user_id, image_url):
+        users_collection = db.users
+        result = users_collection.update_one(
+            {'_id': ObjectId(user_id)},
+            {'$set': {'image': image_url}}
+        )
+
+        if result.modified_count == 0:
+            raise Exception(f"Failed to update user's image with id {user_id}.")
+
+        return {"message": "Image added successfully"}
+

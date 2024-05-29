@@ -53,10 +53,4 @@ def verify_change_in_user(user_id, field_name, new_value):
     else:
         abort(400, f"User data is missing '{field_name}' field")
 
-def verify_post_in_user_favorites(userId, postId):
-    user = verify_user(userId)
-    favorites = user.get("favorites", [])
-    if favorites:
-        return True
-    return False
 

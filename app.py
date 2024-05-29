@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 import os
-import pymongo
 from waitress import serve
 from flask_cors import CORS
 
@@ -11,8 +10,13 @@ from routes.user_routes import users_app
 from routes.email_routes import email_app
 from routes.notification_routes import notification_app
 from routes.comment_routes import comment_app
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Define o tamanho máximo do arquivo (16MB neste caso)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400  # 1 dia
+app.config['ALLOWED_EXTENSIONS'] = {'jpg', 'jpeg', 'png'}  # Adicione 'png' à lista de tipos de arquivo permitidos
 jwt = JWTManager(app)
 
 
