@@ -2,11 +2,10 @@ import os
 from models.User import User
 import bcrypt
 import base64
-import hashlib
+import uuid
 from bson import ObjectId
-from db.firebase import upload_image_to_firebase
+from db.firebase import *
 from utils.user_posts import add_like_to_post,remove_like_from_post
-
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
@@ -159,6 +158,7 @@ def get_all_posts_from_user(userId):
     return posts
 
 
+
 def add_image_to_user_controller(user_id, image):
     upload_folder = 'uploads'
     if not os.path.exists(upload_folder):
@@ -166,16 +166,20 @@ def add_image_to_user_controller(user_id, image):
     
     verify_user(user_id)
 
-    image_path = os.path.join(upload_folder, image.filename)
-    image.save(image_path)
-    print(f"Image saved in: {image_path}") 
 
-    public_url = upload_image_to_firebase(image_path, image.filename)
-    print(f"Public url: {public_url}") 
+    user = User.get_user_by_id_model(user_id)
+    if user.get('image'):
+        delete_image_from_firebase(user['image'])
+
+    unique_filename = str(uuid.uuid4()) + "_" + image.filename
+    image_path = os.path.join(upload_folder, unique_filename)
+    image.save(image_path)
+
+    public_url = upload_image_to_firebase(image_path, unique_filename)
 
     os.remove(image_path)
-    print(f"Image removed: {image_path}") 
     User.update_user_image_model(user_id, public_url)
+
 
 def get_all_users_controller():
     users = User.get_all_users_model()

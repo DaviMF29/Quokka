@@ -136,6 +136,7 @@ class User:
         )
 
         if result.modified_count == 0:
-            raise Exception(f"Falha ao atualizar a imagem do usuário com id {user_id}.")
+            raise Exception(f"Failed to update user's image with id {user_id}.")
 
-        return {"message": "Imagem adicionada com sucesso"}
+        return {"message": "Image added successfully"}
+

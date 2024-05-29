@@ -151,7 +151,6 @@ def add_profile_image_route():
 
     if file.filename == '':
         return jsonify({"error": "No file selected"}), 400
-
     try:
         add_image_to_user_controller(user_id, file)
         return jsonify({"message": "Image added"}), 200
