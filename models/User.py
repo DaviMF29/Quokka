@@ -27,7 +27,7 @@ class User:
         return str(result.inserted_id)
 
     @staticmethod
-    def get_all_users():
+    def get_all_users_model():
         users = users_collection.find()
         serialized_users = []
         for user in users:

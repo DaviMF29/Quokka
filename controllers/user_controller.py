@@ -10,7 +10,7 @@ from utils.user_posts import add_like_to_post,remove_like_from_post
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
-    verify_post_in_user_favorites)
+    )
 
 from utils.user_posts import (
     delete_all_notifications_from_user, delete_all_posts_from_user)
@@ -176,3 +176,8 @@ def add_image_to_user_controller(user_id, image):
     os.remove(image_path)
     print(f"Image removed: {image_path}") 
     User.update_user_image_model(user_id, public_url)
+
+def get_all_users_controller():
+    users = User.get_all_users_model()
+    return users
+

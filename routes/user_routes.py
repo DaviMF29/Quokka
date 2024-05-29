@@ -7,7 +7,8 @@ from controllers.user_controller import (
     get_all_following_controller,get_posts_from_following_controller,
     get_favorite_posts_controller,get_user_by_username_controller,
     get_all_posts_from_user,get_posts_likeds_controller,
-    get_user_by_id_controller,add_image_to_user_controller)
+    get_user_by_id_controller,add_image_to_user_controller,
+    get_all_users_controller)
 
 from flask_jwt_extended import jwt_required
 from models.User import User
@@ -156,6 +157,11 @@ def add_profile_image_route():
         return jsonify({"message": "Image added"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+@users_app.route("/api/users", methods=["GET"])
+def get_all_users_route():
+    users = get_all_users_controller()
+    return jsonify(users), 200
 
 #---------------------------------EXTRA--------------------------------
 
