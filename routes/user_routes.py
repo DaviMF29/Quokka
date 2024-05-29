@@ -7,7 +7,7 @@ from controllers.user_controller import (
     get_all_following_controller,get_posts_from_following_controller,
     get_favorite_posts_controller,get_user_by_username_controller,
     get_all_posts_from_user,get_posts_likeds_controller,
-    get_user_by_id_controller)
+    get_user_by_id_controller,add_image_to_user_controller)
 
 from flask_jwt_extended import jwt_required
 from models.User import User
@@ -138,6 +138,25 @@ def get_my_likedposts():
 def get_user_by_id_route(userId):
     response = get_user_by_id_controller(userId)
     return jsonify(response), 200
+
+@users_app.route("/api/user/image", methods=["POST"])
+@jwt_required()
+def add_profile_image_route():
+    user_id = get_jwt_identity()
+    if 'file' not in request.files:
+        return jsonify({"error": "No image was sended"}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    try:
+        add_image_to_user_controller(user_id, file)
+        return jsonify({"message": "Image added"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 #---------------------------------EXTRA--------------------------------
 
 @users_app.route("/api/users/teste", methods=["POST"])
@@ -149,3 +168,4 @@ def update_all_users_route():
     field = data["field"]
     result = User.add_new_field_to_all_users(field)
     return jsonify({"message": f"Number of documents updated: {result.modified_count}"}), 200
+

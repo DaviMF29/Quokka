@@ -11,3 +11,4 @@ Flask-CORS
 waitress
 pytest
 mongomock
+firebase-admin

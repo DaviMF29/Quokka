@@ -1,10 +1,12 @@
+import os
 from models.User import User
 import bcrypt
 import base64
 import hashlib
 from bson import ObjectId
-
+from db.firebase import upload_image_to_firebase
 from utils.user_posts import add_like_to_post,remove_like_from_post
+
 
 from middleware.global_middleware import (
     verify_email_registered,verify_user,verify_change_in_user,
@@ -18,8 +20,7 @@ def create_user_controller(email,username, password):
     verify_email_registered(email)
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(10))
     hashed_password_base64 = base64.b64encode(hashed_password).decode()
-    hashed_email_sha256 = hashlib.sha256(email.encode()).hexdigest()
-    image = f"https://www.gravatar.com/avatar/{hashed_email_sha256}"
+    image = ""
     user_id = User.create_user_model(username,email,image, hashed_password_base64)
     return {"id": user_id, "message": f"User {username} created"}, 201
 
@@ -157,3 +158,22 @@ def get_all_posts_from_user(userId):
     verify_user(userId)
     posts = User.get_all_posts_from_user(userId)
     return posts
+
+
+def add_image_to_user_controller(user_id, image):
+    upload_folder = 'uploads'
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+    
+    verify_user(user_id)
+
+    image_path = os.path.join(upload_folder, image.filename)
+    image.save(image_path)
+    print(f"Image saved in: {image_path}") 
+
+    public_url = upload_image_to_firebase(image_path, image.filename)
+    print(f"Public url: {public_url}") 
+
+    os.remove(image_path)
+    print(f"Image removed: {image_path}") 
+    User.update_user_image_model(user_id, public_url)
