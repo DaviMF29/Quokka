@@ -174,8 +174,9 @@ def add_image_to_user_controller(user_id, image):
     unique_filename = str(uuid.uuid4()) + "_" + image.filename
     image_path = os.path.join(upload_folder, unique_filename)
     image.save(image_path)
+    destination_blob_name = "profile/" + unique_filename  
 
-    public_url = upload_image_to_firebase(image_path, unique_filename)
+    public_url = upload_image_to_firebase(image_path, destination_blob_name)
 
     os.remove(image_path)
     User.update_user_image_model(user_id, public_url)
