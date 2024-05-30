@@ -98,6 +98,12 @@ def delete_comments_from_post(post_id):
         Comment.delete_comment_model(comment_id)
     return jsonify({"message": "Comments deleted"}), 200
 
+def get_email_from_user(user_id):
+    user = User.get_user_by_id_model(user_id)
+    return user.get("email")
+
+
+
  ###############################################################   
 import re
 
