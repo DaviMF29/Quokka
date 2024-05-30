@@ -99,7 +99,7 @@ def add_following_controller(user_id, following_id):
         
     User.update_user(user_id, {"following": following})
     User.update_user(following_id, {"followers": followers})
-    return {"message": message}, 200
+    return message, 200
 
 def get_all_following_controller(user_id):
     verify_user(user_id)

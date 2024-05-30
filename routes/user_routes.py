@@ -88,7 +88,7 @@ def add_like_to_post_route(userId):
 
     username = get_username_by_id_controller(current_user_id)
     recipientId = get_userId_from_post_controller(postId)
-    createdAt = data.get("createdAt", "2024-05-25T00:53:52.723Z")  # valor padrão para teste
+    createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     text = get_text_from_post_controller(postId)
     notification_text = f"{username} curtiu seu post {text}"
 
@@ -111,8 +111,14 @@ def add_following_route():
     data = request.get_json()
     user_id = data["userId"]
     following_id = data["followingId"]
-    response, status_code = add_following_controller(user_id, following_id)
-    return jsonify(response), status_code
+    createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    message, status_code = add_following_controller(user_id, following_id)
+    print(message)
+    notification_text = f"{get_username_by_id_controller(user_id)} começou a seguir você"
+    if message == "User followed successfully":
+        create_notification_controller(user_id, following_id, notification_text, createdAt, "like", False)
+
+    return jsonify({"message": message}), status_code
 
 @users_app.route("/api/users/<userId>/following", methods=["GET"])
 @jwt_required()

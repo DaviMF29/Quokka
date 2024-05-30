@@ -8,7 +8,6 @@ MAX_TEXT_LENGTH = 300
 
 def verify_user(userId):
     user = User.get_user_by_id_model(userId)
-    print(user)
     if not user:
         abort(400, {"message": "User not exist"})
     return user
