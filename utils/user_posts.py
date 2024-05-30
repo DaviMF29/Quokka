@@ -108,13 +108,16 @@ def get_email_from_user(user_id):
 import re
 
 def add_tag_to_post(text):
+    valid_usernames = []
+
     def replace_at(match):
         username = match.group(1)
-        user = User.get_user_by_username_model(username)
+        user = User.get_user_by_username_model(username.strip()) 
         if user:
+            valid_usernames.append(username)
             return f"<a href=/{username}>@{username}</a>"
         return f"@{username}"
 
     pattern = r"@(\w+)"
     replaced_text = re.sub(pattern, replace_at, text)
-    return replaced_text
+    return replaced_text, valid_usernames

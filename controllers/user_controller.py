@@ -194,3 +194,8 @@ def get_all_users_controller():
     users = User.get_all_users_model()
     return users
 
+def get_userId_by_username_controller(username):
+    user = User.get_user_by_username_model(username)
+    if not user:
+        return {"message": "User not found"}, 404
+    return str(user.get('_id'))

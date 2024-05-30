@@ -2,8 +2,8 @@ from datetime import datetime
 from flask import request, jsonify, Blueprint
 
 from controllers.notification_controller import (
-    create_notification_controller,
-    delete_notification_by_id_controller)
+    create_notification_controller)
+    #delete_notification_by_id_controller
 
 from controllers.post_controller import (
     get_text_from_post_controller,get_userId_from_post_controller
@@ -17,7 +17,8 @@ from controllers.user_controller import (
     get_favorite_posts_controller,get_user_by_username_controller,
     get_all_posts_from_user,get_posts_likeds_controller,
     get_user_by_id_controller,add_image_to_user_controller,
-    get_all_users_controller,get_username_by_id_controller)
+    get_all_users_controller,get_username_by_id_controller,
+    get_userId_by_username_controller)
 
 from flask_jwt_extended import jwt_required
 from models.User import User
@@ -112,8 +113,9 @@ def add_following_route():
     user_id = data["userId"]
     following_id = data["followingId"]
     createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
     message, status_code = add_following_controller(user_id, following_id)
-    print(message)
+    
     notification_text = f"{get_username_by_id_controller(user_id)} começou a seguir você"
     if message == "User followed successfully":
         create_notification_controller(user_id, following_id, notification_text, createdAt, "like", False)
@@ -188,6 +190,12 @@ def get_all_users_route():
     users = get_all_users_controller()
     return jsonify(users), 200
 
+
+
+@users_app.route("/api/userId/<username>", methods=["GET"])
+def get_userId_by_username_route(username):
+    response = get_userId_by_username_controller(username)
+    return jsonify(response), 200
 #---------------------------------EXTRA--------------------------------
 
 @users_app.route("/api/users/teste", methods=["POST"])
