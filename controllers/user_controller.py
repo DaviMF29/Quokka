@@ -1,4 +1,6 @@
 import os
+
+from flask import jsonify
 from models.User import User
 import bcrypt
 import base64
@@ -56,6 +58,9 @@ def update_user_controller(user_id, new_data):
 
 def add_like_to_post_controller(user_id, post_id):
     user = verify_user(user_id)
+    
+    if not user_id or not post_id:
+        return jsonify({"error": "User ID or Post ID missing"}), 400
 
     if user is None:
         return False, "User not found"
@@ -94,7 +99,7 @@ def add_following_controller(user_id, following_id):
         
     User.update_user(user_id, {"following": following})
     User.update_user(following_id, {"followers": followers})
-    return {"message": message}, 200
+    return message, 200
 
 def get_all_following_controller(user_id):
     verify_user(user_id)
@@ -157,6 +162,9 @@ def get_all_posts_from_user(userId):
     posts = User.get_all_posts_from_user(userId)
     return posts
 
+def get_username_by_id_controller(user_id):
+    username = User.get_username_by_id_model(user_id)
+    return username
 
 
 def add_image_to_user_controller(user_id, image):
@@ -186,3 +194,8 @@ def get_all_users_controller():
     users = User.get_all_users_model()
     return users
 
+def get_userId_by_username_controller(username):
+    user = User.get_user_by_username_model(username)
+    if not user:
+        return {"message": "User not found"}, 404
+    return str(user.get('_id'))

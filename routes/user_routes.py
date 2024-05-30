@@ -1,4 +1,13 @@
+from datetime import datetime
 from flask import request, jsonify, Blueprint
+
+from controllers.notification_controller import (
+    create_notification_controller)
+    #delete_notification_by_id_controller
+
+from controllers.post_controller import (
+    get_text_from_post_controller,get_userId_from_post_controller
+)
 
 from controllers.user_controller import (
     create_user_controller,add_or_remove_favorite_post_controller,
@@ -8,7 +17,8 @@ from controllers.user_controller import (
     get_favorite_posts_controller,get_user_by_username_controller,
     get_all_posts_from_user,get_posts_likeds_controller,
     get_user_by_id_controller,add_image_to_user_controller,
-    get_all_users_controller)
+    get_all_users_controller,get_username_by_id_controller,
+    get_userId_by_username_controller)
 
 from flask_jwt_extended import jwt_required
 from models.User import User
@@ -72,27 +82,45 @@ def update_user_route(user_id):
 @users_app.route("/api/users/like/<userId>", methods=["POST"])
 @jwt_required()
 def add_like_to_post_route(userId):
+
     data = request.get_json()
-    postId = data.get("postId")
+    current_user_id = get_jwt_identity()
+    postId = data["postId"]
 
-    if not userId or not postId:
-        return jsonify({"error": "User ID or Post ID missing"}), 400
+    username = get_username_by_id_controller(current_user_id)
+    recipientId = get_userId_from_post_controller(postId)
+    createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    text = get_text_from_post_controller(postId)
+    notification_text = f"{username} curtiu seu post {text}"
 
-    success, message = add_like_to_post_controller(userId, postId)
+    success, message = add_like_to_post_controller(current_user_id, postId)
     if success:
         return jsonify({"message": message}), 200
+    elif success and message == "Post liked successfully":
+        create_notification_controller(current_user_id, recipientId, notification_text, createdAt, "like", False)
+        return jsonify({"message": message}), 200
     else:
-        return jsonify({"message": message}), 400 
-
+        status_code = 400
     
+    return jsonify({"message": message}, status_code)
+
+
+
 @users_app.route("/api/users/following", methods=["PUT"])
 @jwt_required()
 def add_following_route():
     data = request.get_json()
     user_id = data["userId"]
     following_id = data["followingId"]
-    response, status_code = add_following_controller(user_id, following_id)
-    return jsonify(response), status_code
+    createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    message, status_code = add_following_controller(user_id, following_id)
+    
+    notification_text = f"{get_username_by_id_controller(user_id)} começou a seguir você"
+    if message == "User followed successfully":
+        create_notification_controller(user_id, following_id, notification_text, createdAt, "like", False)
+
+    return jsonify({"message": message}), status_code
 
 @users_app.route("/api/users/<userId>/following", methods=["GET"])
 @jwt_required()
@@ -162,6 +190,12 @@ def get_all_users_route():
     users = get_all_users_controller()
     return jsonify(users), 200
 
+
+
+@users_app.route("/api/userId/<username>", methods=["GET"])
+def get_userId_by_username_route(username):
+    response = get_userId_by_username_controller(username)
+    return jsonify(response), 200
 #---------------------------------EXTRA--------------------------------
 
 @users_app.route("/api/users/teste", methods=["POST"])

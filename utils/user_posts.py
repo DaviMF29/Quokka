@@ -98,17 +98,26 @@ def delete_comments_from_post(post_id):
         Comment.delete_comment_model(comment_id)
     return jsonify({"message": "Comments deleted"}), 200
 
+def get_email_from_user(user_id):
+    email = User.get_email_by_id_model(user_id)
+    print(email)
+    return email
+
+
  ###############################################################   
 import re
 
 def add_tag_to_post(text):
+    valid_usernames = []
+
     def replace_at(match):
         username = match.group(1)
-        user = User.get_user_by_username_model(username)
+        user = User.get_user_by_username_model(username.strip()) 
         if user:
+            valid_usernames.append(username)
             return f"<a href=/{username}>@{username}</a>"
         return f"@{username}"
 
     pattern = r"@(\w+)"
     replaced_text = re.sub(pattern, replace_at, text)
-    return replaced_text
+    return replaced_text, valid_usernames

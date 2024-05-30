@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
+from concurrent.futures import ThreadPoolExecutor
 
 from controllers.post_controller import (
     create_post_controller,delete_post_controller,
@@ -8,6 +9,9 @@ from controllers.post_controller import (
     get_comments_from_post_controller,get_all_posts_limited_controller
     
 )
+
+from utils.user_posts import add_tag_to_post
+from utils.notifications_utils import create_notification_async
 
 post_app = Blueprint("post_app", __name__)
 
@@ -64,28 +68,43 @@ def create_post_route():
     if len(images) > 4:
         return jsonify({"error": "Exceeded maximum number of images (4)"}), 400
 
+    post_text, usernames = add_tag_to_post(text)
+
     try:
         post_id = create_post_controller(userId, username, text, createdAt, images)
+
+        usernames = list(set(usernames))
+
+        with ThreadPoolExecutor() as executor:
+            futures = []
+            for mentioned_username in usernames:
+                future = executor.submit(create_notification_async, userId, mentioned_username, post_text, createdAt)
+                futures.append(future)
+
+            for future in futures:
+                future.result()
+
         return jsonify({"id": post_id, "message": f"Post '{text}' created"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
+
+@post_app.route("/teste", methods=["POST"])
+def teste():
+    data = request.get_json()
+    text = data["text"]
+    return jsonify(add_tag_to_post(text)), 200
+
 @post_app.route("/api/posts/likes/<postId>", methods=["GET"])
 def get_likes_from_posts(postId):
     return jsonify(get_likes_from_post_controller(postId)), 200
-
 
 @post_app.route("/api/posts/comments/<postId>", methods=["GET"])
 def get_comments_from_post(postId):
     response, status_code = get_comments_from_post_controller(postId)
     return jsonify(response), status_code
 
-@post_app.route("/teste", methods=["POST"])
-def teste():
-    data = request.get_json()
-    text = data["text"]
-    from utils.user_posts import add_tag_to_post
-    return jsonify(add_tag_to_post(text)), 200
 
 
 

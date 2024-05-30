@@ -1,4 +1,3 @@
-from enum import Enum
 from pymongo import MongoClient
 from bson import ObjectId
 import os

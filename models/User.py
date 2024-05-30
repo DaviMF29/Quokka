@@ -66,6 +66,30 @@ class User:
         return user
     
     @staticmethod
+    def get_username_by_id_model(user_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            return user.get("username")
+        return None
+
+    @staticmethod
+    def get_email_by_id_model(user_id):
+        users_collection = db.users
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            return user.get("email")
+        return None
+
+    @staticmethod
+    def get_userId_by_username_model(username):
+        users_collection = db.users
+        user = users_collection.find_one({"username": username})
+        if user:
+            return str(user.get("_id"))
+        return None
+
+    @staticmethod
     def get_user_by_id_model(id):
         users_collection = db.users
         user = users_collection.find_one({"_id": ObjectId(id)})

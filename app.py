@@ -7,7 +7,6 @@ from flask_cors import CORS
 from routes.auth_routes import auth_app
 from routes.post_routes import post_app
 from routes.user_routes import users_app
-from routes.email_routes import email_app
 from routes.notification_routes import notification_app
 from routes.comment_routes import comment_app
 
@@ -25,7 +24,6 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.register_blueprint(auth_app)
 app.register_blueprint(post_app)
 app.register_blueprint(users_app)
-app.register_blueprint(email_app)
 app.register_blueprint(notification_app)
 app.register_blueprint(comment_app)
 
