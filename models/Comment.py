@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
 import os
-import re
 
 client = MongoClient(os.getenv("MONGODB_URI"))
 db_name = "redesocial"
