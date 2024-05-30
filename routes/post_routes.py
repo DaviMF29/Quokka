@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
+from concurrent.futures import ThreadPoolExecutor
 
 from controllers.post_controller import (
     create_post_controller,delete_post_controller,
@@ -51,8 +52,6 @@ def update_post_route(postId):
         return jsonify({"message": "Post updated successfully"}), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 500
-
-from concurrent.futures import ThreadPoolExecutor
 
 @post_app.route("/api/posts", methods=["POST"])
 @jwt_required()
