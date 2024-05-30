@@ -65,6 +65,17 @@ class Post:
 
         return post
 
+    @staticmethod
+    def get_userId_from_post_model(postId):
+        posts_collection = db.posts
+        post = posts_collection.find_one({"_id": ObjectId(postId)})
+        return post.get("userId")
+
+    @staticmethod
+    def get_text_from_post_model(postId):
+        posts_collection = db.posts
+        post = posts_collection.find_one({"_id": ObjectId(postId)})
+        return post.get("text")
 
     @staticmethod
     def get_comments_from_post_model(postId):

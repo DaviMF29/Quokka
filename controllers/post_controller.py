@@ -96,3 +96,14 @@ def get_comments_from_post_controller(postId):
     comments = Post.get_posts_by_id_model(postId)
     return {"comments": comments}, 200
 
+def get_text_from_post_controller(postId):
+    post = verify_post(postId)
+    if not post:
+        return {"message": "Post not found"}, 404
+    return Post.get_text_from_post_model(postId)
+
+def get_userId_from_post_controller(postId):
+    post = verify_post(postId)
+    if not post:
+        return {"message": "Post not found"}, 404
+    return Post.get_userId_from_post_model(postId)

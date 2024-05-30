@@ -99,9 +99,9 @@ def delete_comments_from_post(post_id):
     return jsonify({"message": "Comments deleted"}), 200
 
 def get_email_from_user(user_id):
-    user = User.get_user_by_id_model(user_id)
-    return user.get("email")
-
+    email = User.get_email_by_id_model(user_id)
+    print(email)
+    return email
 
 
  ###############################################################   
