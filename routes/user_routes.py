@@ -79,9 +79,9 @@ def update_user_route(user_id):
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
-@users_app.route("/api/users/like/<userId>", methods=["POST"])
+@users_app.route("/api/users/like", methods=["POST"])
 @jwt_required()
-def add_like_to_post_route(userId):
+def add_like_to_post_route():
 
     data = request.get_json()
     current_user_id = get_jwt_identity()
@@ -92,17 +92,16 @@ def add_like_to_post_route(userId):
     createdAt = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     text = get_text_from_post_controller(postId)
     notification_text = f"{username} curtiu seu post {text}"
-
     success, message = add_like_to_post_controller(current_user_id, postId)
-    if success:
-        return jsonify({"message": message}), 200
-    elif success and message == "Post liked successfully":
+    
+    if success and message == "Post liked successfully":
         create_notification_controller(current_user_id, recipientId, notification_text, createdAt, "like", False)
+    elif success:
         return jsonify({"message": message}), 200
     else:
-        status_code = 400
+        pass
     
-    return jsonify({"message": message}, status_code)
+    return jsonify({"message": message}, 400)
 
 
 
