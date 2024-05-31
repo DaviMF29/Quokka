@@ -26,7 +26,7 @@ class Notification:
 
     def get_notifications_by_userId(userId):
         notification_collection = db.notifications
-        notifications = notification_collection.find({"userId": userId})
+        notifications = notification_collection.find({"recipientId": userId})
         serialized_notifications = []
         for notification in notifications:
             notification["_id"] = str(notification["_id"])
