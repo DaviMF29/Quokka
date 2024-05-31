@@ -15,7 +15,13 @@ def create_notification_controller(senderId,recipientId, text, createdAt, type, 
 
 def get_notifications_by_userId_controller(userId):
     verify_user(userId)
-    return Notification.get_notifications_by_userId(userId)
+    notifications = Notification.get_notifications_by_userId(userId)
+    arrNotifications = []
+    for notification in notifications:
+        if notification["senderId"] != notification["recipientId"]:
+            arrNotifications.append(notification)
+    return arrNotifications
+            
 
 def delete_notification_by_id_controller(userId,notificationId):
     return Notification.delete_notification_by_id(userId,notificationId)
