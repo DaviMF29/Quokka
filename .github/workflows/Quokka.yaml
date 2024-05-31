@@ -40,6 +40,8 @@ jobs:
       run: |
         mkdir -p db
         echo "${{ secrets.QUOKKA_CREDENTIALS }}" > db/quokka-credentials.json
+        # Verificação para garantir que o JSON esteja bem formatado
+        python -c "import json; json.load(open('db/quokka-credentials.json'))"
 
     # Uncomment the following lines if you want to run flake8 linting
     #- name: Lint with flake8
@@ -53,4 +55,4 @@ jobs:
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      run: pytest
+      run: pytest --disable-warnings
