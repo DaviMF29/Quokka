@@ -39,7 +39,7 @@ class Notification:
         return result.deleted_count > 0
 
 
-    def delete_all_notifications_by_userId(userId):
+    def delete_all_notifications_by_userId(recipientId):
         notification_collection = db.notifications
-        result = notification_collection.delete_many({"userId": userId})
+        result = notification_collection.delete_many({"recipientId": recipientId})
         return result.deleted_count > 0
