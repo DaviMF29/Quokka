@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from controllers.notification_controller import (
     create_notification_controller,get_notifications_by_userId_controller,
@@ -30,6 +30,7 @@ def create_notification():
         return jsonify({"message": str(e)}), 500
 
 @notification_app.route("/api/notifications", methods=["GET"])
+@jwt_required()
 def get_notifications_by_userId():
     userId = get_jwt_identity()
     try:
