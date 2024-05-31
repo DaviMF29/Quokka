@@ -70,7 +70,7 @@ def create_post_route():
 
     replaced_text, usernames = add_tag_to_post(text)
     text_10_chars = text[:10] if len(text) > 10 else text
-
+    print(text_10_chars)
     post_text = f"{username} mencionou você em um post: '{text_10_chars}'"
     try:
         post_id = create_post_controller(userId, username, replaced_text, createdAt, images)
