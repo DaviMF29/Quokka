@@ -30,10 +30,9 @@ def create_post_controller(userId, username, text, createdAt, images=[]):
         images_urls.append(image_url)
 
         os.remove(image_path)
-
+    validate_text_length(text)
     post_id = Post.create_post_model(userId, username, text, createdAt, images_urls)
     add_post_in_user(userId, post_id)
-    validate_text_length(text)
 
     return post_id
 
