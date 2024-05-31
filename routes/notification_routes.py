@@ -39,10 +39,10 @@ def get_notifications_by_userId():
     except Exception as e:
         return jsonify({"message": str(e)}), 500
     
-@notification_app.route("/api/notifications/<userId>/<notificationId>", methods=["DELETE"])
-def delete_notification_by_id(userId,notificationId):
+@notification_app.route("/api/notification/<notificationId>", methods=["DELETE"])
+def delete_notification_by_id(notificationId):
     try:
-        result = delete_notification_by_id_controller(userId,notificationId)
+        result = delete_notification_by_id_controller(notificationId)
         if result:
             return jsonify({"message": "Notification deleted"}), 200
         return jsonify({"message": "Notification not found"}), 404

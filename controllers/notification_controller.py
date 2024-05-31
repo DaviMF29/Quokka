@@ -23,8 +23,8 @@ def get_notifications_by_userId_controller(userId):
     return arrNotifications
             
 
-def delete_notification_by_id_controller(userId,notificationId):
-    return Notification.delete_notification_by_id(userId,notificationId)
+def delete_notification_by_id_controller(notificationId):
+    return Notification.delete_notification_by_id(notificationId)
 
 def delete_all_notifications_by_userId_controller(userId):
     verify_user(userId)
