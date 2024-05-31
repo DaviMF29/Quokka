@@ -39,7 +39,7 @@ jobs:
     - name: Create quokka-credentials.json
       run: |
         mkdir -p db
-        echo "${{ secrets.QUOKKA_CREDENTIALS }}" > db/quokka-credentials.json
+        echo '${{ secrets.QUOKKA_CREDENTIALS }}' | jq '.' > db/quokka-credentials.json
         # Verificação para garantir que o JSON esteja bem formatado
         python -c "import json; json.load(open('db/quokka-credentials.json'))"
 
