@@ -126,7 +126,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
          const data = {
              postId: _id
          }
-         await api.post(`/api/users/like/${currentUserId}`, data, config);
+         await api.post(`/api/users/like`, data, config);
          getNumberOfLikesInPost()
          setPostState(false);
         
@@ -140,7 +140,7 @@ export function Post({ _id,username, userId, text, createdAt, currentUserId,user
     })
 
      async function addNewComment(data: CreateCommentFormData) {
-         console.log('comentado:', data.content);
+         
          if (user.access_token && user.userId && user.username) { 
              await user.addComment(user.access_token,_id, data.content, user.userId, user.username);
          }

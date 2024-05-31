@@ -1,3 +1,5 @@
+import { Popover } from "@radix-ui/themes";
+import { List } from "phosphor-react";
 import styled from "styled-components";
 
 
@@ -73,4 +75,47 @@ export const Logo = styled.img`
     margin-left: 2rem;
     
 `
+
+export const PopoverDiv = styled(Popover.Content)`
+    background: ${props => props.theme['gray-800']};
+    color: ${props => props.theme['gray-100']};
+`
+
+
+export const NotificationDiv = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    padding: 1rem;
+    border-bottom: 1px solid ${props => props.theme['gray-700']};
+    transition: 0.3s;
+    gap: 1rem;
+    &:hover{
+        background-color: ${props => props.theme['gray-700']};
+    }
+
+`
+
+export const DeleteNotificationButton = styled.button`
+    background-color: transparent;
+    width: fit-content;
+    height: fit-content;
+    border: none;
+
+    &:hover{
+        color: ${props => props.theme['red-500']};
+    }
+
+
+`
+
+export const StyledListIcon = styled(List)`
+    color:  ${props => props.theme['gray-300']};
+
+    &:hover{
+        color: ${props => props.theme['red-500']};
+    }
+
+`
+
 

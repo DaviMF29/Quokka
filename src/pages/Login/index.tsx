@@ -92,10 +92,6 @@ export function Login(){
 
 
             </FormContainer>
-
-                
-                
-            
             
         </LoginContainer>
         

@@ -1,5 +1,5 @@
 import {createContext, useEffect, useState} from "react"
-import { IAuthProvider, IContext, IUser, userId } from "./types"
+import { IAuthProvider, IContext, IUser } from "./types"
 import { LoginRequest, getUserLocalStorage, setUserLocalStorage } from "./util"
 import { api } from "../../services/api"
 
@@ -13,10 +13,11 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     //const [profilePicture, setProfilePicture] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [userId, setUserId] = useState<string>('')
-    const [followers, setFollowers] = useState<userId[]>([])
-    const [following, setFollowing] = useState<userId[]>([])
+    const [followers, setFollowers] = useState<string[]>([])
+    const [following, setFollowing] = useState<string[]>([])
     const [likedPosts, setLikedPosts] = useState<string[]>([])
     const [favoritePosts, setFavoritePosts] = useState<string[]>([])
+    const [notifications, setNotifications] = useState<string[]>([])
     
 
     
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             setUser(user)
             
         }
+        
         
     }, [])
 
@@ -61,6 +63,8 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
 
         
     }
+
+    
 
     async function updateUserInfo(token:string, userId:string, username?: string, profileImage?: string) {
         const config = {
@@ -127,7 +131,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
     }
     
 
-    async function addLike(token:string,postId:string, userId:string) {
+    async function addLike(token:string,postId:string) {
         const data = {
             postId : postId,
         }	
@@ -136,7 +140,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
               Authorization: `Bearer ${token}` 
             }
           };
-        const response = await api.put(`/api/posts/like/${userId}`,data,config)
+        const response = await api.put(`/api/posts/like`,data,config)
         return response.data
       
     }
@@ -198,6 +202,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
         setFollowers([])
         setFollowing([])
         setLikedPosts([])
+        setNotifications([])
     }
 
 
@@ -212,6 +217,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             followers,
             favoritePosts,
             likedPosts,
+            
             authenticate,
             logout, 
             getUserInfo, 
@@ -222,6 +228,7 @@ export const AuthProvider = ({ children } : IAuthProvider) => {
             getLikedPosts,
             getPostById,
             getPostLikes,
+            
             addLike,
             addComment,
             followUser,

@@ -1,18 +1,15 @@
 
 
-export interface userId {
-    userId: string;
-}
-
 export interface IUser {
     userId?: string;
     email?: string;
     username?: string;
-    followers?: Array<userId> | undefined;
-    following?: Array<userId> | undefined;
+    followers?: Array<string> | undefined;
+    following?: Array<string> | undefined;
     favoritePosts?: Array<string> | undefined;
     likedPosts?: Array<string> | undefined;
     access_token?: string;
+    
 }
 
 export interface IContext extends IUser {

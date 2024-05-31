@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Box, Tabs } from "@radix-ui/themes";
+import { Post } from "../../components/Post";
 
 export const ProfileWrapper = styled.div`
     background: ${props => props.theme['gray-900']};
@@ -15,11 +16,28 @@ export const ProfileWrapper = styled.div`
     position: absolute;
     top: -1rem;
     
+    
+    
 
     h1{
         height: 2rem;
     }
 `
+
+export const ProfileContent = styled.div`
+    display: flex;
+    width: 100%;
+    gap: 4rem;
+    padding: 2rem 15rem;
+    justify-content: space-between;
+    height: fit-content;
+    border: 1px solid red;
+    
+    
+
+
+`
+
 
 export const ProfilePicture = styled.img`
     box-sizing: initial;
@@ -32,10 +50,6 @@ export const ProfilePicture = styled.img`
 `
 
 export const ProfileInfo = styled.div`
-    position: absolute;
-    left: 15rem;
-    top: 13rem;
-    
     height: fit-content;
     border-radius: 10px;
     padding: 2rem;
@@ -44,7 +58,11 @@ export const ProfileInfo = styled.div`
     align-items: center;
     gap: 1rem;
     box-shadow: 0px 10px 5px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(50px);
+    backdrop-filter: blur(40px);
+    background: ${props => props.theme['gray-800']};
+    
+    
+
     
 `
 
@@ -61,6 +79,7 @@ export const StyledBox = styled(Box)`
     margin-top: 2rem;
     color: ${props => props.theme['gray-100']};
     background: ${props => props.theme['gray-900']};
+    
 
     form {
         display: flex;
@@ -185,3 +204,11 @@ export const UserPosts = styled.div`
 
 
 `
+
+
+export const UserFollowing = styled.aside`
+    width: 13rem;
+
+
+`
+

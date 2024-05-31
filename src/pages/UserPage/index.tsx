@@ -5,8 +5,10 @@ import { Header } from "../../components/Header";
 import { Post, PostProps } from "../../components/Post";
 import { useAuth } from "../../hooks/useAuth";
 import { api } from "../../services/api";
-import { Banner, FollowButton, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, UnfollowButton, UserPosts } from "./styles";
-import { CloudSnow } from "phosphor-react";
+import { Banner, FollowButton, ProfileContent, ProfileInfo, ProfilePicture, ProfileText, ProfileWrapper, UnfollowButton, UserFollowing, UserPosts } from "./styles";
+import { ProfileCard } from "../../components/ProfileCard";
+import { set } from "lodash";
+
 
 interface UserInfo {
     _id: string;
@@ -19,13 +21,21 @@ interface UserInfo {
     posts: Array<string>;
 }
 
+interface FollowingProps {
+    id: string;
+    username: string;
+    email: string;
+    isFollowing: boolean;
+
+}
+
 export function UserPage({ userId }: { userId: string }) {
     const user = useAuth();
     const { userName } = useParams();
     const [pageOwner, setPageOwner] = useState<UserInfo | null>(null);
     const [pageOwnerPosts, setPageOwnerPosts] = useState<PostProps[]>([]);
     const [pageLoaded, setPageLoaded] = useState(false);
-    
+    const [following, setFollowing] = useState<FollowingProps[]>([]);
     async function getUserByUsername() {
         try {
             const response = await api.get(`/api/users/${userName}`);
@@ -57,10 +67,17 @@ export function UserPage({ userId }: { userId: string }) {
             if (user.access_token) { 
                 user.getUserInfo(user.access_token);
             }
+
+            
         };
 
+        getFollowingUsers(pageOwner?.following ?? []);
         fetchData();
+        
     }, [userName,pageLoaded]);
+
+    
+    
 
     async function handleFollow() {
         try {
@@ -94,6 +111,21 @@ export function UserPage({ userId }: { userId: string }) {
         }
     }
 
+    async function getFollowingUsers(followingIds: string[]) {
+    
+        // Mapeia cada ID para uma promessa de requisição da API
+        const requests = followingIds.map(async (followingId) => {
+            const response = await api.get(`/api/user/${followingId}`);
+            return response.data;
+        });
+
+        // Usa Promise.all para aguardar que todas as promessas sejam resolvidas
+        const users = await Promise.all(requests);
+        setFollowing(users);
+        
+        
+    }
+
 
 
     return (
@@ -101,43 +133,61 @@ export function UserPage({ userId }: { userId: string }) {
             <Header />
             <ProfileWrapper>
                 <Banner src="https://i.pinimg.com/originals/0b/a3/d6/0ba3d60362c7e6d256cfc1f37156bad9.jpg" />
-                <ProfileInfo>
-                    <ProfilePicture src={avatarImg} />
-                    <ProfileText>
-                        <h1>{pageOwner?.username || 'User not found'}</h1>
-                        <h3>{pageOwner?.email || 'Email not found'}</h3>
-                        <div>
-                            <p>Posts: {pageOwner?.posts.length}</p>
-                            <p>Seguidores: {pageOwner?.followers?.length}</p>
-                            <p>Seguindo: {pageOwner?.following?.length}</p>
-                        </div>
-                        {pageOwner && pageOwner._id !== userId && (
-                            pageOwner.followers?.includes(userId) ?
-                                <UnfollowButton onClick={handleFollow}>Seguindo</UnfollowButton> :
-                                <FollowButton onClick={handleFollow}>Seguir</FollowButton>
-                        )}
-                    </ProfileText>
-                </ProfileInfo>
-                <UserPosts>
-                    {pageOwnerPosts.map((post) => (
-                        <Post
-                        key={post._id}
-                            username={post.username}
-                            userId={post.userId}
-                            createdAt={post.createdAt}
-                            text={post.text}
-                            _id={post._id}
-                            setPostState={setPageLoaded}
-                            userFollowing={user.following?.map(userId => userId.toString())}
-                            currentUserId={user.userId ?? ''}
-                            userLikedPosts={user.likedPosts}
-                            userFavoritePosts={user.favoritePosts}
-                            deletePostFunction={handleDeletePost}
-                            setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
-                            commentField={false}
-                        />
-                    ))}
-                </UserPosts>
+                <ProfileContent>
+                    <ProfileInfo>
+                        <ProfilePicture src={avatarImg} />
+                        <ProfileText>
+                            <h1>{pageOwner?.username || 'User not found'}</h1>
+                            <h3>{pageOwner?.email || 'Email not found'}</h3>
+                            <div>
+                                <p>Posts: {pageOwner?.posts.length}</p>
+                                <p>Seguidores: {pageOwner?.followers?.length}</p>
+                                <p>Seguindo: {pageOwner?.following?.length}</p>
+                            </div>
+                            {pageOwner && pageOwner._id !== userId && (
+                                pageOwner.followers?.includes(userId) ?
+                                    <UnfollowButton onClick={handleFollow}>Seguindo</UnfollowButton> :
+                                    <FollowButton onClick={handleFollow}>Seguir</FollowButton>
+                            )}
+                        </ProfileText>
+                    </ProfileInfo>
+                    <UserPosts>
+                        {pageOwnerPosts.map((post) => (
+                            <Post
+                            key={post._id}
+                                username={post.username}
+                                userId={post.userId}
+                                createdAt={post.createdAt}
+                                text={post.text}
+                                _id={post._id}
+                                setPostState={setPageLoaded}
+                                userFollowing={user.following?.map(userId => userId.toString())}
+                                currentUserId={user.userId ?? ''}
+                                userLikedPosts={user.likedPosts}
+                                userFavoritePosts={user.favoritePosts}
+                                deletePostFunction={handleDeletePost}
+                                setPostAsFavorite={(postId, userId) => user.setPostAsFavorite(user.access_token??'', postId, userId)}
+                                commentField={false}
+                            />
+                        ))}
+                    </UserPosts>
+                    <UserFollowing>
+                        <h3>Seguindo:</h3>
+                        {
+                            following.map((following:FollowingProps) => (
+                                <ProfileCard
+                                    key={following.id}
+                                    id={following.id}
+                                    username={following.username}
+                                    email={following.email}
+                                    isFollowing={user.following?.includes(following.id) ? false : true}
+                                />
+                            ))
+                        }
+                    </UserFollowing>
+
+                </ProfileContent>
+                
             </ProfileWrapper>
         </>
     );
