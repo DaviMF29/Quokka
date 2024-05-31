@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import quokkaLogo from '../../assets/urso branco 1.svg'
 import { useAuth } from '../../hooks/useAuth'
-import { DeleteNotificationButton, ExitButton, HeaderContainer, Logo, NotificationButton, NotificationDiv, PopoverDiv, StyledListIcon } from './styles'
-import { Bell, List } from 'phosphor-react'
+import { DeleteAllButton, DeleteNotificationButton, ExitButton, HeaderContainer, Logo, NotificationButton, NotificationDiv, PopoverDiv, StyledListIcon } from './styles'
+import { Bell, List, Trash } from 'phosphor-react'
 import { Popover } from '@radix-ui/themes'
 import { useEffect, useState } from 'react'
 import { api } from '../../services/api'
@@ -36,10 +36,16 @@ export function Header() {
         setNotifications(response.data)
     }
 
-    async function handleDeleteNotification(userId:string, notificationId:string) {
-        await api.delete(`api/notifications/${userId}/${notificationId}`)
+    async function handleDeleteNotification( notificationId:string) {
+        await api.delete(`api/notification/${notificationId}`)
         getNotifications()
     }
+
+    async function handleDeleteAllNotifications(userId:string) {
+        await api.delete(`api/notifications/${userId}`)
+        getNotifications()
+    }
+
 
 
     useEffect(() => {
@@ -63,16 +69,18 @@ export function Header() {
                         <NotificationButton><Bell size={24} /></NotificationButton>
                 </Popover.Trigger>
                 <PopoverDiv size="4">
+                        
                         {notifications.length > 0 ?( notifications.map(notification => {
                                  return (
                                       <NotificationDiv key={notification._id}>
                                         
                                         <p>{notification.text}</p>
-                                        <DeleteNotificationButton onClick={() => handleDeleteNotification(user?.userId??'',notification._id)}><StyledListIcon /></DeleteNotificationButton>
+                                        <DeleteNotificationButton onClick={() => handleDeleteNotification(notification._id)}><StyledListIcon /></DeleteNotificationButton>
                                       </NotificationDiv>
                                  )
                             })
                         ): (<p>Sem notificações no momento</p>)}
+                        {notifications.length > 0 && (<DeleteAllButton onClick={() => handleDeleteAllNotifications(user.userId ?? '')}>apagar tudo</DeleteAllButton>)}
                 </PopoverDiv>
                 </Popover.Root>
                 

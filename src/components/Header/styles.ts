@@ -79,6 +79,12 @@ export const Logo = styled.img`
 export const PopoverDiv = styled(Popover.Content)`
     background: ${props => props.theme['gray-800']};
     color: ${props => props.theme['gray-100']};
+    max-width: 30rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-height: 70vh;
+    overflow-y: auto;
 `
 
 
@@ -86,6 +92,7 @@ export const NotificationDiv = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: top;
+    
     padding: 1rem;
     border-bottom: 1px solid ${props => props.theme['gray-700']};
     transition: 0.3s;
@@ -108,6 +115,20 @@ export const DeleteNotificationButton = styled.button`
 
 
 `
+
+export const DeleteAllButton = styled.button`
+    background-color: transparent;
+    text-decoration: underline;
+    color: ${props => props.theme['blue-300']};
+    border: none;
+    padding-top: 1rem;
+    transition: 0.3s;
+
+    &:hover{
+        color: ${props => props.theme['red-500']};
+    }
+`
+
 
 export const StyledListIcon = styled(List)`
     color:  ${props => props.theme['gray-300']};

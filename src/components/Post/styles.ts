@@ -6,6 +6,7 @@ export const PostContainer = styled.article`
     background: ${props => props.theme['gray-800']};
     border-radius: 8px;
     padding: 2.5rem;
+    max-width: 40vw;
     
 
     &+&{
