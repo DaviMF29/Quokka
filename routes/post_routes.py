@@ -71,7 +71,9 @@ def create_post_route():
     text_without_href, replaced_text, usernames = add_tag_to_post(text)
     text_without_href = text_without_href.split(" ")
     text_10_words = ' '.join(text_without_href[:10])
-    post_text = f"{username} mencionou você em um post: '{text_10_words}'..."
+    if len(text_10_words) >= 10:
+        text_10_words = f"{text_10_words}..."
+    post_text = f"{username} mencionou você em um post: '{text_10_words}'"
     try:
         post_id = create_post_controller(userId, username, replaced_text, createdAt, images)
 
