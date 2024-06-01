@@ -31,7 +31,6 @@ export const ProfileContent = styled.div`
     padding: 2rem 15rem;
     justify-content: space-between;
     height: fit-content;
-    border: 1px solid red;
     
     
 
