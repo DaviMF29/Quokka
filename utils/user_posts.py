@@ -120,4 +120,4 @@ def add_tag_to_post(text):
 
     pattern = r"@(\w+)"
     replaced_text = re.sub(pattern, replace_at, text)
-    return replaced_text, valid_usernames
+    return text,replaced_text, valid_usernames
