@@ -69,7 +69,7 @@ def create_post_route():
         return jsonify({"error": "Exceeded maximum number of images (4)"}), 400
 
     replaced_text, usernames = add_tag_to_post(text)
-    text_10_chars = text[:10] if len(text) > 10 else text
+    text_10_chars = replaced_text[:10] if len(text) > 10 else replaced_text
     post_text = f"{username} mencionou você em um post: '{text_10_chars}'"
     try:
         post_id = create_post_controller(userId, username, replaced_text, createdAt, images)
