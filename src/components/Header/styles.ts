@@ -96,9 +96,11 @@ export const NotificationDiv = styled.div`
     padding: 1rem;
     border-bottom: 1px solid ${props => props.theme['gray-700']};
     transition: 0.3s;
+    margin-top: 0.25rem;
     gap: 1rem;
     &:hover{
         background-color: ${props => props.theme['gray-700']};
+        border-radius: 6px;
     }
 
 `
