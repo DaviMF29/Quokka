@@ -102,6 +102,8 @@ Pronto! Agora você deve conseguir utilizar o Quokka em sua máquina local.
 
 Este projeto foi desenvolvido por estudantes da **Universidade Estadual da Paraíba (UEPB)** como parte de um trabalho acadêmico.
 
+- [Elias Medeiros](https://github.com/eliasmedeiros898)
+
 ## Aviso
 
 > **Nota:** Este projeto foi desenvolvido para fins educacionais e não tem fins lucrativos.
