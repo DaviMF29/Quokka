@@ -43,7 +43,7 @@ Para rodar o projeto Quokka em sua máquina, siga as instruções abaixo para co
 
 1. **Clone o Repositório**
    ```bash
-   git clone https://github.com/seu-usuario/quokka.git
+   git clone https://github.com/DaviMF29/Quokka.git
    cd quokka
    ```
 
