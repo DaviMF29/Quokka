@@ -91,10 +91,10 @@ Para rodar o projeto Quokka em sua máquina, siga as instruções abaixo para co
      npm start
      ```
 
-   O frontend estará disponível em `http://localhost:3000`.
+   O frontend estará disponível em `http://localhost:4173`.
 
 4. **Acesse o Projeto**
-   - Abra seu navegador e acesse `http://localhost:3000` para visualizar a aplicação.
+   - Abra seu navegador e acesse `http://localhost:4173` para visualizar a aplicação.
 
 Pronto! Agora você deve conseguir utilizar o Quokka em sua máquina local.
 
