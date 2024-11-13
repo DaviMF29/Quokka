@@ -1,8 +1,13 @@
+import json
+import os
 import firebase_admin
 from firebase_admin import credentials, storage
 
 
-cred = credentials.Certificate('db/quokka-credentials.json')
+firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+firebase_credentials = json.loads(firebase_credentials_json)
+
+cred = credentials.Certificate(firebase_credentials)
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'quokka-3fca5.appspot.com'
 })
