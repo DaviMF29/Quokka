@@ -1,15 +1,17 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required
-
-from middleware.global_middleware import (
-    verify_user, verify_post,validate_text_length, verify_post_is_from_user)
+from concurrent.futures import ThreadPoolExecutor
 
 from controllers.post_controller import (
-    create_post_controller, add_like_to_post_controller, add_comment_to_post_controller,
-    delete_post_controller, update_post_by_id_controller, get_all_posts_controller,
-    get_post_by_id_controller
+    create_post_controller,delete_post_controller,
+    update_post_by_id_controller, get_all_posts_controller,
+    get_post_by_id_controller,get_likes_from_post_controller,
+    get_comments_from_post_controller,get_all_posts_limited_controller
     
 )
+
+from utils.user_posts import add_tag_to_post
+from utils.notifications_utils import create_notification_async
 
 post_app = Blueprint("post_app", __name__)
 
@@ -18,18 +20,22 @@ def get_posts():
     posts = get_all_posts_controller()
     return jsonify(posts), 200
 
+@post_app.route("/api/posts/limited")
+def get_limited_posts():
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=10, type=int)
+    return jsonify(get_all_posts_limited_controller(page, limit)), 200
+
 @post_app.route("/api/posts/<postId>")
 def get_post_by_id(postId):
     post = get_post_by_id_controller(postId)
     return jsonify(post)
 
 @post_app.route("/api/posts/<postId>", methods=["DELETE"])
-@jwt_required()
 def delete_post_route(postId):
     data = request.get_json()
-    userID = data["userId"]
-    verify_post_is_from_user(postId,userID)
-    delete_post_controller(postId)
+    userId = data["userId"]
+    delete_post_controller(postId,userId)
     return jsonify({"message": "Post deleted"}), 200
 
 @post_app.route("/api/posts/<postId>", methods=["PUT"])
@@ -50,80 +56,58 @@ def update_post_route(postId):
 @post_app.route("/api/posts", methods=["POST"])
 @jwt_required()
 def create_post_route():
-    data = request.get_json()
-    username = data["username"]
-    userId = data["userId"]
-    text = data["text"] 
-    createdAt = data["createdAt"] #você tem que definir no backend
-    isCode = data.get("isCode", False)
+    username = request.form.get("username")
+    userId = request.form.get("userId")
+    text = request.form.get("text")
+    createdAt = request.form.get("createdAt")
 
-    if not all([username, userId, text]):
+    if not all([username, userId, text, createdAt]):
         return jsonify({"message": "Missing required fields"}), 400
 
-    language = None
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-    language = data.get("language")
+    images = request.files.getlist('file')
+    if len(images) > 4:
+        return jsonify({"error": "Exceeded maximum number of images (4)"}), 400
 
+    text_without_href, replaced_text, usernames = add_tag_to_post(text)
+    text_without_href = text_without_href.split(" ")
+    text_10_words = ' '.join(text_without_href[:10])
+    if len(text_10_words) >= 10:
+        text_10_words = f"{text_10_words}..."
+    post_text = f"{username} mencionou você em um post: '{text_10_words}'"
     try:
-        verify_user(userId)
-    except:
-        return jsonify({"message": "User not exist"}), 400
+        post_id = create_post_controller(userId, username, replaced_text, createdAt, images)
 
-    post_id = create_post_controller(userId, username, text,createdAt, isCode=isCode, language=language)
-    return jsonify({"id": post_id, "message": f"Post {text} created"}), 201
+        usernames = list(set(usernames))
+
+        with ThreadPoolExecutor() as executor:
+            futures = []
+            for mentioned_username in usernames:
+                future = executor.submit(create_notification_async, userId, mentioned_username, post_text, createdAt)
+                futures.append(future)
+
+            for future in futures:
+                future.result()
+
+        return jsonify({"id": post_id, "message": f"Post '{text}' created"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 
-@post_app.route("/api/posts/comment", methods=["PUT"])
-@jwt_required()
-def add_comment_route():
+@post_app.route("/teste", methods=["POST"])
+def teste():
     data = request.get_json()
-    previousPostId = data["previousPostId"]
-    username = data["username"]
-    userId = data["userId"]
     text = data["text"]
-    isCode = data.get("isCode", False)
-    language = None
+    return jsonify(add_tag_to_post(text)), 200
 
-    if not all([previousPostId, username, userId, text]):
-        return jsonify({"message": "Missing required fields"}), 400
+@post_app.route("/api/posts/likes/<postId>", methods=["GET"])
+def get_likes_from_posts(postId):
+    return jsonify(get_likes_from_post_controller(postId)), 200
 
-    if isCode:
-        language = data["language"]
-
-    if isCode and "language" not in data:
-        return jsonify({"message": "Field 'language' is required when 'isCode' is True"}), 400
-
-    try:
-        verify_user(userId)
-        verify_post(previousPostId)
-    except:
-        return jsonify({"message": "User or initial post does not exist"}), 404
-    
-    validate_text_length(text)
-
-    result = add_comment_to_post_controller(previousPostId, userId, username, text, isCode, language) if isCode else add_comment_to_post_controller(previousPostId, userId, username, text)
-    
-    return jsonify(result)
-
-
-@post_app.route("/api/posts/like/<postId>", methods=["PUT"])
-@jwt_required()
-def add_like_route(postId):
-    
-    if not all([postId]):
-        return jsonify({"message": "Missing required fields"}), 400
-
-    try:
-        verify_post(postId)
-    except:
-        return jsonify({"message": "User or post does not exist"}), 404
-
-    result = add_like_to_post_controller(postId)
-    return jsonify(result)
-
-
+@post_app.route("/api/posts/comments/<postId>", methods=["GET"])
+def get_comments_from_post(postId):
+    response, status_code = get_comments_from_post_controller(postId)
+    return jsonify(response), status_code
 
 
 
