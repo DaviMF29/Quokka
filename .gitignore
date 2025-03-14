@@ -1,0 +1,4 @@
+.env
+__pycache__/
+rascunhos.txt
+quokka-credentials.json
